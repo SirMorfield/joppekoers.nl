@@ -1,0 +1,11 @@
+{
+  "apps": [
+    {
+      "name": "radioScraper",
+      "script": "node server/radio/radio.js",
+      "watch": true,
+      "max_restarts": 1000,
+      "exec_mode": "fork"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    "*.log",
+    "npm-debug.log*",
+    "yarn-debug.log*",
+    "yarn-error.log*",
+    ".DS_Store*",
+    ".node-persist/",
+    "pids",
+    "*.pid",
+    "*.seed",
+    "*.pid.lock",
+    "lib-cov",
+    "coverage",
+    ".nyc_output",
+    ".grunt",
+    "bower_components",
+    ".lock-wscript",
+    "build/Release",
+    "node_modules/",
+    "jspm_packages/",
+    "typings/",
+    ".npm",
+    ".eslintcache",
+    ".node_repl_history",
+    "*.tgz",
+    ".yarn-integrity",
+    ".env",
+    ".next",
+    ".vuepress/dist",
+    "test.js",
+    "stations.json",
+    "package-lock.json",
+    "uploads/"
+  ],
+  "verbose": false,
+  "execMap": {
+    "js": "node --harmony"
+  },
+  "watch": [
+    "."
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ext": "js"
+}
