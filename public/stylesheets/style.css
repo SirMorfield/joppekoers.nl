@@ -1,8 +1,207 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 14px "Lucida Grande";
 }
 
-a {
-  color: #00B7FF;
+.w3-bar-block .w3-bar-item {
+  padding: 20px
+}
+
+.top,
+.bottom {
+  position: fixed;
+  width: 100%;
+  z-index: 1
+}
+
+.top {
+  top: 0
+}
+.sidebar {
+  height: 100%;
+  width: 200px;
+  background-color: #fff;
+  position: fixed !important;
+  z-index: 1;
+  overflow: auto
+}
+
+@media (max-width:992px) {
+  .sidebar.collapse {
+    display: none
+  }
+
+  .main {
+    margin-left: 0 !important;
+    margin-right: 0 !important
+  }
+}
+
+@media (min-width:993px) {
+  .modal-content {
+    width: 900px
+  }
+
+  .hide-large {
+    display: none !important
+  }
+
+  .sidebar.collapse {
+    display: block !important
+  }
+}
+
+.bar-block .dropdown-hover,
+.bar-block .dropdown-click {
+  width: 100%
+}
+
+.bar-block .dropdown-hover .dropdown-content,
+.bar-block .dropdown-click .dropdown-content {
+  min-width: 100%
+}
+
+.bar-block .dropdown-hover .button,
+.bar-block .dropdown-click .button {
+  width: 100%;
+  text-align: left;
+  padding: 8px 16px
+}
+
+.bar-block .bar-item {
+  width: 100%;
+  display: block;
+  padding: 8px 16px;
+  text-align: left;
+  border: none;
+  white-space: normal;
+  float: none;
+  outline: 0
+}
+
+.bar-block.center .bar-item {
+  text-align: center
+}
+
+.block {
+  display: block;
+  width: 100%
+}
+
+.card {
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)
+}
+.animate-left {
+  position: relative;
+  animation: animateleft 0.4s
+}
+
+.xlarge {
+  font-size: 24px !important
+}
+
+.xxlarge {
+  font-size: 36px !important
+}
+
+.xxxlarge {
+  font-size: 48px !important
+}
+
+.jumbo {
+  font-size: 64px !important
+}
+
+.animate-left {
+  position: relative;
+  animation: animateleft 0.4s
+}
+
+@keyframes animateleft {
+  from {
+    left: -300px;
+    opacity: 0
+  }
+
+  to {
+    left: 0;
+    opacity: 1
+  }
+}
+
+.bar-block.center .bar-item {
+  text-align: center
+}
+
+.block {
+  display: block;
+  width: 100%
+}
+
+.bar-block .bar-item {
+  width: 100%;
+  display: block;
+  padding: 8px 16px;
+  text-align: left;
+  border: none;
+  white-space: normal;
+  float: none;
+  outline: 0
+}
+
+.bar .bar-item {
+  padding: 8px 16px;
+  float: left;
+  width: auto;
+  border: none;
+  display: block;
+  outline: 0
+}
+
+.white,
+.hover-white:hover {
+  color: #000 !important;
+  background-color: #fff !important
+}
+
+.padding-16 {
+  padding-top: 16px !important;
+  padding-bottom: 16px !important
+}
+
+.padding-24 {
+  padding-top: 24px !important;
+  padding-bottom: 24px !important
+}
+
+.left {
+  float: left !important
+}
+
+.right {
+  float: right !important
+}
+
+.center {
+  text-align: center !important
+}
+
+.row-padding,
+.row-padding>.half,
+.row-padding>.third,
+.row-padding>.twothird,
+.row-padding>.threequarter,
+.row-padding>.quarter,
+.row-padding>.col {
+  padding: 0 8px
+}
+
+.col,
+.half,
+.third,
+.twothird,
+.threequarter,
+.quarter {
+  float: left;
+  width: 100%
 }
