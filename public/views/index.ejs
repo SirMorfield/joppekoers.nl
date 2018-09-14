@@ -1,18 +1,58 @@
-<html lang="en">
+<html>
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
   <title>
     <%=title%>
   </title>
+  <link rel="stylesheet" href="../stylesheets/normalize.css">
+  <link rel="stylesheet" href="../stylesheets/style.css">
 </head>
 
-<body class="page">
-  <footer class="page">
+<body>
 
-  </footer>
+  <table width="100%" style="height: 100%;" cellpadding="10" cellspacing="0" border="0">
+    <tr>
+
+      <!-- ============ HEADER SECTION ============== -->
+      <td colspan="2" style="height: 100px;" bgcolor="#777d6a">
+        <h1>Website Logo</h1>
+      </td>
+    </tr>
+
+    <tr>
+      <!-- ============ LEFT COLUMN (MENU) ============== -->
+      <td width="20%" valign="top" bgcolor="#999f8e">
+        <a href="#">Menu link</a><br>
+        <a href="#">Menu link</a><br>
+        <a href="#">Menu link</a><br>
+        <a href="#">Menu link</a><br>
+        <a href="#">Menu link</a>
+      </td>
+
+      <!-- ============ RIGHT COLUMN (CONTENT) ============== -->
+      <td width="80%" valign="top" bgcolor="#d2d8c7">
+
+        <h2>Page heading</h2>
+
+        Here's a two column layout with header and footer sections that span the width of both columns. The first table
+        row creates the header and contains a single table cell which uses the colspan="2" attribute-value pair.<br>
+        <br>
+
+        The second table row contains two table cells which create the menu column (left) and the content column
+        (right). The colspan attribute is not set in either so they default to colspan="1".<br>
+        <br>
+
+        The third table row creates the footer. Like the header, it contains a single table cell which uses the
+        colspan="2" attribute-value pair.
+      </td>
+    </tr>
+
+    <!-- ============ FOOTER SECTION ============== -->
+    <tr>
+      <td colspan="2" align="center" height="20" bgcolor="#777d6a">© Joppe Koers 2016-2018</td>
+    </tr>
+  </table>
 </body>
 
-</html>
+<html>
