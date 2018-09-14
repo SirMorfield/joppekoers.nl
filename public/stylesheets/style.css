@@ -1,19 +1,20 @@
-/*
-$color1: rgba(237, 106, 90, 1);
-$color2: rgba(244, 241, 187, 1);
-$color3: rgba(155, 193, 188, 1);
-$color4: rgba(93, 87, 107, 1);
-$color5: rgba(230, 235, 224, 1); */
 
+.paddle{
+  background-color:rgba(230, 235, 224, 1);
+  background-color: rgba(93, 87, 107, 1);
+  background-color: rgba(155, 193, 188, 1);
+  background-color: rgba(244, 241, 187, 1);
+  background-color: rgba(237, 106, 90, 1);
+}
 .page{
   max-width: 1600px;
 }
 body{
-  background-color:rgba(230, 235, 224, 1);
+  background-color:rgba(155, 193, 188, 1);
   font-family: "Lucida Grande";
   float: center;
 }
+
 footer{
   background-color: rgba(93, 87, 107, 1);
-
 }
