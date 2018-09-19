@@ -1,4 +1,3 @@
-
 .paddle{
   background-color:rgba(230, 235, 224, 1);
   background-color: rgba(93, 87, 107, 1);
@@ -6,15 +5,63 @@
   background-color: rgba(244, 241, 187, 1);
   background-color: rgba(237, 106, 90, 1);
 }
-.page{
-  max-width: 1600px;
-}
+
 body{
-  background-color:rgba(155, 193, 188, 1);
   font-family: "Lucida Grande";
-  float: center;
 }
 
-footer{
+#container {
+  max-width: 1600px;
+  padding: 7px;
+  display: grid;
+  margin: 0 auto;
+  grid-template-columns: 1fr 5fr;
+  grid-template-rows: 1fr 8fr 1fr;
+  grid-template-areas: "head head"
+                       "menu mid1"
+                       "footer footer";
+}
+
+#head {
+  background-color: rgba(244, 241, 187, 1);
+  grid-area: head;
+  height: 50px;
+  padding: 3px;
+}
+
+#menu {
+  background-color: rgba(237, 106, 90, 1);
+  grid-area: menu;
+}
+
+#mid1 {
+  background-color: rgba(155, 193, 188, 1);
+  grid-area: mid1;
+}
+
+#footer {
+  grid-area: footer;
   background-color: rgba(93, 87, 107, 1);
+}
+
+
+#logo-name {
+  width: 30%;
+  height: 100%;
+margin: 0 auto;
+background-color: blue;
+}
+
+#logo-name > img {
+  float: left;
+  height: 100%;
+}
+
+#logo-name > div {
+  /* position: relative; */
+  /* width: 100%; */
+  height: 100%;
+  float: left;
+font-size: 100%;
+  background-color: brown;
 }
