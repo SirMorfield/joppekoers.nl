@@ -5,9 +5,16 @@
   background-color: rgba(244, 241, 187, 1);
   background-color: rgba(237, 106, 90, 1);
 }
+/*
+$color1: rgba(30, 56, 136, 1);
+$color2: rgba(71, 168, 189, 1);
+$color3: rgba(245, 230, 99, 1);
+$color4: rgba(255, 173, 105, 1);
+$color5: rgba(156, 56, 72, 1); */
 
 body{
   font-family: "Lucida Grande";
+  background-color: rgba(93, 87, 107, 1);
 }
 
 #container {
@@ -25,43 +32,58 @@ body{
 #head {
   background-color: rgba(244, 241, 187, 1);
   grid-area: head;
-  height: 50px;
+  height: 80px;
   padding: 3px;
 }
 
 #menu {
-  background-color: rgba(237, 106, 90, 1);
   grid-area: menu;
+  background-color: rgba(237, 106, 90, 1);
+  padding: 15px 10px;
 }
 
+#menu > div{
+  font-size: 25px;
+  padding: 10px 20px;
+
+}
+
+#menu > div:hover{
+  background-color: rgba(230, 235, 224, 1);
+  border-radius: 3px;
+  font-size: 28px;
+}
 #mid1 {
   background-color: rgba(155, 193, 188, 1);
   grid-area: mid1;
+  padding: 10px;
 }
 
 #footer {
   grid-area: footer;
-  background-color: rgba(93, 87, 107, 1);
+  background-color: rgba(244, 241, 187, 1);
 }
-
+#copyright{
+/* vertical-align: middle  */
+  text-align: center;
+}
 
 #logo-name {
   width: 30%;
   height: 100%;
 margin: 0 auto;
-background-color: blue;
+display: flex;
+justify-content: center;
 }
 
-#logo-name > img {
-  float: left;
+#logo{
   height: 100%;
 }
 
-#logo-name > div {
-  /* position: relative; */
-  /* width: 100%; */
-  height: 100%;
-  float: left;
-font-size: 100%;
-  background-color: brown;
+#name{
+  margin-left: 10px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 50px;
 }
