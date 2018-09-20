@@ -6,21 +6,32 @@
   <title>joppekoers.nl</title>
   <link rel="stylesheet" href="../stylesheets/normalize.css">
   <link rel="stylesheet" href="../stylesheets/style.css">
+  <script src="../javascripts/main.js"></script>
 </head>
 
 <body>
   <div id="container">
     <div id="head">
       <div id="logo-name">
-        <img src="../logo/logo128x128.png" alt="error 404">
-        <div>
-          <h6>Joppe Koers.nl</h6>
-        </div>
+        <img src="../logo/logo128x128.png" id="logo">
+        <div id="name">
+          Joppe Koers.nl</div>
       </div>
     </div>
-    <div id="menu">b</div>
-    <div id="mid1">c</div>
-    <div id="footer">d</div>
+    <div id="menu">
+      <div id="home">Home</div>
+      <div id="projects">Projects</div>
+      <div id="guestProjects"> Guest projects</div>
+      <div id="wolmolen">Wolmolen</div>
+    </div>
+    <div id="mid1">
+      <%= menu %>
+    </div>
+    <div id="footer">
+      <div id="copyright">
+        &copy; 2018 Joppe Koers
+      </div>
+    </div>
   </div>
 </body>
 

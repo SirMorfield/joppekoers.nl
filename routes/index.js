@@ -1,8 +1,12 @@
 const express = require('express');
 let router = express.Router();
 
-router.get('/', (req, res, next) => {
-  res.render('index.ejs', { title: 'joppekoers.nl' });
+router.get('/:location', (req, res, next) => {
+  let data = {
+    title: 'joppekoers.nl',
+    menu: 'Home page info'
+  }
+  res.render('index.ejs', data);
 });
 
 module.exports = router;
