@@ -3,7 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>joppekoers.nl</title>
+  <title>
+    <%= title %>
+  </title>
   <link rel="stylesheet" href="../stylesheets/normalize.css">
   <link rel="stylesheet" href="../stylesheets/style.css">
 </head>
@@ -19,7 +21,9 @@
       </div>
     </div>
     <div id="menu">b</div>
-    <div id="mid1">c</div>
+    <div id="mid1">
+      <%- partial ('./partials/home.html') %>
+    </div>
     <div id="footer">d</div>
   </div>
 </body>

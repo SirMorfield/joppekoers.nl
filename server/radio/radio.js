@@ -13,16 +13,17 @@ db.defaults({
   QMusic: [],
   radioVeronica: [],
   radio100pNL: [],
-  radio3FM: []
+  radio3FM: [],
+  radio538: []
 }).write();
 
 const getSongDelay = 1000;
 let browser;
-let headless = true;
+let headless = false;
 
 async function openPage({ blockReq, headless }) {
   let options = { headless: headless, ignoreHTTPSErrors: true }
-  if (blockReq) { options.args = ['--no-sandbox', "--disable-accelerated-2d-canvas", "--disable-gpu", '--disable-web-security', '--disable-dev-profile'] }
+  if (blockReq) { options.args = ['--no-sandbox', "--disable-accelerated-2d-canvas", "--disable-gpu", '--disable-web-security', '--disable-dev-profile', '--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'] }
 
   if (!browser) browser = await puppeteer.launch(options);
   let page = await browser.newPage();
@@ -38,25 +39,18 @@ async function openPage({ blockReq, headless }) {
 }
 
 const scrapeLog = ({ station, song }) => {
-  try {
-    if (song.error || !song.name || !song.artist) {
-      console.log(colors.red(station, '\t', JSON.stringify(song.name), '\t', JSON.stringify(song.name), JSON.stringify(song.errorMsg)));
-    } else {
-      // console.log('scraped', station, JSON.stringify(song));
-    }
-  } catch (err) {
-    console.error(colors.red(err));
+  if (song.error || song.name.length < 1 || song.artist.length < 1) {
+    console.log(colors.red(station, '\t', JSON.stringify(song.name), '\t', JSON.stringify(song.name), JSON.stringify(song.errorMsg)));
+  } else {
+    // console.log('scraped', station, JSON.stringify(song));
   }
 }
 
 async function saveSong({ song, station }) {
   try {
     let songsPlayed = await db.get(station).write();
-    // song.artist = (song.artist).replace(/\s/g, '').toLowerCase();
-    // song.name = (song.name).replace(/\s/g, '').toLowerCase();
-
-    if (!song.name) { song.name = '', song.error = true };
-    if (!song.artist) { song.artist = '', song.error = true };
+    if (typeof song.name !== 'string' || song.name.length < 1) { song.name = '', song.error = true };
+    if (typeof song.artist !== 'string' || song.artist.length < 1) { song.artist = '', song.error = true };
 
     let prevSong = songsPlayed[songsPlayed.length - 1] || {};
     if (prevSong.name !== song.name && prevSong.artist !== song.artist) {
@@ -66,8 +60,6 @@ async function saveSong({ song, station }) {
   }
   catch (err) { console.error(err); }
 }
-
-
 
 const scrapeSkyRadio = async () => {
   let station = 'skyRadio'
@@ -292,14 +284,47 @@ const scrapeRadio3FM = async () => {
   getSong();
 };
 
-Promise.all([
-  scrapeRadio10(),
-  scrapeSkyRadio(),
-  scrapeQMusic(),
-  scrapeNPORadio2(),
-  scrapeRadioVeronica(),
-  scrapeRadio100pNL(),
-  scrapeRadio3FM(),
-]).catch(err => console.error(err));
+const scrapeRadio538 = async () => {
+  let station = 'radio538';
+  let page = await openPage({ blockReq: false, headless: headless });
+
+  await page.goto('https://www.radiozenders.fm/radio-1');
+  await page.waitForSelector('body > main > div.container > section > div > div.stations > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > div > div:nth-child(1) > div > a > img');
+  await page.click('body > main > div.container > section > div > div.stations > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > div > div:nth-child(1) > div > a > img');
+
+  async function getSong() {
+    let song = await page.evaluate(() => {
+      let song = {
+        error: true,
+        date: (new Date()).toLocaleString('en-GB'),
+      };
+      try {
+        let x = document.querySelector('#player-station-info').innerHTML.trim().split(' - ');
+        song.name = x[1];
+        song.artist = x[0];
+        song.error = false;
+      } catch (err) { console.error(err); song.errorMsg = err.message }
+      return song
+    });
+
+    scrapeLog({ station: station, song: song });
+    saveSong({ song: song, station: station });
+    await page.waitFor(getSongDelay);
+    getSong();
+  }
+  getSong();
+};
+// Promise.all([
+//   scrapeRadio538(),
+//   scrapeRadio10(),
+//   scrapeSkyRadio(),
+//   scrapeQMusic(),
+//   scrapeNPORadio2(),
+//   scrapeRadioVeronica(),
+//   scrapeRadio100pNL(),
+//   scrapeRadio3FM(),
+// ]).catch(err => console.error(err));
+
+scrapeRadio538();
 
 console.log('started app');
