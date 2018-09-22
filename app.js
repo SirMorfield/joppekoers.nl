@@ -4,11 +4,10 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const favicon = require('serve-favicon')
-
-const indexRouter = require('./routes/index');
+const compression = require('compression')
 
 let app = express();
-
+app.use(compression());
 app.use(favicon(path.join(__dirname, 'public/logo/favicon.ico')))
 
 // view engine setup
@@ -21,7 +20,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+
+app.use('/', require('./routes/language.js'));
+app.use('/en/*', require('./routes/index.js'));
+app.use('/nl/*', require('./routes/index.js'));
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

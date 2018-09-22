@@ -1,15 +1,22 @@
 const express = require('express');
 
-// const fs = require('fs');
+const fs = require('fs');
 const path = require('path');
-// const home = fs.readFileSync(path.join(__dirname, '../public/contents/home.html'));
+const home = fs.readFileSync(path.join(__dirname, '../public/views/partials/home.ejs'));
 
 let router = express.Router();
 
-router.get('/', (req, res, next) => {
+router.get('/:language/:page', (req, res, next) => {
+  let language = req.params.language;
+  let page = req.params.page;
+
+  let options = {
+
+  }
+
   res.render('index.ejs', {
     title: 'joppekoers.nl',
-    mid1: path.join(__dirname, '../public/contents/home.html')
+    mid1: home
   });
 });
 
