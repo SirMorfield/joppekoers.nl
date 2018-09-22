@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -15,30 +16,28 @@
   <div id="container">
     <div id="head">
       <div id="logo-name">
-        <img src="../logo/logo128x128.png" id="logo">
+        <img src="../logo/logoSymbol128.svg" id="logo">
         <div id="name">Joppe Koers.nl</div>
       </div>
     </div>
+
     <div id="menu">
       <div id="home">Home</div>
       <div id="projects">Projects</div>
       <div id="guestProjects">Guest projects</div>
       <div id="wolmolen">Wolmolen</div>
+      <div id="ictInDeWolken">Ict in de wolken</div>
     </div>
+
     <div id="mid1">
-      <%= menu %>
+      <%- mid1 %>
     </div>
+
     <div id="footer">
       <div id="copyright">
         &copy; 2018 Joppe Koers
       </div>
     </div>
-    <div id="menu">b</div>
-    <div id="mid1">
-      <%- partial('./partials/home.html') %>
-    </div>
-    <div id="footer">d</div>
-  </div>
 </body>
 
 </html>
