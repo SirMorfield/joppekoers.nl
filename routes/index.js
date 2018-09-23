@@ -9,15 +9,27 @@ let router = express.Router();
 router.get('/:language/:page', (req, res, next) => {
   let language = req.params.language;
   let page = req.params.page;
+  let options;
 
-  let options = {
+  switch (language) {
+    // case 'nl':
 
+    //   break;
+
+    default:
+      options = {
+        home: 'Home',
+        projects: 'projects',
+        guestProjects: 'guestProjects',
+        wolmolen: 'wolmolen',
+        ictIndeWolken: 'ictInDeWolken',
+        mid1: home
+      }
+      break;
   }
 
-  res.render('index.ejs', {
-    title: 'joppekoers.nl',
-    mid1: home
-  });
+
+  res.render('index.ejs', options);
 });
 
 module.exports = router;
