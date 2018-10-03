@@ -43,13 +43,13 @@ body{
   padding: 15px 10px;
 }
 
-#menu > div{
+#menu > a > div{
   font-size: 18px;
   padding: 10px 15px;
 
 }
 
-#menu > div:hover{
+#menu > a > div:hover{
   background-color: rgba(230, 235, 224, 1);
   border-radius: 3px;
   cursor: pointer;
