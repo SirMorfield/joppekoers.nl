@@ -14,10 +14,10 @@ router.get('/home', (req, res) => {
   let options = {
     title: 'Joppe Koers.nl',
     home: 'Home',
-    projects: 'projects',
-    guestProjects: 'guestProjects',
-    wolmolen: 'wolmolen',
-    ictInDeWolken: 'ictInDeWolken',
+    projects: 'Projects',
+    guestProjects: 'Guests\' projects',
+    wolmolen: 'Wolmolen',
+    ictInDeWolken: 'Ict in de wolken',
     mid1: home
   }
   res.render('index.ejs', options);
@@ -27,10 +27,10 @@ router.get('/projects', (req, res) => {
   let options = {
     title: 'Joppe Koers.nl',
     home: 'Home',
-    projects: 'projects',
-    guestProjects: 'guestProjects',
-    wolmolen: 'wolmolen',
-    ictInDeWolken: 'ictInDeWolken',
+    projects: 'Projects',
+    guestProjects: 'Guests\' projects',
+    wolmolen: 'Wolmolen',
+    ictInDeWolken: 'Ict in de wolken',
     mid1: projects
   }
   res.render('index.ejs', options);
