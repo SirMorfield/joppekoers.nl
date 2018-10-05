@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public/')));
 
 
 app.use('/', require('./routes/index.js'));
-// app.use('/*', require('./routes/index.js'));
+app.use('/deletthis', require('./routes/deletthis.js'));
 
 
 // catch 404 and forward to error handler
