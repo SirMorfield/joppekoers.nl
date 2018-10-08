@@ -2,7 +2,7 @@
   "apps": [
     {
       "name": "joppekoers.nl",
-      "script": "node app.js",
+      "script": "node ./bin/www",
       "watch": true,
       "exec_mode": "fork",
       "max_restarts": 1000
