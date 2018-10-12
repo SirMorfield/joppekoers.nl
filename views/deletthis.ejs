@@ -1,0 +1,39 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>deletthis</title>
+  <link rel="stylesheet" href="../stylesheets/deletthis.css">
+  <script src='/socket.io/socket.io.js'></script>
+  <script>
+    var socket = io();
+    socket.on('test', function () {
+
+    })
+
+
+    const next = () => {
+      socket.emit('reqNewImg');
+      socket.on('resNewImg', function (newImg) {
+        document.getElementById('img').src = newImg;
+      })
+    }
+  </script>
+</head>
+
+<body>
+  <div id="box">
+
+    <div id="imgContainer">
+      <%- img %>
+      <!-- '<img src=\"../deletthis/img/' + img + '\" id="img">' -->
+    </div>
+    <a class="prev" onclick="prev()">&#10094;</a>
+    <a class="next" onclick="next()">&#10095;</a>
+
+  </div>
+</body>
+
+</html>
