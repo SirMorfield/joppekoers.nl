@@ -6,9 +6,9 @@ const http = require('http');
 const https = require('https');
 
 const credentials = {
-  key: fs.readFileSync('/etc/letsencrypt/live/joppekoers.nl/privkey.pem', 'utf8'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/joppekoers.nl/cert.pem', 'utf8'),
-  ca: fs.readFileSync('/etc/letsencrypt/live/joppekoers.nl/chain.pem', 'utf8')
+  key: fs.readFileSync('./privkey.pem', 'utf8'),
+  cert: fs.readFileSync('./cert.pem', 'utf8'),
+  ca: fs.readFileSync('./chain.pem', 'utf8')
 };
 
 const httpServer = http.createServer(app);
