@@ -17,32 +17,44 @@ body{
   display: flex;
   justify-content: center;
   width: 90%;
+  height: 70%;
 }
+
 
 #img{
-
+height: 100%
 }
+
 
 .prev, .next {
   cursor: pointer;
-  position: absolute;
-  top: 50%;
   width: auto;
   padding: 16px;
   color: white;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 40px;
   transition: 0.3s ease;
   border-radius: 0 3px 3px 0;
+  /* position: absolute; */
+  position: sticky;
+
+  top: 50%;
 }
 
 .next {
   /* display: block; */
-  right: 0;
-  /* float: right; */
+  float: right;
+  margin-right: 0px;
   border-radius: 3px 0 0 3px;
 }
 
 .prev:hover, .next:hover {
   background-color: rgba(0,0,0,0.8);
+}
+
+.uploadBox{
+  padding: 20px;
+  position: absolute;
+  top: 70%;
+  background-color: rgb(27, 2, 2);
 }

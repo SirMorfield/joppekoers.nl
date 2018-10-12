@@ -1,3 +1,9 @@
-setInterval(() => {
-  console.log('lol');
-}, 4000)
+const name = (params) => {
+  console.log(2);
+  return;
+  console.log(1);
+
+}
+
+
+name();
