@@ -9,6 +9,8 @@ var port = 8080;
 app.set('port', port);
 
 var server = http.createServer(app);
+var io = require('socket.io')(server);
+app.set('socketio', io);
 
 server.listen(port);
 server.on('error', onError);
@@ -44,4 +46,5 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+  console.log('Listening on ', bind);
 }

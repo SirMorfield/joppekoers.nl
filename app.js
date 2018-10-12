@@ -1,7 +1,7 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const favicon = require('serve-favicon')
 const compression = require('compression')
@@ -20,9 +20,10 @@ app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public/')));
 
-
-app.use('/', require('./routes/index.js'));
-app.use('/deletthis', require('./routes/deletthis.js'));
+const index = require('./routes/index.js');
+app.use('/', index);
+const deletthis = require('./routes/deletthis.js');
+app.use('/deletthis', deletthis);
 
 
 // catch 404 and forward to error handler

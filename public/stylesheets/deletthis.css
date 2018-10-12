@@ -1,0 +1,48 @@
+body{
+  background-color: #02111B
+
+}
+
+#box{
+  margin: 20 auto;
+  width: 70%;
+  height: 100%;
+  background-color: #334E58;
+
+}
+
+#imgContainer{
+  padding: 20px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  width: 90%;
+}
+
+#img{
+
+}
+
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.3s ease;
+  border-radius: 0 3px 3px 0;
+}
+
+.next {
+  /* display: block; */
+  right: 0;
+  /* float: right; */
+  border-radius: 3px 0 0 3px;
+}
+
+.prev:hover, .next:hover {
+  background-color: rgba(0,0,0,0.8);
+}
