@@ -2,7 +2,8 @@
   "name": "joppekoers.nl2",
   "scripts": {
     "start": "node ./bin/www",
-    "debug": "nodemon ./bin/www --config configs/nodemon.json"
+    "debug": "nodemon ./app.js --config configs/nodemon.json",
+    "production": "pm2 start ./configs/app.json"
   },
   "dependencies": {
     "colors": "^1.3.1",
