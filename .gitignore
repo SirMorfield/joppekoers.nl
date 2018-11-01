@@ -9,6 +9,3 @@ node_modules/
 test.js
 stations.json
 package-lock.json
-uploads/
-img/
-uploaded/

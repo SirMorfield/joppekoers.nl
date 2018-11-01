@@ -6,14 +6,32 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>deletthis</title>
   <link rel="stylesheet" href="../deletthis/deletthis.css">
-  <script src='/socket.io/socket.io.js'></script>
+  <script src="/socket.io/socket.io.js"></script>
   <script>
-    var socket = io();
+    let socket = io();
+    let imageList = [];
+    let listPos = 0;
     const next = () => {
-      socket.emit('reqNewImg');
-      socket.on('resNewImg', function (newImg) {
-        document.getElementById('img').src = newImg;
-      })
+      if (listPos <= imageList.length) socket.emit('reqNewImg');
+      else {
+        listPos += 1;
+        document.getElementById('img').src = imageList[listPos];
+      }
+    }
+
+    socket.on('resNewImg', function (newImgSrc) {
+      imageList.push(newImgSrc);
+      listPos += 1;
+      document.getElementById('img').src = newImgSrc;
+      console.log(JSON.stringify(imageList), listPos);
+    });
+
+    const prev = () => {
+      if (listPos - 1 >= 0 && listPos - 1 <= imageList.length) {
+        listPos -= 1;
+        document.getElementById('img').src = imageList[listPos];
+      }
+      console.log(JSON.stringify(imageList), listPos);
     }
   </script>
 </head>
@@ -23,7 +41,7 @@
     <a class="prev" onclick="prev()">&#10094;</a>
     <a class="next" onclick="next()">&#10095;</a>
     <div id="imgContainer">
-      <%- img %>
+      <img src="<%=img%>" alt="404 image not found" id="img">
       <!-- '<img src=\"../deletthis/img/' + img + '\" id="img">' -->
     </div>
 
