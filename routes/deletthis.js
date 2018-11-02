@@ -32,9 +32,9 @@ module.exports = io => {
     });
   };
 
-  setTimeout(() => {
-    renameAllImages();
-  }, 10000);
+  // setTimeout(() => {
+  //   renameAllImages();
+  // }, 10000);
 
   let images;
   getDirSize().then(r => images = r);
