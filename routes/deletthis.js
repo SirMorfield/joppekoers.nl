@@ -1,7 +1,9 @@
 const path = require('path');
 const express = require('express');
 const fs = require('fs')
+const jsonfile = require('jsonfile');
 let router = express.Router();
+
 
 module.exports = io => {
   const getRandomImgName = () => {
@@ -23,7 +25,9 @@ module.exports = io => {
   const renameAllImages = () => {
     getDirSize().then(r => {
       r.forEach(img => {
-        fs.rename(path.join(__dirname, '../public/deletthis/img', img), path.join(__dirname, '../public/deletthis/img', getRandomImgName()), (err) => { if (err) console.error(err) });
+        let oldPath = path.join(__dirname, '../public/deletthis/img', img);
+        let newPath = path.join(__dirname, '../public/deletthis/img', getRandomImgName());
+        fs.rename(oldPath, newPath, (err) => { if (err) console.error(err) });
       });
     });
   };

@@ -5,7 +5,10 @@
       "script": "./app.js",
       "watch": true,
       "exec_mode": "fork",
-      "max_restarts": 1000
+      "max_restarts": 1000,
+      "env": {
+        "NODE_ENV": "production"
+      }
     }
   ]
 }
