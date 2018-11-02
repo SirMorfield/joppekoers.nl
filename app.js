@@ -8,11 +8,29 @@ const compression = require('compression')
 const upload = require('express-fileupload');
 const express = require('express');
 let app = express();
+
+const credentials = {
+  key: fs.readFileSync(path.join(__dirname, './bin/privkey.pem'), 'utf8'),
+  cert: fs.readFileSync(path.join(__dirname, './bin/cert.pem'), 'utf8'),
+  ca: fs.readFileSync(path.join(__dirname, './bin/chain.pem'), 'utf8')
+};
+
+const httpsServer = https.createServer(credentials, app);
 const httpServer = http.createServer(app);
-const io = require('socket.io')(httpServer);
+const io = require('socket.io')(httpsServer);
 
 const index = require('./routes/index.js');
 const deletthis = require('./routes/deletthis.js')(io);
+
+app.enable('trust proxy');
+
+app.use((req, res, next) => {
+  if (req.secure) {
+    next();
+  } else {
+    res.redirect('https://' + req.headers.host + req.url);
+  }
+});
 
 app.use(upload());
 app.use(favicon(path.join(__dirname, 'public/logo/favicon.ico')))
@@ -23,18 +41,6 @@ app.set('view engine', 'ejs');
 // app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public/')));
-
-//----------------------------
-
-// io.on('connection', socket => {
-//   console.log('connection');
-//   socket.on('reqNewImg', () => {
-//     console.log('req');
-//     socket.emit('resNewImg', 'lol');
-//   });
-// });
-
-//----------------------------
 
 app.use('/', index);
 app.use('/deletthis', deletthis);
@@ -51,17 +57,4 @@ app.use((err, req, res, next) => {
 app.use(compression());
 
 httpServer.listen(8080, () => console.log('HTTP Server running on port 8080'));
-
-//www
-// const credentials = {
-//   key: fs.readFileSync(path.join(__dirname, './privkey.pem'), 'utf8'),
-//   cert: fs.readFileSync(path.join(__dirname, './cert.pem'), 'utf8'),
-//   ca: fs.readFileSync(path.join(__dirname, './chain.pem'), 'utf8')
-// };
-
-
-// const httpsServer = https.createServer(credentials, app);
-// httpsServer.listen(8000, () => {
-//   console.log('HTTPS Server running on port 8000');
-// });
-// httpsServer.on('error', onError);
+httpsServer.listen(8443, () => console.log('HTTPS Server running on port 8443'));
