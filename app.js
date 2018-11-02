@@ -1,3 +1,5 @@
+const production = process.env.NODE_ENV == 'production';
+console.log('NODE_ENV:', process.env.NODE_ENV);
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
@@ -8,29 +10,34 @@ const compression = require('compression')
 const upload = require('express-fileupload');
 const express = require('express');
 let app = express();
-
-const credentials = {
-  key: fs.readFileSync(path.join(__dirname, './bin/privkey.pem'), 'utf8'),
-  cert: fs.readFileSync(path.join(__dirname, './bin/cert.pem'), 'utf8'),
-  ca: fs.readFileSync(path.join(__dirname, './bin/chain.pem'), 'utf8')
-};
-
-const httpsServer = https.createServer(credentials, app);
 const httpServer = http.createServer(app);
-const io = require('socket.io')(httpsServer);
+let io;
+let httpsServer;
+let credentials;
+
+if (production) {
+  credentials = {
+    key: fs.readFileSync(path.join(__dirname, './bin/privkey.pem'), 'utf8'),
+    cert: fs.readFileSync(path.join(__dirname, './bin/cert.pem'), 'utf8'),
+    ca: fs.readFileSync(path.join(__dirname, './bin/chain.pem'), 'utf8')
+  };
+  httpsServer = https.createServer(credentials, app);
+  io = require('socket.io')(httpsServer);
+
+  app.enable('trust proxy');
+  app.use((req, res, next) => {
+    if (req.secure) {
+      next();
+    } else {
+      res.redirect('https://' + req.headers.host + req.url);
+    }
+  });
+} else {
+  io = require('socket.io')(httpServer);
+}
 
 const index = require('./routes/index.js');
 const deletthis = require('./routes/deletthis.js')(io);
-
-app.enable('trust proxy');
-
-app.use((req, res, next) => {
-  if (req.secure) {
-    next();
-  } else {
-    res.redirect('https://' + req.headers.host + req.url);
-  }
-});
 
 app.use(upload());
 app.use(favicon(path.join(__dirname, 'public/logo/favicon.ico')))
@@ -57,4 +64,4 @@ app.use((err, req, res, next) => {
 app.use(compression());
 
 httpServer.listen(8080, () => console.log('HTTP Server running on port 8080'));
-httpsServer.listen(8443, () => console.log('HTTPS Server running on port 8443'));
+if (production) httpsServer.listen(8443, () => console.log('HTTPS Server running on port 8443'));
