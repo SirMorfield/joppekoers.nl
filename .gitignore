@@ -6,6 +6,6 @@ build/Release
 node_modules/
 .npm
 .eslintcache
-test.js
 stations.json
 package-lock.json
+*.pem

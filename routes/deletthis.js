@@ -60,12 +60,8 @@ module.exports = io => {
   }
 
   io.on('connection', socket => {
-    console.log('connection');
     socket.on('reqNewImg', () => {
-      console.log('req');
-      let x = getRandomImgPath();
-      console.log('x', x);
-      socket.emit('resNewImg', x);
+      socket.emit('resNewImg', getRandomImgPath());
     });
   });
 
@@ -81,17 +77,18 @@ module.exports = io => {
         return;
       }
 
-      let savePath = path.join(__dirname, '../public/deletthis/uploaded', getRandomImgName())
+      let savePath = path.join(__dirname, '../public/deletthis/uploaded', getRandomImgName());
       req.files.upfile.mv(savePath, function (err) {
         if (err) {
+          console.error(err);
           res.send("Error Occured!");
         } else {
-          res.send('Done uploading file');
+          res.send('Done uploading file, it will appear in the pool after review');
         }
       });
     } catch (err) {
       console.error(err);
-      res.send('error occurred');
+      res.send('Error Occurred');
     }
   });
 
