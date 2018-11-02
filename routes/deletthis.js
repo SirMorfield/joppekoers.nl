@@ -32,9 +32,9 @@ module.exports = io => {
     });
   };
 
-  // setTimeout(() => {
-  //   renameAllImages();
-  // }, 10000);
+  setTimeout(() => {
+    renameAllImages();
+  }, 10000);
 
   let images;
   getDirSize().then(r => images = r);
@@ -69,7 +69,7 @@ module.exports = io => {
     });
   });
 
-  router.post('/upload', function (req, res) {
+  router.post('/upload', (req, res) => {
     try {
       if (!req.files.upfile) {
         res.send("No File selected !");
@@ -82,7 +82,7 @@ module.exports = io => {
       }
 
       let savePath = path.join(__dirname, '../public/deletthis/uploaded', getRandomImgName());
-      req.files.upfile.mv(savePath, function (err) {
+      req.files.upfile.mv(savePath, (err) => {
         if (err) {
           console.error(err);
           res.send("Error Occured!");
