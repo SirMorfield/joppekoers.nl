@@ -23,7 +23,7 @@ let headless = false;
 
 async function openPage({ blockReq, headless }) {
   let options = { headless: headless, ignoreHTTPSErrors: true }
-  if (blockReq) { options.args = ['--no-sandbox', "--disable-accelerated-2d-canvas", "--disable-gpu", '--disable-web-security', '--disable-dev-profile', '--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'] }
+  if (blockReq) { options.args = ['--no-sandbox', '--disable-web-security', '--disable-dev-profile', '--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36', '--window-size=1920,1040'] }
 
   if (!browser) browser = await puppeteer.launch(options);
   let page = await browser.newPage();
@@ -53,7 +53,7 @@ async function saveSong({ song, station }) {
     if (typeof song.artist !== 'string' || song.artist.length < 1) { song.artist = '', song.error = true };
 
     let prevSong = songsPlayed[songsPlayed.length - 1] || {};
-    if (prevSong.name !== song.name && prevSong.artist !== song.artist) {
+    if (prevSong.name !== song.name && prevSong.artist !== song.artist && prevSong.error !== song.error) {
       await db.get(station).push(song).write();
       console.log('saved\t', colors.green(songsPlayed.length), '\t', station, '\t', JSON.stringify(song.name), '\t\t', JSON.stringify(song.artist));
     }
@@ -100,23 +100,27 @@ const scrapeRadio10 = async () => {
   let page = await openPage({ blockReq: false, headless: headless });
   await page.setViewport({ height: 200, width: 200 });
   await page.goto('https://www.radio10.nl/nieuws');
-  await page.waitForSelector('#link');
+  await page.waitFor(4000);
   await page.click('#link');
-  await page.waitForSelector('#player-holder > div:nth-child(1) > div > div > div.sc-kjoXOD.dVuRTQ > div.sc-cHGsZl.hLcQCx > div.sc-cJSrbW.karlJd > div.sc-ksYbfQ.gfQjpR')
-  await page.waitForSelector('#player-holder > div:nth-child(1) > div > div > div.sc-kjoXOD.dVuRTQ > div.sc-cHGsZl.hLcQCx > div.sc-cJSrbW.karlJd > div.sc-hmzhuo.krKkJm')
+  await page.waitFor(4000);
+  console.log('lmao');
   async function getSong() {
     let song = await page.evaluate(() => {
+      let getElementByXpath = (path) => document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+
+      let name = getElementByXpath('//*[@id="player-holder"]/div[1]/div/div/div[2]/div[2]/div[2]/div[1]');
+      let songName = getElementByXpath('//*[@id="player-holder"]/div[1]/div/div/div[2]/div[2]/div[2]/div[2]');
       let song = {
         error: true,
-        date: (new Date()).toLocaleString('en-GB'),
+        date: (new Date()).toLocaleString('en-GB')
       }
       try {
-        song.name = document.querySelector('#player-holder > div:nth-child(1) > div > div > div.sc-kjoXOD.dVuRTQ > div.sc-cHGsZl.hLcQCx > div.sc-cJSrbW.karlJd > div.sc-ksYbfQ.gfQjpR').innerHTML.trim()
-        song.artist = document.querySelector('#player-holder > div:nth-child(1) > div > div > div.sc-kjoXOD.dVuRTQ > div.sc-cHGsZl.hLcQCx > div.sc-cJSrbW.karlJd > div.sc-hmzhuo.krKkJm').innerHTML.trim()
+        song.name = name.innerText.trim();
+        song.artist = songName.innerText.trim();
         song.error = false
 
       } catch (err) { console.error(err); song.errorMsg = err.message }
-      return song
+      return song;
     });
 
     scrapeLog({ song: song, station: station });
@@ -314,17 +318,17 @@ const scrapeRadio538 = async () => {
   }
   getSong();
 };
-// Promise.all([
-//   scrapeRadio538(),
-//   scrapeRadio10(),
-//   scrapeSkyRadio(),
-//   scrapeQMusic(),
-//   scrapeNPORadio2(),
-//   scrapeRadioVeronica(),
-//   scrapeRadio100pNL(),
-//   scrapeRadio3FM(),
-// ]).catch(err => console.error(err));
+Promise.all([
+  scrapeRadio538(),
+  scrapeRadio10(),
+  scrapeSkyRadio(),
+  scrapeQMusic(),
+  scrapeNPORadio2(),
+  scrapeRadioVeronica(),
+  scrapeRadio100pNL(),
+  scrapeRadio3FM(),
+]).catch(err => console.error(err));
 
-scrapeRadio538();
+// scrapeRadio10();
 
 console.log('started app');
