@@ -6,43 +6,39 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>deletthis</title>
   <link rel="stylesheet" href="../deletthis/deletthis.css">
-  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
   <script>
     let socket = io();
     let imageList = [];
     let listPos = 0;
-    const next = () => {
-      if (listPos <= imageList.length) socket.emit('reqNewImg');
-      else {
-        listPos += 1;
-        document.getElementById('img').src = imageList[listPos];
+
+    const loadImg = (direction) => {
+      let result = listPos + direction;
+      if (result < 0) return;
+      listPos = result;
+
+      if (result > imageList.length - 1) {
+        socket.emit('reqNewImg');
+        return;
       }
+      document.getElementById('img').src = imageList[result]
     }
 
     socket.on('resNewImg', function (newImgSrc) {
       imageList.push(newImgSrc);
-      listPos += 1;
       document.getElementById('img').src = newImgSrc;
-      console.log(JSON.stringify(imageList), listPos);
     });
 
-    const prev = () => {
-      if (listPos - 1 >= 0 && listPos - 1 <= imageList.length) {
-        listPos -= 1;
-        document.getElementById('img').src = imageList[listPos];
-      }
-      console.log(JSON.stringify(imageList), listPos);
-    }
+    window.onload = () => socket.emit('reqNewImg');
   </script>
 </head>
 
 <body>
   <div id="box">
-    <a class="prev" onclick="prev()">&#10094;</a>
-    <a class="next" onclick="next()">&#10095;</a>
+    <a class="prev" onclick="loadImg(-1)">&#10094;</a>
+    <a class="next" onclick="loadImg(1)">&#10095;</a>
     <div id="imgContainer">
-      <img src="<%=img%>" alt="404 image not found" id="img">
-      <!-- '<img src=\"../deletthis/img/' + img + '\" id="img">' -->
+      <img src="" alt="404 image not found" id="img">
     </div>
 
     <div id="uploadBox">
