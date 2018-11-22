@@ -1,7 +1,6 @@
 {
-  "name": "joppekoers.nl2",
+  "name": "joppekoers.nl",
   "scripts": {
-    "start": "node ./bin/www",
     "debug": "nodemon ./app.js --config configs/nodemon.json",
     "production": "NODE_ENV=production pm2 start ./configs/app.json"
   },
