@@ -9,3 +9,4 @@ node_modules/
 stations.json
 package-lock.json
 *.pem
+deletthis/img/*.jpg

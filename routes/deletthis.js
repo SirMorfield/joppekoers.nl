@@ -9,7 +9,7 @@ module.exports = io => {
   const getRandomImgName = () => {
     let text = "";
     let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for (let i = 0; i < 32; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+    for (let i = 0; i < 16; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
     return text + '.jpg';
   };
 
@@ -32,9 +32,9 @@ module.exports = io => {
     });
   };
 
-  // setTimeout(() => {
-  //   renameAllImages();
-  // }, 10000);
+  setTimeout(() => {
+    renameAllImages();
+  }, 1000);
 
   let images;
   getDirSize().then(r => images = r);
