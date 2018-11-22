@@ -12,7 +12,8 @@
     "test.js",
     "stations.json",
     "package-lock.json",
-    "uploads/"
+    "uploads/",
+    "deletthis/img/"
   ],
   "verbose": false,
   "execMap": {
