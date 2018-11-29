@@ -19,20 +19,26 @@ body{
 }
 
 #container {
-  max-width: 1600px;
-  width: 85%;
+  /* max-width: 1600px; */
+  width: 1300px;
   display: grid;
   margin: 0 auto;
-  grid-template-columns: 1fr 5fr;
+  grid-template-columns: 1fr 6fr;
   grid-template-rows: 1fr 8fr 1fr;
   grid-template-areas: "head head"
                        "menu mid1"
                        "footer footer";
 }
+@media only screen and (min-width: 1300) {
+  #container{
+    width: 100%;
+    background-color: red;
+  }
+}
 
 #head {
-  background-color: rgba(244, 241, 187, 1);
   grid-area: head;
+  background-color: rgba(244, 241, 187, 1);
   height: 80px;
   padding: 3px;
 }
@@ -46,15 +52,18 @@ body{
 #menu > a > div{
   font-size: 18px;
   padding: 10px 15px;
-
-}
-
-#menu > a > div:hover{
-  background-color: rgba(230, 235, 224, 1);
-  border-radius: 3px;
   cursor: pointer;
 }
 
+#menu > a > div:hoverc{
+  background-color: rgba(230, 235, 224, 1);
+  border-radius: 3px;
+}
+
+.test:focus{
+  background-color: rgba(230, 235, 224, 1);
+  border-radius: 3px;
+}
 #mid1 {
   background-color: rgba(155, 193, 188, 1);
   grid-area: mid1;
@@ -92,6 +101,7 @@ body{
   font-size: 35px;
   /* text-overflow: clip; */
 }
+
 a {
   all: unset;
 }

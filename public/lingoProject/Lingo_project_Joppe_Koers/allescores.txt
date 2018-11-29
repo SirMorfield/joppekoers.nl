@@ -1,0 +1,37 @@
+<br>Gebrekken:
+<br> -algortime op het langste en kortste woord te vinden kan beter
+<br> -niet 100% fool proof
+
+<br> Package includes:
+<br> -100% willekeurig woord uit nederlanse woordenlijst, gebasseerd op het ingevoerde level
+<br> -telling van aantal pogingen
+<br> -tijdsduur van het spel in hh:mm:ss
+<br> -verschillende levels
+<br> -score gebasseerd op tijdsduur, pogingen, level
+<br> -fool<br> -proof bijvoorbeeld: wanneer de gebruiker bij het level een woord opschrijft crahed het programma niet, maar het vraagt nogmaals om een level
+<br> -bestand met scores en naam van de spelers samen met overige informatie
+<br> -mogelijkheid om je score op te slaan met je naam
+<br> -het bestand met de woorden kan makkelijk worden vervangen door een ander.
+
+<br>Gebrekken:
+<br> -algortime op het langste en kortste woord te vinden kan beter
+<br> -niet 100% fool proof
+
+----
+
+
+<br>Errors/ bugs gevonden in Python:
+<br> -geen mogelijkheid om variabels in een str() te zetten bij het command input(), dit kan wel in een print()command
+<br> -gebrekkige support voor umlaut en dergelijke vreemde letters
+<br> -het woord "random" als variable interfeert met de functie random.randint()
+<br> -len() telt vanaf 1 en arr[] telt vanaf 0, dit zorgt voor verwarring
+<br> -een txt file kan maar een keer gelezen worden na het openen, daarna moet het weer gesloten worden en weer geopend om verder te lezen
+<br> -end='' werkt soms wel, soms niet
+<br> -de ""#comment" mannier om comments toe te voegen heeft een andere kleur dan de " """comment""" "
+<br> -geen nogelijkheid om één dubbele aanhalingsteken tusen aanhalingstekens te zetten
+<br> -sommige functies in pycharm worden niet met een andere kleur weergegven:
+                                                    <br> -random.randint()
+                                                    <br> -.append()
+                                                    <br> -end=""
+                                                    <br> -.isalpha()
+['135.2384090423584', 'Joppe', '0.07727909088134766', '14', '8']
