@@ -1,9 +1,51 @@
-<h2>
-  <%= message %>
-</h2>
-<h2>
-  <%= error.status %>
-</h2>
-<pre><%= error.stack %></pre>
-<pre><%=error%></pre>
-<h1>Woopsiefloepsie something went wrong!</h1>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>
+    <%= error.status %>
+  </title>
+  <link rel="stylesheet" href="../stylesheets/normalize.css">
+
+  <style>
+    body {
+      padding: 30px;
+    }
+
+    .button {
+      padding: 20px;
+      background-color: rgba(237, 106, 90, 1);
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .button:hover {
+      background-color: rgba(230, 235, 224, 1);
+    }
+
+    a {
+      all: unset;
+    }
+  </style>
+</head>
+
+<body>
+  <h3>
+    <%= error.status %>
+    -
+    <%= message %>
+    Something went wrong!
+  </h3>
+  <h2>Something went wrong!</h2>
+
+  <a href="/home">
+    <div class="button">
+      Go back to home
+    </div>
+  </a>
+
+</body>
+
+</html>

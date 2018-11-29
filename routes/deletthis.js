@@ -32,14 +32,21 @@ module.exports = io => {
     });
   };
 
-  setTimeout(() => {
-    renameAllImages();
-  }, 1000);
+  // setTimeout(() => {
+  //   renameAllImages();
+  // }, 1000);
 
   let images;
   getDirSize().then(r => images = r);
 
-  const getRandomImgPath = () => '../deletthis/img/' + images[Math.floor(Math.random() * images.length)];
+  const getImagePath = (image) => {
+    let path = '../deletthis/img/';
+    if (image) {
+      return path.join(path, image);
+    } else {
+      return path.join(path, images[Math.floor(Math.random() * images.length)])
+    }
+  };
 
   const isImage = (mimetype) => {
     let isImage = false;
@@ -65,7 +72,7 @@ module.exports = io => {
 
   io.on('connection', socket => {
     socket.on('reqNewImg', () => {
-      socket.emit('resNewImg', getRandomImgPath());
+      socket.emit('resNewImg', getImagePath());
     });
   });
 
@@ -97,7 +104,18 @@ module.exports = io => {
   });
 
   router.get('/', (req, res) => {
-    res.render('deletthis.ejs', { img: getRandomImgPath() });
+    res.render('deletthis.ejs', { img: getImagePath() });
+  });
+
+
+  router.get('/', (req, res) => {
+    let image = req.params.image;
+    if (images.indexOf(image)) {
+      res.render('deletthis.ejs', { img: getImagePath(image) });
+    } else {
+      res.render('deletthis.ejs', { img: getImagePath() });
+    }
+
   });
 
   return router;
