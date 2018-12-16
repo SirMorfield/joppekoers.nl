@@ -25,7 +25,7 @@
   }
 
   article {
-    margin: 10px;
+    margin: 8px;
     width: 280px;
     height: 280px;
     position: relative;
@@ -34,7 +34,7 @@
 
   p,
   h2 {
-    margin: 20px
+    margin: 12px
   }
 
   .front,
@@ -76,20 +76,27 @@
     title: 'My first Game',
     created: 'date unknown',
     format: 'jpg',
-    desc_short: 'The first game I ever made, without a libary',
+    desc_short: 'The first game I ever made, without a library',
     path: '/softwareProjects/firstGame/index.html'
   }, {
     id: 'lingoProject',
     title: 'My first Python project',
     created: 'date unknown',
     format: 'jpg',
-    desc_short: 'The first Python program I ever wrote. Click to download the zip.',
-    path: '/softwareProjects/lingoProject/lingoProject.zip'
+    desc_short: 'The first Python program I ever wrote.',
+    path: 'https://github.com/SirMorfield/joppekoers.nl/tree/master/public/softwareProjects/lingoProject'
+  }, {
+    id: 'radio',
+    title: 'Radio analysis',
+    created: 'date unknown',
+    format: 'png',
+    desc_short: 'Often I hear the same song trice on the radio in a single day. To test which radio station is the least original I wrote a script that monitors what song is played on the 12 most popular radio stations in the Netherlands.',
+    path: 'https://github.com/SirMorfield/joppekoers.nl/tree/master/server/radio'
   }];
 
 
 
-  const head = document.getElementsByTagName("main")[0];
+  const head = document.getElementById("board");
   function load(i) {
     let path = items[i].path;
     let id = items[i].id;
@@ -99,7 +106,7 @@
     let im = document.createElement("img");
 
     im.setAttribute("src", "../softwareProjects/projectLogo/" + id + "." + format);
-    im.setAttribute("alt", desc);
+    im.setAttribute("alt", '404 image not found');
     im.setAttribute("class", "front");
 
     let h2 = document.createElement("h2");
