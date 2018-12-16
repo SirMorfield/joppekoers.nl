@@ -1,16 +1,11 @@
-.paddle{
+/* .paddle{
   background-color:rgba(230, 235, 224, 1);
   background-color: rgba(93, 87, 107, 1);
   background-color: rgba(155, 193, 188, 1);
   background-color: rgba(244, 241, 187, 1);
   background-color: rgba(237, 106, 90, 1);
-}
-/*
-$color1: rgba(30, 56, 136, 1);
-$color2: rgba(71, 168, 189, 1);
-$color3: rgba(245, 230, 99, 1);
-$color4: rgba(255, 173, 105, 1);
-$color5: rgba(156, 56, 72, 1); */
+} */
+
 @import url('https://fonts.googleapis.com/css?family=Kadwa');
 
 body{
@@ -21,6 +16,7 @@ body{
 #container {
   /* max-width: 1600px; */
   width: 1300px;
+  max-width: 100%;
   display: grid;
   margin: 0 auto;
   grid-template-columns: 1fr 6fr;
@@ -28,12 +24,6 @@ body{
   grid-template-areas: "head head"
                        "menu mid1"
                        "footer footer";
-}
-@media only screen and (min-width: 1300) {
-  #container{
-    width: 100%;
-    background-color: red;
-  }
 }
 
 #head {
@@ -55,15 +45,11 @@ body{
   cursor: pointer;
 }
 
-#menu > a > div:hoverc{
+#menu > a > div:hover{
   background-color: rgba(230, 235, 224, 1);
   border-radius: 3px;
 }
 
-.test:focus{
-  background-color: rgba(230, 235, 224, 1);
-  border-radius: 3px;
-}
 #mid1 {
   background-color: rgba(155, 193, 188, 1);
   grid-area: mid1;
@@ -74,8 +60,9 @@ body{
   grid-area: footer;
   background-color: rgba(244, 241, 187, 1);
 }
+
 #copyright{
-/* vertical-align: middle  */
+  padding: 20px;
   text-align: center;
 }
 

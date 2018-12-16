@@ -1,38 +1,35 @@
-const fs = require('fs');
-const path = require('path');
-const home = fs.readFileSync(path.join(__dirname, '../views/partials/home.ejs'));
-const projects = fs.readFileSync(path.join(__dirname, '../views/partials/projects.ejs'));
-const ictInDeWolken = fs.readFileSync(path.join(__dirname, '../views/partials/ictInDeWolken.ejs'));
 const express = require('express');
 let router = express.Router();
+
+let options = {
+  title: '',
+  home: 'Home',
+  projects: 'Projects',
+  guestProjects: 'Guests\' projects',
+  wolmolen: 'Wolmolen',
+  softwareProjects: 'software projects',
+  partials: ['partials/home.ejs']
+};
+
+if (process.env.NODE_ENV == 'production') options.title = 'Joppe Koers.nl'
+else options.title = 'localhost'
 
 router.get('/', (req, res, next) => {
   res.redirect('/home');
 });
 
-let options = {
-  title: 'Joppe Koers.nl',
-  home: 'Home',
-  projects: 'Projects',
-  guestProjects: 'Guests\' projects',
-  wolmolen: 'Wolmolen',
-  ictInDeWolken: 'Ict in de wolken',
-  mid1: ''
-};
-
 router.get('/home', (req, res) => {
-  options.mid1 = home
+  options.partials = ['partials/home.ejs']
   res.render('index.ejs', options);
 });
-
 
 router.get('/projects', (req, res) => {
-  options.mid1 = projects
+  options.partials = ['partials/projects.ejs']
   res.render('index.ejs', options);
 });
 
-router.get('/ictInDeWolken', (req, res) => {
-  options.mid1 = ictInDeWolken
+router.get('/softwareProjects', (req, res) => {
+  options.partials = ['partials/softwareProjects.ejs']
   res.render('index.ejs', options);
 });
 
