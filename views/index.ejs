@@ -4,13 +4,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
+  <meta name="google" content="notranslate">
+  <meta name="description" content="This is a webside made, hosted and maintened by Joppe Koers">
+  <meta name="keywords" content="Joppe Koers, Portfolio, softwareProjects">
+  <meta name="author" content="Joppe Koers">
   <title>
     <%= title %>
   </title>
   <link rel="stylesheet" href="../stylesheets/normalize.css">
   <link rel="stylesheet" href="../stylesheets/style.css">
   <script src="../javascripts/main.js"></script>
-  <script src="../javascripts/socket.io.min.js"></script>
+  <!-- <script src="../javascripts/socket.io.min.js"></script> -->
 </head>
 
 <body>
@@ -47,16 +51,18 @@
         </div>
       </a>
 
-      <a href="/ictInDeWolken">
-        <div id="ictInDeWolken">
-          <%= ictInDeWolken %>
+      <a href="/softwareProjects">
+        <div id="softwareProjects">
+          <%= softwareProjects %>
         </div>
       </a>
     </div>
 
     <div id="mid1">
-      <%- mid1 %>
-      <!-- <% include  %> -->
+      <% partials.forEach(function(partial){ %>
+      <%- include(partial)-%>
+      <% }); %>
+
     </div>
 
     <div id="footer">

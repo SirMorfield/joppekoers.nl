@@ -1,9 +1,7 @@
 const path = require('path');
 const express = require('express');
 const fs = require('fs')
-const jsonfile = require('jsonfile');
 let router = express.Router();
-
 
 module.exports = io => {
   const getRandomImgName = () => {

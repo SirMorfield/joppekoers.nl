@@ -1,0 +1,134 @@
+<style>
+  .front,
+  .back {
+    background-color: rgb(244, 241, 187);
+    color: black;
+    transition: .7s
+  }
+
+  img,
+  .front,
+  .back,
+  main,
+  header {
+    height: 100%;
+    width: 100%
+  }
+
+  main {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: stretch;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center
+  }
+
+  article {
+    margin: 10px;
+    width: 280px;
+    height: 280px;
+    position: relative;
+    perspective: 30rem;
+  }
+
+  p,
+  h2 {
+    margin: 20px
+  }
+
+  .front,
+  .back {
+    position: absolute;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
+  }
+
+  .back {
+    transform: rotateY(180deg);
+    cursor: pointer
+  }
+
+  article:hover .front {
+    transform: rotateY(180deg)
+  }
+
+  article:hover .back {
+    transform: rotateY(360deg)
+  }
+
+  .seo-text {
+    display: none;
+  }
+</style>
+<main id="board"></main>
+
+<script>
+  //I did not write this, it is copied form Pim Meulensteen
+  let width = document.getElementById("board").offsetWidth;
+  let height = document.getElementById("board").offsetHeight;
+  let q = Math.min(4, Math.floor((width - 17) / 300)) * (Math.ceil((height - 80) / 300))
+
+  //TODO: choose best image format
+  const items = [{
+    id: 'firstGame',
+    title: 'My first Game',
+    created: 'date unknown',
+    format: 'jpg',
+    desc_short: 'The first game I ever made, without a libary',
+    path: '/softwareProjects/firstGame/index.html'
+  }, {
+    id: 'lingoProject',
+    title: 'My first Python project',
+    created: 'date unknown',
+    format: 'jpg',
+    desc_short: 'The first Python program I ever wrote. Click to download the zip.',
+    path: '/softwareProjects/lingoProject/lingoProject.zip'
+  }];
+
+
+
+  const head = document.getElementsByTagName("main")[0];
+  function load(i) {
+    let path = items[i].path;
+    let id = items[i].id;
+    let format = items[i].format;
+    let desc = items[i].desc_short;
+    let article = document.createElement("article");
+    let im = document.createElement("img");
+
+    im.setAttribute("src", "../softwareProjects/projectLogo/" + id + "." + format);
+    im.setAttribute("alt", desc);
+    im.setAttribute("class", "front");
+
+    let h2 = document.createElement("h2");
+    h2.innerHTML = items[i].title;
+
+    let d = document.createElement("p");
+    d.innerHTML = items[i].created;
+    d.setAttribute("class", "date");
+
+    let p = document.createElement("p");
+    p.innerHTML = desc;
+    let b = document.createElement("section");
+    b.setAttribute("class", "back");
+
+    //apply
+    b.appendChild(h2);
+    b.appendChild(d);
+    b.appendChild(p);
+
+    //link to program
+    b.setAttribute("onclick", 'location.href=\'' + path + '\'');
+
+    article.appendChild(im);
+    article.appendChild(b);
+
+    head.appendChild(article);
+  }
+
+  items.forEach((item, index) => {
+    load(index)
+  });
+</script>

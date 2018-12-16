@@ -4,16 +4,13 @@
     "*.log",
     "npm-debug.log*",
     ".DS_Store*",
-    ".node-persist/",
-    "build/Release",
     "node_modules/",
     ".npm",
     ".eslintcache",
-    "test.js",
     "stations.json",
     "package-lock.json",
     "uploads/",
-    "deletthis/img/"
+    "deletthis/img/*"
   ],
   "verbose": false,
   "execMap": {
