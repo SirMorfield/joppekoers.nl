@@ -7,7 +7,7 @@ let options = {
   projects: 'Projects',
   guestProjects: 'Guests\' projects',
   wolmolen: 'Wolmolen',
-  softwareProjects: 'software projects',
+  softwareProjects: 'Software projects',
   partials: ['partials/home.ejs']
 };
 
