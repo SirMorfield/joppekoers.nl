@@ -1,4 +1,4 @@
-/* .paddle{
+/* .niks{
   background-color:rgba(230, 235, 224, 1);
   background-color: rgba(93, 87, 107, 1);
   background-color: rgba(155, 193, 188, 1);
@@ -85,10 +85,26 @@ body{
   display: flex;
   justify-content: center;
   flex-direction: column;
-  font-size: 35px;
+  font-size: 32px;
   /* text-overflow: clip; */
 }
 
-a {
-  all: unset;
+a:link {
+  text-decoration: none;
+  color: black;
+}
+
+a:visited {
+  text-decoration: none;
+  color:black;
+}
+
+#internalLink{
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+#internalLink:hover{
+  background-color: rgba(230, 235, 224, 1);
+  color: red;
 }

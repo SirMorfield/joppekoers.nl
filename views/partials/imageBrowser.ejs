@@ -1,0 +1,164 @@
+<style>
+  #popup {
+    display: none;
+    position: fixed;
+    padding: 25px 0;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  #popupContent {
+    position: relative;
+    background-color: rgba(155, 193, 188, 1);
+    margin: auto;
+    height: 95%;
+    width: 95%;
+    max-width: 95%;
+    max-height: 95%;
+  }
+
+  #closePopup {
+    color: rgba(237, 106, 90, 1);
+    float: right;
+    font-size: 28px;
+    padding: 11px 20px;
+    font-weight: bold;
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+  }
+
+  #closePopup:hover,
+  #closePopup:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  #popupImg {
+    position: relative;
+    max-width: 84%;
+    max-height: 95%;
+  }
+
+  #popupMediaAndNav {
+    z-index: 1;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  #prev,
+  #next {
+    position: relative;
+    cursor: pointer;
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    transition: 0.3s ease;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 0 3px 3px 0;
+    animation: wiggle .1s alternate;
+
+  }
+
+  @keyframes wiggle {
+    0% {
+      transform: rotate(-2deg);
+    }
+
+    100% {
+      transform: rotate(2deg);
+    }
+  }
+
+  #next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+  }
+
+  /* On hover, add a black background color with a little bit see-through */
+
+  #prev:hover,
+  #next:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+</style>
+
+<button id="btn" onclick="openPopup([{path:'../images/testImages/1.jpg', type:'img'}])">Open popup</button>
+
+<div id="popup">
+  <div id="popupContent">
+    <div id="popupMediaAndNav">
+      <a id="prev" onclick="otherSlide(-1)">&#10094;</a>
+      <img src="" id="popupImg">
+      <a id="next" onclick="otherSlide(1)">&#10095;</a>
+    </div>
+    <span id="closePopup" onclick="closePopupFunc()">&times;</span>
+  </div>
+</div>
+
+<script>
+  let popup = document.getElementById('popup');
+  let closePopup = document.getElementById('closePopup');
+  let popupImg = document.getElementById('popupImg');
+  let popupMedia = [];
+  let currentMediaPos = 0;
+  const closePopupFunc = () => {
+    popup.style.display = "none";
+  }
+
+  const openPopupFunc = (params) => {
+    popup.style.display = "block";
+  }
+
+  const openPopup = (media) => {
+    popupMedia = media;
+    if (media[currentMediaPos].type !== 'img') return;
+
+    popupImg.src = media[currentMediaPos].path;
+    openPopupFunc();
+  }
+
+  const wiggle = (which) => {
+    let button = document.getElementById(which);
+    button.style.animation = "none";
+    button.style.animation = "wiggle .1s infinite alternate";
+    setTimeout(() => {
+      button.style.animation = "none";
+    }, 320);
+  }
+
+  const otherSlide = (direction) => {
+    let newPos = currentMediaPos + direction;
+
+    if (newPos > popupMedia.length - 1) {
+      wiggle('next');
+      return;
+    }
+    if (newPos < 0) {
+      wiggle('prev');
+      return;
+    }
+    if (popupMedia[newPos].type !== 'img') {
+      return;
+    }
+    currentMediaPos += direction;
+    popupImg.src = popupMedia[currentMediaPos].path;
+  }
+
+  window.onclick = function (event) {
+    if (event.target == popup) {
+      closePopupFunc();
+    }
+  }
+</script>

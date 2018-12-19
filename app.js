@@ -64,5 +64,5 @@ app.use((err, req, res, next) => {
 
 app.use(compression());
 
-httpServer.listen(8080, () => console.log('HTTP Server running on port 8080'));
-if (production) httpsServer.listen(8443, () => console.log('HTTPS Server running on port 8443'));
+httpServer.listen(8080, () => { });
+if (production) httpsServer.listen(8443, () => { });
