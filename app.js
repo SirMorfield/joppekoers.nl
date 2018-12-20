@@ -39,6 +39,7 @@ if (production) {
 const index = require('./routes/index.js');
 const deletthis = require('./routes/deletthis.js')(io);
 
+app.use(compression({ level: 9 }));
 app.use(upload());
 app.use(favicon(path.join(__dirname, 'public/logo/favicon.ico')))
 
@@ -62,7 +63,6 @@ app.use((err, req, res, next) => {
   res.render('./error.ejs');
 });
 
-app.use(compression());
 
 httpServer.listen(8080, () => { });
 if (production) httpsServer.listen(8443, () => { });

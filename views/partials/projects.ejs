@@ -1,0 +1,25 @@
+<%- include('../partials/imageBrowser.ejs')-%>
+<style>
+  #main {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: stretch;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center
+  }
+
+  .image {
+    width: 280px;
+    cursor: pointer;
+    margin: 15px;
+  }
+
+  .image:hover {
+    outline: 5px solid rgba(244, 241, 187, 1);
+  }
+</style>
+<div id="main">
+  <img src="images/knife/0.jpg" srcset="" class="image" onclick="openPopup({path:'images/knife/', imgs:['0.jpg','1.jpg']})">
+  <img src="images/table/0.jpg" srcset="" class="image" onclick="openPopup({path:'images/table/', imgs:['0.jpg','2.jpg','1.jpg','3.jpg','4.jpg  ']})">
+</div>

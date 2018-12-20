@@ -40,6 +40,7 @@
   }
 
   #popupImg {
+    cursor: pointer;
     position: relative;
     max-width: 84%;
     max-height: 95%;
@@ -94,13 +95,11 @@
   }
 </style>
 
-<button id="btn" onclick="openPopup([{path:'../images/testImages/1.jpg', type:'img'}])">Open popup</button>
-
 <div id="popup">
   <div id="popupContent">
     <div id="popupMediaAndNav">
       <a id="prev" onclick="otherSlide(-1)">&#10094;</a>
-      <img src="" id="popupImg">
+      <img src="" id="popupImg" onclick="viewRaw()">
       <a id="next" onclick="otherSlide(1)">&#10095;</a>
     </div>
     <span id="closePopup" onclick="closePopupFunc()">&times;</span>
@@ -122,10 +121,13 @@
   }
 
   const openPopup = (media) => {
-    popupMedia = media;
-    if (media[currentMediaPos].type !== 'img') return;
-
-    popupImg.src = media[currentMediaPos].path;
+    //{path:'images/knife', imgs:['0.jpg','1.jpg']}
+    popupMedia = [];
+    currentMediaPos = 0;
+    media.imgs.forEach(img => {
+      popupMedia.push(media.path + img);
+    });
+    popupImg.src = popupMedia[currentMediaPos];
     openPopupFunc();
   }
 
@@ -149,11 +151,13 @@
       wiggle('prev');
       return;
     }
-    if (popupMedia[newPos].type !== 'img') {
-      return;
-    }
+
     currentMediaPos += direction;
-    popupImg.src = popupMedia[currentMediaPos].path;
+    popupImg.src = popupMedia[currentMediaPos];
+  }
+
+  const viewRaw = () => {
+    location.href = popupImg.src;
   }
 
   window.onclick = function (event) {
