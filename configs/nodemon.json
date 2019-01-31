@@ -7,10 +7,10 @@
     "node_modules/",
     ".npm",
     ".eslintcache",
-    "stations.json",
+    "users.json",
     "package-lock.json",
-    "uploads/",
-    "deletthis/img/*"
+    "sessions/",
+    "temp.*"
   ],
   "verbose": false,
   "execMap": {
@@ -22,5 +22,8 @@
   "env": {
     "NODE_ENV": "development"
   },
-  "ext": "js"
+  "ext": "js",
+  "events": {
+    "start": "clear"
+  }
 }

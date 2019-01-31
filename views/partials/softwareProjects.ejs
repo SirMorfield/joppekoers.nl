@@ -72,6 +72,13 @@
 
   //TODO: choose best image format
   const items = [{
+    id: 'radio',
+    title: 'Radio analysis',
+    created: 'date unknown',
+    format: 'png',
+    desc_short: 'Often I hear the same song trice on the radio in a single day. To test which radio station is the least original I wrote a script that monitors what song is played on the 12 most popular radio stations in the Netherlands.',
+    path: 'https://github.com/SirMorfield/joppekoers.nl/tree/master/server/radio'
+  }, {
     id: 'firstGame',
     title: 'My first Game',
     created: 'date unknown',
@@ -85,16 +92,7 @@
     format: 'jpg',
     desc_short: 'The first Python program I ever wrote.',
     path: 'https://github.com/SirMorfield/joppekoers.nl/tree/master/public/softwareProjects/lingoProject'
-  }, {
-    id: 'radio',
-    title: 'Radio analysis',
-    created: 'date unknown',
-    format: 'png',
-    desc_short: 'Often I hear the same song trice on the radio in a single day. To test which radio station is the least original I wrote a script that monitors what song is played on the 12 most popular radio stations in the Netherlands.',
-    path: 'https://github.com/SirMorfield/joppekoers.nl/tree/master/server/radio'
   }];
-
-
 
   const head = document.getElementById("board");
   function load(i) {
