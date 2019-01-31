@@ -99,16 +99,20 @@ a:visited {
   color:black;
 }
 
-#internalLink{
+#internalLink {
   cursor: pointer;
   text-decoration: underline;
 }
 
-#internalLink:hover{
+#internalLink:hover {
   background-color: rgba(244, 241, 187, 1);
   color: red;
 }
 
-button{
+button {
   cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
