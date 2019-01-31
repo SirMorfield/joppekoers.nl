@@ -17,9 +17,9 @@ let credentials;
 
 if (production) {
   credentials = {
-    key: fs.readFileSync(path.join(__dirname, '/etc/letsenvrypt/live/joppekoers.nl/privkey.pem'), 'utf8'),
-    cert: fs.readFileSync(path.join(__dirname, '/etc/letsenvrypt/live/joppekoers.nl/cert.pem'), 'utf8'),
-    ca: fs.readFileSync(path.join(__dirname, '/etc/letsenvrypt/live/joppekoers.nl/chain.pem'), 'utf8')
+    key: fs.readFileSync('/etc/letsenvrypt/live/joppekoers.nl/privkey.pem', 'utf8'),
+    cert: fs.readFileSync('/etc/letsenvrypt/live/joppekoers.nl/cert.pem', 'utf8'),
+    ca: fs.readFileSync('/etc/letsenvrypt/live/joppekoers.nl/chain.pem', 'utf8')
   };
   httpsServer = https.createServer(credentials, app);
   io = require('socket.io')(httpsServer);
