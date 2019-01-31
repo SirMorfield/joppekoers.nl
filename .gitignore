@@ -16,4 +16,4 @@ public/deletthis/img/*
 public/deletthis/uploaded/*
 
 #https certificates
-bin/*
+*.pem
