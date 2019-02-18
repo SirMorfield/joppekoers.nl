@@ -1,8 +1,12 @@
-console.log(
-  String(
-    JSON.stringify(
+const fs = require('fs');
+const path = require('path');
+const { promisify } = require("util");
+const readdir = promisify(fs.readdir);
+const stat = promisify(fs.stat)
 
-      { a: 1 }
-    )
-  )
-);
+const filesDir = path.join(__dirname, '/public/drop/files/');
+
+(async () => {
+  let x = await stat(path.join(filesDir, 'newest.txt'));
+  console.log(x.birthtimeMs);
+})()

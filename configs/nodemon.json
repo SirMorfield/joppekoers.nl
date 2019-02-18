@@ -10,7 +10,8 @@
     "users.json",
     "package-lock.json",
     "sessions/",
-    "temp.*"
+    "temp.*",
+    "test.*"
   ],
   "verbose": false,
   "execMap": {

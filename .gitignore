@@ -1,4 +1,4 @@
-#framework, editor, macos, cache ed.
+# framework, editor, macos, cache ed.
 *.log
 npm-debug.log*
 .DS_Store*
@@ -9,11 +9,15 @@ package-lock.json
 *.pem
 .vscode/
 temp.*
+test.*
 .node-persist/
 
 #images form deletthis.com
 public/deletthis/img/*
-public/deletthis/uploaded/*
+publ ic/deletthis/uploaded/*
 
 #https certificates
 *.pem
+
+# drops
+public/drop/files/*

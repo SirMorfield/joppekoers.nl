@@ -7,7 +7,7 @@ const path = require('path');
 const createError = require('http-errors');
 const favicon = require('serve-favicon')
 const compression = require('compression')
-const upload = require('express-fileupload');
+const fileUpload = require('express-fileupload');
 const express = require('express');
 let app = express();
 const httpServer = http.createServer(app);
@@ -36,11 +36,12 @@ if (production) {
   io = require('socket.io')(httpServer);
 }
 
-const index = require('./routes/index.js');
-const deletthis = require('./routes/deletthis.js')(io);
 
 app.use(compression({ level: 9 }));
-app.use(upload());
+app.use(fileUpload({
+  limits: { fileSize: 3.221e9 }, // 3 GiB
+  abortOnLimit: true
+}));
 app.use(favicon(path.join(__dirname, 'public/logo/favicon.ico')))
 
 app.set('views', path.join(__dirname, 'views/'));
@@ -50,8 +51,14 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public/')));
 
+const index = require('./routes/index.js');
 app.use('/', index);
+
+const deletthis = require('./routes/deletthis.js')(io);
 app.use('/deletthis', deletthis);
+
+const drop = require('./routes/drop.js');
+app.use('/drop', drop)
 
 app.use((req, res, next) => next(createError(404)));
 
