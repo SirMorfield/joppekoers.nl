@@ -38,11 +38,11 @@ module.exports = io => {
   getDirSize().then(r => images = r);
 
   const getImagePath = (image) => {
-    let path = '../deletthis/img/';
+    let path1 = '../deletthis/img/';
     if (image) {
-      return path.join(path, image);
+      return path.join(path1, image);
     } else {
-      return path.join(path, images[Math.floor(Math.random() * images.length)])
+      return path.join(path1, images[Math.floor(Math.random() * images.length)])
     }
   };
 
@@ -90,7 +90,7 @@ module.exports = io => {
       req.files.upfile.mv(savePath, (err) => {
         if (err) {
           console.error(err);
-          res.send("Error Occured!");
+          res.send("Error Occured! 1");
         } else {
           res.send('Done uploading file, it will appear in the pool after review');
         }
