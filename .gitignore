@@ -14,7 +14,7 @@ test.*
 
 #images form deletthis.com
 public/deletthis/img/*
-publ ic/deletthis/uploaded/*
+public/deletthis/uploaded/*
 
 #https certificates
 *.pem
