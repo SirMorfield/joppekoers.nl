@@ -13,41 +13,82 @@ body{
   background-color: rgba(93, 87, 107, 1);
 }
 
-#container {
-  /* max-width: 1600px; */
-  width: 1300px;
-  max-width: 100%;
-  display: grid;
-  margin: 0 auto;
-  grid-template-columns: 1fr 6fr;
-  grid-template-rows: 1fr 8fr 1fr;
-  grid-template-areas: "head head"
-                       "menu mid1"
-                       "footer footer";
+@media (orientation:landscape) {
+  #container {
+    /* max-width: 1600px; */
+    width: 1300px;
+    max-width: 100%;
+    display: grid;
+    margin: 0 auto;
+    grid-template-columns: 1fr 6fr;
+    grid-template-rows: 0.5fr 9fr 0.5fr;
+    grid-template-areas: "head head"
+                         "menu mid1"
+                         "footer footer";
+  }
+
+  #menu {
+    grid-area: menu;
+    background-color: rgba(237, 106, 90, 1);
+    padding: 15px 10px;
+  }
+
+  #menu > a > div{
+    font-size: 18px;
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+
+  #menu > a > div:hover{
+    background-color: rgba(244, 241, 187, 1);
+    border-radius: 3px;
+  }
+}
+
+@media (orientation:portrait) {
+  #container {
+    /* max-width: 1600px; */
+    width: 1300px;
+    max-width: 100%;
+    display: grid;
+    margin: 0 auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 8fr 0.5fr;
+    grid-template-areas: "head"
+                         "menu"
+                         "mid1"
+                         "footer";
+  }
+
+  #menu {
+    grid-area: menu;
+    background-color: rgba(237, 106, 90, 1);
+    padding: 15px 10px;
+  }
+
+  #menu > a > div{
+    font-size: 18px;
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+
+  #menu > a > div:hover{
+    background-color: rgba(244, 241, 187, 1);
+    border-radius: 3px;
+  }
 }
 
 #head {
   grid-area: head;
   background-color: rgba(244, 241, 187, 1);
-  height: 80px;
-  padding: 3px;
+  height: 70px;
 }
 
-#menu {
-  grid-area: menu;
-  background-color: rgba(237, 106, 90, 1);
-  padding: 15px 10px;
-}
-
-#menu > a > div{
-  font-size: 18px;
-  padding: 10px 15px;
-  cursor: pointer;
-}
-
-#menu > a > div:hover{
-  background-color: rgba(244, 241, 187, 1);
-  border-radius: 3px;
+#head > #topLogo{
+  height: 95%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
 }
 
 #mid1 {
@@ -64,29 +105,6 @@ body{
 #copyright{
   padding: 20px;
   text-align: center;
-}
-
-#logo-name {
-  width: 30%;
-  height: 100%;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-}
-
-#logo{
-  padding: 5px;
-  height: 90%;
-  vertical-align: middle;
-}
-
-#name{
-  margin-left: 10px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  font-size: 32px;
-  /* text-overflow: clip; */
 }
 
 a:link {
