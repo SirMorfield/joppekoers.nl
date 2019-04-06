@@ -1,12 +1,13 @@
-const fs = require('fs');
-const path = require('path');
-const { promisify } = require("util");
-const readdir = promisify(fs.readdir);
-const stat = promisify(fs.stat)
+const request = require('request')
+const Authorization = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik4tbEMwbi05REFMcXdodUhZbkhRNjNHZUNYYyIsImtpZCI6Ik4tbEMwbi05REFMcXdodUhZbkhRNjNHZUNYYyJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuY29yZS53aW5kb3dzLm5ldC8iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC8zNTRmZGVlOS1mZmRkLTQyODctODRmOC04ZDEwOGM3Y2E1ZmIvIiwiaWF0IjoxNTU0NDg5NTYxLCJuYmYiOjE1NTQ0ODk1NjEsImV4cCI6MTU1NDQ5MzQ2MSwiYWNyIjoiMSIsImFpbyI6IkFTUUEyLzhMQUFBQW5GYXpwMTh1ZmF1OXR6N3JoQy9ManRBdW51Y2RZOVFENWczYTl6cDJHNG89IiwiYW1yIjpbInB3ZCJdLCJhcHBpZCI6IjdmNTlhNzczLTJlYWYtNDI5Yy1hMDU5LTUwZmM1YmIyOGI0NCIsImFwcGlkYWNyIjoiMiIsImZhbWlseV9uYW1lIjoiS29lcnMiLCJnaXZlbl9uYW1lIjoiSm9wcGUiLCJncm91cHMiOlsiNjk1ODQxNmMtMDM0YS00ZTdlLWJhNTYtODVkM2RkYzNjMWJiIiwiNWY2YzY5NTctNzM4Zi00Yzc0LWIwMTQtZjMxOTE3NmMxYjFiIiwiYWI0MmU4NTMtOTdjZi00NzYwLTg3YTgtNDUxZjQ3MTcxNTZiIiwiYWMyZGE4OGQtZjM3Mi00MDkxLWFmNTktYjRmZWE5YzAyNjZmIiwiMDhjMGYyMjgtOTE3Yi00NTQwLThmNjItMmQ4ZDNkMTFmZjkyIiwiMzY2NzEwMDctMDY5Yy00YTAzLWI2NjctMzdjZmJjYjcxNjQ1IiwiNGRlYWJmZTItNjQzMC00YjMzLTliZTktMmFlYjdjNjc5OGFjIiwiNDk2Y2RmZTYtZmI5Ny00ZDlkLWEyODUtZDUxNDdiZDQ4MjExIl0sImlwYWRkciI6IjgwLjYxLjE5Mi4zOSIsIm5hbWUiOiJKb3BwZSBLb2VycyIsIm9pZCI6IjhjNjViZjI1LTVmYWQtNDM4MS1iYTZhLTM5Yjk0YWQ4ZDc0ZSIsIm9ucHJlbV9zaWQiOiJTLTEtNS0yMS0xNjM3NDExNjY4LTMzNDYxMTI0NDYtMTkwMzIyODE0Mi0zNjYxOCIsInB1aWQiOiIxMDAzMDAwMDlGNjcwM0ZEIiwic2NwIjoidXNlcl9pbXBlcnNvbmF0aW9uIiwic3ViIjoiSXd0c3VsOE9NZ1ZsWlNFaE4tZV9EMXM0NnM3d2s2dnVwenVVVTZpeXRiSSIsInRpZCI6IjM1NGZkZWU5LWZmZGQtNDI4Ny04NGY4LThkMTA4YzdjYTVmYiIsInVuaXF1ZV9uYW1lIjoiMTg2NDFAZWR1Lm1zYS5ubCIsInVwbiI6IjE4NjQxQGVkdS5tc2EubmwiLCJ1dGkiOiJPNldYODY1S01FdTBBeVd2eFBVdEFBIiwidmVyIjoiMS4wIn0.E_0-tYOVHhTnbkxjx41W45Hn98b14iiR7k_EerwmPz__L-lFH8qaMGKFZIXjut6r-1dtrjsxvzRQjoKwtbtWX5e1wLMOKkkyPDEcuT7hHDTZP0VHbMeUss_Xv1fKUFB9UvTLMTPzDT9xFQaoQYDTgylyPQlcDw_LYsM_HZb7mcbKW0PsU61SkR3vk_VDlayS_Nw1d_5O-IuKe2NhGYGxDnczr7kWMm2JL21UQkMjgfySXOA2eXwBHgT7sYkIiqDcDGUF6QwxwkkQMn4C1Y2UsYMgj8--2Q3mboJEEb4iCIpp8t-qqk02Ny0kIIETcTB-p1w7WKFOOjSao5MqTtsE0Q'
 
-const filesDir = path.join(__dirname, '/public/drop/files/');
-
-(async () => {
-  let x = await stat(path.join(filesDir, 'newest.txt'));
-  console.log(x.birthtimeMs);
-})()
+const options = {
+  headers: { Authorization },
+  url: 'https://management.azure.com/subscriptions/cf6603a3-3168-4ed3-806c-901467dc683a/resourceGroups/cloud-shell-storage-westeurope/providers/Microsoft.Compute/virtualMachines/server4/start?api-version=2018-06-01',
+  method: 'POST'
+}
+request(options, (error, response, body) => {
+  console.error('error:', error)
+  console.log('statusCode:', response.statusCode)
+  console.log('body:', body)
+})

@@ -1,0 +1,29 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Minecraft server</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+  <script>
+    let socket = io()
+    function startServer() {
+      socket.emit('startServer')
+    }
+  </script>
+</head>
+
+<body>
+  <p>
+    request server for 1 hour
+  </p>
+  <p>
+    After this the server will turn off, if you have not requested another session before that
+  </p>
+  <p>
+    <button onclick="startServer()">Go</button>
+  </p>
+</body>
+
+</html>

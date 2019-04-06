@@ -14,10 +14,12 @@ test.*
 
 #images form deletthis.com
 public/deletthis/img/*
-public/deletthis/uploaded/*
+public/deletthis/uploaded/*.*
 
 #https certificates
 *.pem
 
 # drops
-public/drop/files/*
+public/drop/files/*.*
+
+public/db.zip
