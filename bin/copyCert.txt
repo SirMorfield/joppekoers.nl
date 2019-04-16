@@ -1,1 +1,0 @@
-sudo cp /etc/letsencrypt/live/joppekoers.nl/* ~/joppekoers.nl/bin/
