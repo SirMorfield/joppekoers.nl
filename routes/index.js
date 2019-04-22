@@ -1,5 +1,5 @@
 let options = {
-  title: '',
+  title: process.env.NODE_ENV == 'production' ? 'Joppe Koers.nl' : 'localhost',
   home: 'Home',
   contact: 'Contact',
   projects: 'Projects',
@@ -8,9 +8,6 @@ let options = {
   softwareProjects: 'Software projects',
   partials: ['partials/home.ejs']
 }
-
-if (process.env.NODE_ENV == 'production') options.title = 'Joppe Koers.nl'
-else options.title = 'localhost'
 
 exports.home = (req, res) => {
   options.partials = ['partials/home.ejs']
@@ -21,12 +18,6 @@ exports.contact = (req, res) => {
   let contactOptions = options
   contactOptions.partials = ['partials/contact.ejs']
   res.render('index.ejs', contactOptions)
-}
-
-exports.projects = (req, res) => {
-  let projectsOptions = options
-  projectsOptions.partials = ['partials/projects.ejs']
-  res.render('index.ejs', projectsOptions)
 }
 
 exports.guestProjects = (req, res) => {

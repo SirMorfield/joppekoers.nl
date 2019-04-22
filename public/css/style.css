@@ -10,52 +10,57 @@
 
 body{
   font-family: 'Kadwa', serif;
-  background-color: rgba(93, 87, 107, 1);
+  background-color: rgba(244, 241, 187, 1);
 }
 
 @media (orientation:landscape) {
   #container {
-    /* max-width: 1600px; */
-    width: 1300px;
-    max-width: 100%;
+    width: 1700px;
+    max-width: 99%;
     display: grid;
     margin: 0 auto;
     grid-template-columns: 1fr 6fr;
-    grid-template-rows: 0.5fr 9fr 0.5fr;
-    grid-template-areas: "head head"
-                         "menu mid1"
+    grid-template-rows: 9fr 0.5fr;
+    grid-gap: 8px;
+    padding: 8px;
+    grid-template-areas: "menu mid1"
                          "footer footer";
+
   }
 
   #menu {
     grid-area: menu;
     background-color: rgba(237, 106, 90, 1);
-    padding: 15px 10px;
+    padding: 15px;
+    }
+
+
+  #menu > a {
+    text-decoration: none;
   }
 
   #menu > a > div{
     font-size: 18px;
-    padding: 10px 15px;
+    padding: 10px 10px;
     cursor: pointer;
+    background-color: rgba(237, 106, 90, 1);
   }
 
   #menu > a > div:hover{
     background-color: rgba(244, 241, 187, 1);
-    border-radius: 3px;
   }
 }
 
 @media (orientation:portrait) {
   #container {
     /* max-width: 1600px; */
-    width: 1300px;
-    max-width: 100%;
+    width: 100%;
     display: grid;
     margin: 0 auto;
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto 8fr 0.5fr;
-    grid-template-areas: "head"
-                         "menu"
+    grid-template-rows: auto 8fr 0.5fr;
+    grid-gap: 8px;
+    grid-template-areas: "menu"
                          "mid1"
                          "footer";
   }
@@ -64,6 +69,10 @@ body{
     grid-area: menu;
     background-color: rgba(237, 106, 90, 1);
     padding: 15px 10px;
+  }
+
+  #menu > a {
+    text-decoration: none;
   }
 
   #menu > a > div{
@@ -80,12 +89,12 @@ body{
 
 #head {
   grid-area: head;
-  background-color: rgba(244, 241, 187, 1);
-  height: 70px;
+  height: 80px;
 }
 
-#head > #topLogo{
-  height: 95%;
+#topLogo{
+  max-width: 85%;
+  padding: 0 0 10px;
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -94,12 +103,12 @@ body{
 #mid1 {
   background-color: rgba(155, 193, 188, 1);
   grid-area: mid1;
-  padding: 10px;
+  padding: 20px;
+
 }
 
 #footer {
   grid-area: footer;
-  background-color: rgba(244, 241, 187, 1);
 }
 
 #copyright{
@@ -108,7 +117,6 @@ body{
 }
 
 a:link {
-  text-decoration: none;
   color: black;
 }
 
@@ -117,14 +125,12 @@ a:visited {
   color:black;
 }
 
-#internalLink {
+.internalLink {
   cursor: pointer;
-  text-decoration: underline;
 }
 
-#internalLink:hover {
-  background-color: rgba(244, 241, 187, 1);
-  color: red;
+.internalLink:hover {
+  color: rgba(244, 241, 187, 1);
 }
 
 button {
