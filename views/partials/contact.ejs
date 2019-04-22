@@ -1,15 +1,84 @@
-<p>
-  <b>Name </b> Joppe Koers
-</p>
+<style>
+  .copyButton {
+    background-color: Transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+  }
 
-<p>
-  <b>Email </b>joppe.koers@gmail.com
-</p>
+  .copyButton:hover {
+    background-color: rgba(244, 241, 187, 1);
+    border-radius: 3px;
+  }
 
-<p>
-  <b>Phone </b>0610154519
-</p>
+  .item {
+    padding-right: 1em;
+  }
+</style>
 
-<p>
-  <b>KvK </b>
-</p>
+<script>
+  function copy(str) {
+    const el = document.createElement('textarea');
+    el.value = str;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+  }
+</script>
+
+<h1>Contact</h1>
+<table>
+  <tr>
+    <td class="item" class="ite"><b>Name</b></td>
+    <td class="item" id="name">Joppe Koers</td>
+    <td class="item">
+      <button class="copyButton" onclick="copy('Joppe Koers')">
+        <img src="/routes/contact/copy.svg">
+        copy
+      </button>
+    </td>
+  </tr>
+  <tr>
+    <td class="item"><b>Email</b></td>
+    <td class="item" id="email">joppe@joppekoers.nl</td>
+    <td class="item">
+      <button class="copyButton" onclick="copy('joppe@joppekoers.nl')">
+        <img src="/routes/contact/copy.svg">
+        copy
+      </button>
+    </td>
+  </tr>
+  <tr>
+    <td class="item"><b>Phone</b></td>
+    <td class="item" id="phone">+31 0610154519</td>
+    <td class="item">
+      <button class="copyButton" onclick="copy('+31 0610154519')">
+        <img src="/routes/contact/copy.svg">
+        copy
+      </button>
+    </td>
+  </tr>
+  <tr>
+    <td class="item"><b>KvK</b></td>
+    <td class="item" id="kvk">73820857</td>
+    <td class="item">
+      <button class="copyButton" onclick="copy('73820857')">
+        <img src="/routes/contact/copy.svg">
+        copy
+      </button>
+    </td>
+  </tr>
+  <tr>
+    <td class="item"><b>Location</b> </td>
+    <td class="item" id="location">Amsterdam</td>
+    <td class="item">
+      <button class="copyButton" onclick="copy('Amsterdam')">
+        <img src="/routes/contact/copy.svg">
+        copy
+      </button>
+    </td>
+  </tr>
+</table>
