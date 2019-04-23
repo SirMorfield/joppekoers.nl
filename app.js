@@ -19,9 +19,9 @@ let credentials
 
 if (production) {
   credentials = {
-    key: fs.readFileSync(path.join(__dirname, './bin/privkey.pem'), 'utf8'),
-    cert: fs.readFileSync(path.join(__dirname, './bin/cert.pem'), 'utf8'),
-    ca: fs.readFileSync(path.join(__dirname, './bin/chain.pem'), 'utf8')
+    key: fs.readFileSync('/etc/letsencrypt/live/joppekoers.nl/privkey.pem', 'utf8'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/joppekoers.nl/cert.pem', 'utf8'),
+    ca: fs.readFileSync('/etc/letsencrypt/live/joppekoers.nl/chain.pem', 'utf8')
   }
   httpsServer = https.createServer(credentials, app)
   io = require('socket.io')(httpsServer)
@@ -72,5 +72,5 @@ app.use((err, req, res, next) => {
 })
 
 
-httpServer.listen(8080, () => { })
-if (production) httpsServer.listen(8443, () => { })
+httpServer.listen(80, () => { })
+if (production) httpsServer.listen(443, () => { })
