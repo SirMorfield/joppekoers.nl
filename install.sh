@@ -6,11 +6,7 @@ sudo bash nodesource_setup.sh
 sudo apt install nodejs -y
 rm nodesource_setup.sh
 
-mkdir ~/.npm-global
-npm config set prefix '~/.npm-global'
-export PATH=~/.npm-global/bin:$PATH
-source ~/.profile
-npm install -g pm2
+sudo npm install -g pm2
 
 sudo setcap cap_net_bind_service=+ep /usr/bin/node
 
