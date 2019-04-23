@@ -1,5 +1,12 @@
 const mime = require('mime-types')
-const disk = require('diskusage')
+
+const exec = require('util').promisify(require('child_process').exec);
+
+async function diskUsagePercent() {
+  const { stdout, stderr } = await exec("df / | awk '{ print $5 }' | tail -n 1");
+  if (stderr) return 100
+  return parseInt(stdout.replace(/^\D+/g, ''))
+}
 
 function randomStr(length, { numbers = true, capitalLetters = true, lowerCaseLetters = true }) {
   let text = ''
@@ -29,8 +36,8 @@ module.exports = (path, asyncFs) => {
     const fileName = name + '.' + mime.extension(file.mimetype)
     const savePath = path.join(filesDir, fileName)
 
-    const free = await disk.check('/')
-    if (free < 4.295e10) { // 40 GiB
+    const free = await diskUsagePercent()
+    if (free < 80) {
       const files = await asyncFs.readdir(filesDir)
 
       let oldest = { file: 'testfile123', birthtimeMs: Infinity }
