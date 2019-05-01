@@ -16,6 +16,7 @@
     "https": "^1.0.0",
     "image-size": "^0.7.1",
     "jsonfile": "^4.0.0",
+    "lowdb": "^1.0.0",
     "mime-types": "^2.1.22",
     "nodemon": "~1.18.3",
     "puppeteer": "^1.15.0",
