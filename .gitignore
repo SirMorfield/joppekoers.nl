@@ -22,4 +22,5 @@ public/deletthis/uploaded/*.*
 # drops
 public/drop/files/*.*
 
-public/db.zip
+# radio
+stations.json
