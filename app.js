@@ -8,7 +8,8 @@ const { promisify } = require("util")
 const asyncFs = {
   readdir: promisify(fs.readdir),
   unlink: promisify(fs.unlink),
-  stat: promisify(fs.stat)
+  stat: promisify(fs.stat),
+  readFile: promisify(fs.readFile)
 }
 const express = require('express')
 let app = express()
@@ -72,5 +73,5 @@ app.use((err, req, res, next) => {
 })
 
 
-httpServer.listen(80, () => { })
+httpServer.listen(production ? 80 : 8080, () => { })
 if (production) httpsServer.listen(443, () => { })
