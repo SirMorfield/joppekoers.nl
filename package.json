@@ -2,7 +2,8 @@
   "name": "joppekoers.nl",
   "scripts": {
     "debug": "nodemon ./app.js --config configs/nodemon.json",
-    "production": "NODE_ENV=production pm2 start ./configs/app.json"
+    "production": "NODE_ENV=production pm2 start ./configs/app.json",
+    "radio": "NODE_ENV=production pm2 start ./configs/radio.json"
   },
   "dependencies": {
     "compression": "^1.7.3",
