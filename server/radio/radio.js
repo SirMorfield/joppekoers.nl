@@ -48,14 +48,14 @@
 
     socket.emit('getInfo', { id: station.id })
 
-    socket.on('streaminfo', (data) => {
+    socket.on('streaminfo', async (data) => {
       const info = data.split(' - ')
       const song = {
         name: info[1],
         artist: info[0],
         dates: [Date.now()],
       }
-      saveSong(song, station.name)
+      await saveSong(song, station.name)
     })
   })
   console.log('started app')

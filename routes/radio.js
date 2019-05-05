@@ -16,14 +16,16 @@ module.exports = (asyncFs, path) => {
           originalSongs.push(song)
           return
         }
-        let index = originalSongs.findIndex((originalSong) => originalSong.name == song.name)
-        if (index > -1) originalSongs[index].dates.push(song.date);
 
+        let index = originalSongs.findIndex((originalSong) => originalSong.name == song.name)
+        if (index !== -1) originalSongs[index].dates.push(song.date)
         else originalSongs.push(song)
       })
+
       originalSongs.sort((a, b) => b.length - a.length) // sorting from most played to least played song
+
       let newStation = {
-        score: originalSongs.length == 0 || numAllSongs == 0 ? '0.0' : (originalSongs.length / numAllSongs * 100).toFixed(1) || 0,
+        score: originalSongs.length == 0 || numAllSongs == 0 ? '0.0' : (originalSongs.length / numAllSongs * 100).toFixed(1),
         numOriginalSongs: originalSongs.length,
         numAllSongs: numAllSongs,
         latestSong: latestSong,
