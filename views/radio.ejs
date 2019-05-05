@@ -5,80 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>radio</title>
+  <link rel="stylesheet" href="/routes/radio/style.css">
 </head>
 
 <body>
-  <style>
-    body {
-      background-color: rgb(54, 57, 63);
-      color: white;
-    }
-
-    pre {
-      outline: 1px solid #ccc;
-      padding: 5px;
-      margin: 5px;
-    }
-
-    .string {
-      color: green;
-    }
-
-    .number {
-      color: darkorange;
-    }
-
-    .boolean {
-      color: blue;
-    }
-
-    .null {
-      color: magenta;
-    }
-
-    .key {
-      color: red;
-    }
-
-    #stationsBox {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    .station {
-      width: 500px;
-      height: 400px;
-      padding: 7px;
-      margin: 7px;
-      background: rgb(33, 35, 38);
-    }
-
-    .stationSongs {
-      position: relative;
-      display: flex;
-      padding: 5px;
-      margin: 0 auto;
-      width: 97%;
-      max-width: 97%;
-      height: 72%;
-      background: rgb(47, 49, 54);
-      color: white;
-      border: none;
-    }
-
-    .stationName {
-      font-size: 20px;
-    }
-
-    .stationText {
-      padding: 5px;
-    }
-
-    ::-webkit-scrollbar {
-      display: none;
-    }
-  </style>
-
   <div id="stationsBox">
     <% const stations = JSON.parse(stationsStr) %>
     <% for(const station in stations) { %>
@@ -103,33 +33,6 @@
     </div>
     <%}%>
   </div>
-
-  <!-- <script>
-    function syntaxHighlight(json) {
-      json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-        var cls = 'number';
-        if (/^"/.test(match)) {
-          if (/:$/.test(match)) {
-            cls = 'key';
-          } else {
-            cls = 'string';
-          }
-        } else if (/true|false/.test(match)) {
-          cls = 'boolean';
-        } else if (/null/.test(match)) {
-          cls = 'null';
-        }
-        return '<span class="' + cls + '">' + match + '</span>';
-      });
-    }
-
-    Array.from(document.getElementsByClassName('station')).forEach((station, index) => {
-      document.getElementsByClassName('station')[index] = syntaxHighlight(document.getElementsByClassName('station')[index])
-    })
-  </script> -->
-
-
 </body>
 
 </html>
