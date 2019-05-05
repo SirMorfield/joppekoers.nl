@@ -5,7 +5,6 @@
     "production": "NODE_ENV=production pm2 start ./configs/app.json"
   },
   "dependencies": {
-    "axios": "^0.18.0",
     "compression": "^1.7.3",
     "cookie-parser": "~1.4.3",
     "ejs": "~2.5.7",
@@ -19,9 +18,9 @@
     "lowdb": "^1.0.0",
     "mime-types": "^2.1.22",
     "nodemon": "~1.18.3",
-    "puppeteer": "^1.15.0",
     "request": "^2.88.0",
     "serve-favicon": "^2.5.0",
-    "socket.io": "~2.1.0"
+    "socket.io": "~2.1.0",
+    "socket.io-client": "^2.2.0",
   }
 }
