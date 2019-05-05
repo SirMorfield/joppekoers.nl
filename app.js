@@ -2,7 +2,6 @@ const production = process.env.NODE_ENV == 'production'
 console.log('NODE_ENV:', process.env.NODE_ENV)
 const fs = require('fs')
 const http = require('http')
-const https = require('https')
 const path = require('path')
 const { promisify } = require("util")
 const asyncFs = {
@@ -14,30 +13,8 @@ const asyncFs = {
 const express = require('express')
 let app = express()
 const httpServer = http.createServer(app)
-let io
-let httpsServer
-let credentials
-
-if (production) {
-  credentials = {
-    key: fs.readFileSync('/etc/letsencrypt/live/joppekoers.nl/privkey.pem', 'utf8'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/joppekoers.nl/cert.pem', 'utf8'),
-    ca: fs.readFileSync('/etc/letsencrypt/live/joppekoers.nl/chain.pem', 'utf8')
-  }
-  httpsServer = https.createServer(credentials, app)
-  io = require('socket.io')(httpsServer)
-
-  app.enable('trust proxy')
-  app.use((req, res, next) => {
-    if (req.secure) {
-      next()
-    } else {
-      res.redirect('https://' + req.headers.host + req.url)
-    }
-  })
-} else {
-  io = require('socket.io')(httpServer)
-}
+let io = require('socket.io')(httpServer)
+app.enable('trust proxy')
 
 const compression = require('compression')
 app.use(compression({ level: 9 }))
@@ -72,6 +49,4 @@ app.use((err, req, res, next) => {
   res.render('./error.ejs')
 })
 
-
-httpServer.listen(production ? 80 : 8080, () => { })
-if (production) httpsServer.listen(443, () => { })
+httpServer.listen(8080, () => { })
