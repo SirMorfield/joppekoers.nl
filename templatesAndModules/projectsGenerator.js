@@ -34,10 +34,10 @@ const fs = require('fs');
 
 
   let img
-  if (individual) img = `<img src="${thumbnail}" onclick='openPopup(${filesFormated})' class="flexbinImage" id="${project}">`
+  if (individual) img = `<img src="${thumbnail}" onclick='openPopup(${filesFormated})' class="lazyload flexbinImage" id="${project}">`
   else {
     const root = path.join('/img/projectImg/', project) + '/'
-    img = `<img src="${thumbnail}" onclick='openPopup(${filesFormated},"${root}")' class="flexbinImage" id="${project}">`
+    img = `<img src="${thumbnail}" onclick='openPopup(${filesFormated},"${root}")' class="lazyload flexbinImage" id="${project}">`
   }
   console.log(img)
 
@@ -51,3 +51,6 @@ const fs = require('fs');
 //                  or show with rootLocation:
 //                  <img src="/img/projectImg/wolmolen/0.jpg" onclick='openPopup([{src:"0.jpg",w:2756,h:1550}],"/img/projectImg/wolmolen/")' class="flexbinImage" id="wolmolen">
 //                  default FALSE
+
+// create small preview image with
+// convert -resize 'X300' 0.jpg 0h300px.jpg
