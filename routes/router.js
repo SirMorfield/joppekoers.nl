@@ -58,22 +58,8 @@ module.exports = (io, path, asyncFs) => {
     deletthis.upload(req, res)
   })
 
-  const mcServer = require("./mcServer.js")
-  router.get("/mcServer", limiter(100, 5), (req, res) => {
-    mcServer.mcServer(req, res)
-  })
-
-  const radio = require("./radio.js")(asyncFs, path)
-  router.get("/radio", limiter(50, 5), radio.root)
-
   io.on("connection", socket => {
-    socket.on("reqNewImg", () => {
-      deletthis.reqNewImg(socket)
-    })
-
-    socket.on("startServer", () => {
-      mcServer.startServer(socket)
-    })
+    socket.on("reqNewImg", () => deletthis.reqNewImg(socket))
   })
 
   return router

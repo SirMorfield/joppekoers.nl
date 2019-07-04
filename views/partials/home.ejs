@@ -7,7 +7,6 @@
 
   .flexbinImage:hover {
     outline: 3px solid rgba(244, 241, 187, 1);
-
   }
 </style>
 
@@ -19,8 +18,9 @@
   Do you want me to make you something? See the projects below to see what I'm capable of. You can contact me form the <a href="/contact" class="internalLink">/contact</a> page. <br>
 </p>
 
-
+<script src="/js/openPopup.js"></script>
 <div class="flexbin">
+  <img src="/img/projectImg/wolmolen/0.jpg" onclick='openPopup([{src:"0.jpg",w:2756,h:1550},{src:"10.jpg",w:2756,h:1550},{src:"11.jpg",w:2756,h:1550},{src:"13.jpg",w:2756,h:1550},{src:"15.jpg",w:2756,h:1550},{src:"16.jpg",w:2756,h:1550},{src:"19.jpg",w:2756,h:1550},{src:"2.jpg",w:2756,h:1550},{src:"21.jpg",w:2756,h:1550},{src:"3.jpg",w:2756,h:1550},{src:"4.jpg",w:2756,h:1550},{src:"5.jpg",w:2756,h:1550},{src:"6.jpg",w:2756,h:1550},{src:"7.jpg",w:2756,h:1550}],"/img/projectImg/wolmolen/")' class="flexbinImage" id="wolmolen">
   <img src="/img/projectImg/hammer/0.jpg" onclick='openPopup([{src:"/img/projectImg/hammer/0.jpg",w:1200,h:1600},{src:"/img/projectImg/hammer/1.jpg",w:1200,h:1600},{src:"/img/projectImg/hammer/2.jpg",w:1200,h:1600}])' class="flexbinImage" id="hammer">
   <img src="/img/projectImg/jacobsLadder/0.jpg" onclick='openPopup([{src:"/img/projectImg/jacobsLadder/0.jpg",w:1200,h:1600},{src:"/img/projectImg/jacobsLadder/1.jpg",w:1200,h:1600},{src:"/img/projectImg/jacobsLadder/2.jpg",w:1200,h:1600}])' class="flexbinImage" id="jacobsLadder">
   <img src="/img/projectImg/knife/0.jpg" onclick='openPopup([{src:"/img/projectImg/knife/0.jpg",w:3264,h:2448},{src:"/img/projectImg/knife/1.jpg",w:3264,h:2448}])' class="flexbinImage" id="knife">
@@ -66,18 +66,3 @@
   </div>
 
 </div>
-<script>
-  function openPopup(files) {
-    let options = {
-      loop: false,
-      bgOpacity: 0.98,
-      showAnimationDuration: 0,
-      hideAnimationDuration: 0,
-      pinchToClose: false,
-    };
-
-    let pswpElement = document.querySelectorAll('.pswp')[0];
-    let gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, files, options);
-    gallery.init();
-  }
-</script>
