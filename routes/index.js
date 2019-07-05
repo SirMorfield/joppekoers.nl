@@ -2,10 +2,8 @@ let options = {
   title: process.env.NODE_ENV == 'production' ? 'Joppe Koers.nl' : 'localhost',
   home: 'Home',
   contact: 'Contact',
-  projects: 'Projects',
   guestProjects: 'Guests\' projects',
   wolmolen: 'Wolmolen',
-  softwareProjects: 'Software projects',
   partials: ['partials/home.ejs']
 }
 
@@ -30,9 +28,4 @@ exports.wolmolen = (req, res) => {
   let wolmolenOptions = options
   wolmolenOptions.partials = ['partials/wolmolen.ejs']
   res.render('index.ejs', wolmolenOptions)
-}
-
-exports.softwareProjects = (req, res) => {
-  options.partials = ['partials/softwareProjects.ejs']
-  res.render('index.ejs', options)
 }

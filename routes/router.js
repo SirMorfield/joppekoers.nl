@@ -2,7 +2,7 @@ const rateLimit = require("express-rate-limit")
 const production = process.env.NODE_ENV == "production"
 
 function limiter(max, mins) {
-  // max requests per miniut for this route
+  // max requests per minute for this route
   let limiter = rateLimit({
     windowMs: mins * 60 * 1000,
     max,
@@ -20,43 +20,19 @@ module.exports = (io, path, asyncFs) => {
   })
 
   const index = require("./index.js")
-  router.get("/home", (req, res) => {
-    index.home(req, res)
-  })
-  router.get("/contact", (req, res) => {
-    index.contact(req, res)
-  })
-  router.get("/projects", (req, res) => {
-    index.projects(req, res)
-  })
-  router.get("/guestProjects", (req, res) => {
-    index.guestProjects(req, res)
-  })
-  router.get("/wolmolen", (req, res) => {
-    index.wolmolen(req, res)
-  })
-  router.get("/softwareProjects", (req, res) => {
-    index.softwareProjects(req, res)
-  })
+  router.get("/home", index.home)
+  router.get("/contact", index.contact)
+  router.get("/guestProjects", index.guestProjects)
+  router.get("/wolmolen", index.wolmolen)
 
   const drop = require("./drop.js")(path, asyncFs)
-  router.get("/drop", (req, res) => {
-    drop.drop(req, res)
-  })
-  router.post("/drop/upload", async (req, res) => {
-    drop.upload(req, res)
-  })
-  router.get("/drop/:name", (req, res) => {
-    drop.get(req, res)
-  })
+  router.get("/drop", drop.drop)
+  router.post("/drop/upload", drop.upload)
+  router.get("/drop/:name", drop.get)
 
   const deletthis = require("./deletthis.js")(asyncFs, path)
-  router.get("/deletthis", (req, res) => {
-    deletthis.deletthis(req, res)
-  })
-  router.post("/deletthis/upload", (req, res) => {
-    deletthis.upload(req, res)
-  })
+  router.get("/deletthis", deletthis.deletthis)
+  router.post("/deletthis/upload", deletthis.upload)
 
   io.on("connection", socket => {
     socket.on("reqNewImg", () => deletthis.reqNewImg(socket))
