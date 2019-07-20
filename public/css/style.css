@@ -25,7 +25,7 @@ body {
     padding: 8px;
     grid-template-areas: "menu mid1"
                          "footer footer";
-
+    min-height: 100vh;
   }
 
   #menu {
@@ -34,21 +34,13 @@ body {
     padding: 15px;
     }
 
-
-  #menu > a {
-    text-decoration: none;
-  }
-
-  #menu > a > div{
+  .menuItem {
     font-size: 18px;
     padding: 10px 10px;
     cursor: pointer;
     background-color: rgba(237, 106, 90, 1);
   }
 
-  #menu > a > div:hover{
-    background-color: rgba(244, 241, 187, 1);
-  }
 }
 
 @media (orientation:portrait) {
@@ -63,6 +55,8 @@ body {
     grid-template-areas: "menu"
                          "mid1"
                          "footer";
+    min-height: 100vh;
+
   }
 
   #menu {
@@ -71,27 +65,26 @@ body {
     padding: 15px 10px;
   }
 
-  #menu > a {
-    text-decoration: none;
-  }
-
-  #menu > a > div{
+  .menuItem {
     font-size: 18px;
     padding: 10px 15px;
     cursor: pointer;
   }
+}
 
-  #menu > a > div:hover{
-    background-color: rgba(244, 241, 187, 1);
-    border-radius: 3px;
-  }
+.menuItem:hover{
+  background-color: rgba(244, 241, 187, 1);
+}
+
+#menu > a {
+  text-decoration: none;
 }
 
 #head {
   height: 80px;
 }
 
-#topLogo{
+#topLogo {
   max-width: 85%;
   padding: 0 0 10px;
   margin: 0 auto;
@@ -106,7 +99,7 @@ body {
 }
 
 
-#copyright{
+#copyright {
   padding: 20px;
   text-align: center;
 }
