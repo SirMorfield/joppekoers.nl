@@ -14,33 +14,34 @@
   <link rel="stylesheet" href="/lib/normalize.css">
   <link rel="stylesheet" href="/css/style.css">
   <!-- <script src="/js/socket.io.min.js"></script> -->
+  <script src="/lib/lazysizes.min.js"></script>
 </head>
 
 <body>
   <div id="container">
-
     <div id="menu">
       <img src="/logo/logoW160px.png" id="topLogo">
+
       <a href="/home">
-        <div id="home">
+        <div id="home" class="menuItem">
           <%= home %>
         </div>
       </a>
 
       <a href="/contact">
-        <div id="contact">
+        <div id="contact" class="menuItem">
           <%= contact %>
         </div>
       </a>
 
       <a href="/guestProjects">
-        <div id="guestProjects">
+        <div id="guestProjects" class="menuItem">
           <%= guestProjects %>
         </div>
       </a>
 
       <a href="/wolmolen">
-        <div id="wolmolenNav">
+        <div id="wolmolen" class="menuItem">
           <%= wolmolen %>
         </div>
       </a>
