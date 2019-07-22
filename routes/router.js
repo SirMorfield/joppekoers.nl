@@ -1,5 +1,7 @@
 const rateLimit = require("express-rate-limit")
 const production = process.env.NODE_ENV == "production"
+const path = require('path')
+const fs = require('fs')
 
 function limiter(max, mins) {
   // max requests per minute for this route
@@ -14,7 +16,7 @@ function limiter(max, mins) {
 const express = require("express")
 let router = express.Router()
 
-module.exports = (io, path, asyncFs) => {
+module.exports = (io, db) => {
   router.get("/", (req, res) => {
     res.redirect("/home")
   })
@@ -23,19 +25,26 @@ module.exports = (io, path, asyncFs) => {
   router.get("/home", index.home)
   router.get("/contact", index.contact)
   router.get("/guestProjects", index.guestProjects)
-  router.get("/wolmolen", index.wolmolen)
 
-  const drop = require("./drop.js")(path, asyncFs)
+  const wolmolen = require('./wolmolen.js')(db, index.standardOptions)
+  router.get("/wolmolen", wolmolen.route)
+
+  const drop = require("./drop.js")(path, fs)
   router.get("/drop", drop.drop)
   router.post("/drop/upload", drop.upload)
   router.get("/drop/:name", drop.get)
 
-  const deletthis = require("./deletthis.js")(asyncFs, path)
-  router.get("/deletthis", deletthis.deletthis)
-  router.post("/deletthis/upload", deletthis.upload)
+  router.get('*', (req, res) => {
+    const options = {
+      error: {
+        code: 404,
+        message: 'Not found'
+      }
+    }
+    res.render('error.ejs', options)
+  })
 
   io.on("connection", socket => {
-    socket.on("reqNewImg", () => deletthis.reqNewImg(socket))
   })
 
   return router

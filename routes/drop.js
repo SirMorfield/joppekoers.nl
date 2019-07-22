@@ -18,7 +18,7 @@ function randomStr(length, { numbers = true, capitalLetters = true, lowerCaseLet
   return text
 }
 
-module.exports = (path, asyncFs) => {
+module.exports = (path, fs) => {
   const filesDir = path.join(__dirname, '../public/drop/files')
 
   function drop(req, res) {
@@ -38,16 +38,16 @@ module.exports = (path, asyncFs) => {
 
     const free = await diskUsagePercent()
     if (free < 80) {
-      const files = await asyncFs.readdir(filesDir)
+      const files = await fs.readdir(filesDir)
 
       let oldest = { file: 'testfile123', birthtimeMs: Infinity }
       for (const file of files) {
-        let stats = await asyncFs.stat(path.join(filesDir, file))
+        let stats = await fs.stat(path.join(filesDir, file))
         if (stats.birthtimeMs < oldest.birthtimeMs) oldest = { file, birthtimeMs: stats.birthtimeMs }
       }
 
       if (oldest.file !== 'testfile123') {
-        await asyncFs.unlink(path.join(filesDir, oldest.file))
+        await fs.unlink(path.join(filesDir, oldest.file))
       }
     }
 
@@ -62,7 +62,7 @@ module.exports = (path, asyncFs) => {
   }
 
   async function get(req, res) {
-    const files = await asyncFs.readdir(filesDir)
+    const files = await fs.readdir(filesDir)
     const file = files.find(file => file.includes(req.params.name))
     if (!file) return res.send('Not found')
     res.download(path.join(filesDir, file))

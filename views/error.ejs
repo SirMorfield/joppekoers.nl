@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>
-    <%= error.status %>
+    <%= error.message %>
   </title>
   <link rel="stylesheet" href="../lib/normalize.css">
 
@@ -33,9 +33,9 @@
 
 <body>
   <h3>
-    <%= error.status %>
+    <%= error.code %>
     -
-    <%= message %>
+    <%= error.message %>
   </h3>
   <h2>Something went wrong!</h2>
 
