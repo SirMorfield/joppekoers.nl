@@ -1,27 +1,37 @@
 {
   "name": "joppekoers.nl",
+  "version": "1.0.0",
+  "description": "Joppe Koers' website",
+  "main": "app.js",
+  "dependencies": {
+    "compression": "^1.7.3",
+    "ejs": "^2.6.1",
+    "express": "~4.16.0",
+    "express-fileupload": "^1.1.4",
+    "express-rate-limit": "^3.4.0",
+    "googleapis": "^41.0.1",
+    "image-size": "^0.7.1",
+    "lowdb": "^1.0.0",
+    "mime-types": "^2.1.22",
+    "nodemailer": "^6.3.0",
+    "serve-favicon": "^2.5.0",
+    "socket.io": "~2.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "~1.18.3"
+  },
   "scripts": {
     "debug": "nodemon ./app.js --config configs/nodemon.json",
     "production": "NODE_ENV=production pm2 start ./configs/app.json"
   },
-  "dependencies": {
-    "compression": "^1.7.3",
-    "cookie-parser": "~1.4.3",
-    "ejs": "^2.6.1",
-    "express": "~4.16.0",
-    "express-fileupload": "^1.1.4",
-    "express-http-proxy": "^1.5.1",
-    "express-rate-limit": "^3.4.0",
-    "http-errors": "~1.6.2",
-    "https": "^1.0.0",
-    "image-size": "^0.7.1",
-    "jsonfile": "^4.0.0",
-    "lowdb": "^1.0.0",
-    "mime-types": "^2.1.22",
-    "nodemon": "~1.18.3",
-    "request": "^2.88.0",
-    "serve-favicon": "^2.5.0",
-    "socket.io": "~2.1.0",
-    "socket.io-client": "^2.2.0"
-  }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SirMorfield/joppekoers.nl.git"
+  },
+  "author": "Joppe Koers",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SirMorfield/joppekoers.nl/issues"
+  },
+  "homepage": "https://github.com/SirMorfield/joppekoers.nl#readme"
 }

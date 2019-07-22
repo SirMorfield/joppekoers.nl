@@ -1,44 +1,131 @@
-<p>
-  <h1>
-    Wolmolen V.3.1
-  </h1>
-</p>
-
-This device makes it easy to unravel large strands of wool. It has ball bearings, making it much smoother than the umbrella style machines. <br>
-
-<p>
-  These machines are: <br>
-  - Hand made in Amsterdam. <br>
-  - Finished with Danish oil. <br>
-  - Able to free spin for 20 seconds. <br>
-  - Handle up to 2 meter log strands. <br>
-  - Easy to disassemble for storage. <br>
-  - Using three 1 cm high friction feet so the machine won't wobble, even on a uneven surface. <br>
-  For more information and pricing <a href="/contact" class="internalLink">contact</a> me.
-</p>
-
-<script src="/js/openPopup.js"></script>
-<img src="/img/projectImg/wolmolen/0h300px.jpg" onclick='openPopup([{src:"000.jpg",w:2756,h:1550},{src:"001.jpg",w:2756,h:1550},{src:"002.jpg",w:2756,h:1550},{src:"003.jpg",w:2756,h:1550},{src:"004.jpg",w:2756,h:1550},{src:"005.jpg",w:2756,h:1550},{src:"006.jpg",w:2756,h:1550},{src:"007.jpg",w:2756,h:1550},{src:"008.jpg",w:2756,h:1550},{src:"009.jpg",w:2756,h:1550},{src:"010.jpg",w:2756,h:1550},{src:"011.jpg",w:2756,h:1550},{src:"012.jpg",w:2756,h:1550}],"/img/projectImg/wolmolen/")' class="lazyload" id="wolmolenImg">
-
 <style>
   #wolmolen {
     background-color: rgba(244, 241, 187, 1);
   }
 
-  #wolmolenImg {
+  #wolmolenMain {
+    display: grid;
+    grid-template-columns: 4.5fr 1fr;
+    grid-template-rows: auto 1fr 1fr;
+    grid-template-areas:
+      "title title"
+      "picture order"
+      "description description";
+    min-height: 100vh;
+  }
+
+  #description {
+    grid-area: description;
+    padding: 60px 0 0 20px;
+  }
+
+  #order {
+    grid-area: order;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+  }
+
+  #orderButton {
+    /* margin: 0 80px; */
+    padding: 20px 40px;
+    background-color: rgba(244, 241, 187, 1);
+    cursor: pointer;
+  }
+
+  #orderButton:hover {
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7);
+  }
+
+  #price {
+    /* font-family: Arial, Helvetica, sans-serif; */
+    padding: 20px 20px 5px;
+    font-size: 2.2em;
+  }
+
+  #incBtw {
+    padding: 0 20px 0 0;
+    font-size: 0.8em;
+  }
+
+  #available {
+    padding: 20px 20px 0 0;
+  }
+
+  #picture {
+    grid-area: picture;
     display: flex;
     justify-content: center;
-    margin: 0 auto;
-    width: 40%;
+    /* margin: 0 auto; */
+    /* width: 40% auto; */
     cursor: pointer;
+  }
+
+  #wolmolenImg {
+    cursor: pointer;
+    width: 90%
   }
 
   #wolmolenImg:hover {
     /* outline: 3px solid rgba(244, 241, 187, 1); */
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7);
   }
+
+  #title {
+    padding: 0 0 0 100px;
+  }
 </style>
 
+<div id="wolmolenMain">
+  <div id="title">
+    <h1>
+      Joppe's Wolmolen V.3.2
+    </h1>
+  </div>
+  <div id="description">
+
+    This device makes it easy to unravel large strands of wool. It has ball bearings, making it much smoother than the umbrella style machines. <br>
+
+    <p>
+      These machines are: <br>
+      - Hand made in Amsterdam. <br>
+      - Finished with Danish oil. <br>
+      - Able to free spin for 20 seconds. <br>
+      - Handle up to 2 meter log strands. <br>
+      - Easy to disassemble for storage. <br>
+      - Using three 1 cm high friction feet so the machine won't wobble, even on a uneven surface. <br>
+      For more information and pricing <a href="/contact" class="internalLink">contact</a> me.
+    </p>
+  </div>
+
+  <div id="order">
+    <div id="orderButton">
+      Order Now
+    </div>
+
+    <div id="price">
+      € 184.20
+    </div>
+
+    <div id="incBtw">
+      inc. 21% BTW
+    </div>
+
+    <div id="available">
+      <b id="numAvailable"><%=wolmolenStock%></b> pieces in stock
+    </div>
+
+  </div>
+
+  <div id="picture">
+    <img src="/img/projectImg/wolmolen/0h300px.jpg" onclick='openPopup([{src:"000.jpg",w:2756,h:1550},{src:"001.jpg",w:2756,h:1550},{src:"002.jpg",w:2756,h:1550},{src:"003.jpg",w:2756,h:1550},{src:"004.jpg",w:2756,h:1550},{src:"005.jpg",w:2756,h:1550},{src:"006.jpg",w:2756,h:1550},{src:"007.jpg",w:2756,h:1550},{src:"008.jpg",w:2756,h:1550},{src:"009.jpg",w:2756,h:1550},{src:"010.jpg",w:2756,h:1550},{src:"011.jpg",w:2756,h:1550},{src:"012.jpg",w:2756,h:1550}],"/img/projectImg/wolmolen/")' class="lazyload" id="wolmolenImg">
+  </div>
+
+
+</div>
+
+<script src="/js/openPopup.js"></script>
 <link rel="stylesheet" href="/lib/PhotoSwipe/photoswipe.css">
 <link rel="stylesheet" href="/lib/PhotoSwipe/default-skin/default-skin-custom.css">
 <script src="/lib/PhotoSwipe/photoswipe.min.js"></script>
