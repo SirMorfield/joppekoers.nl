@@ -12,15 +12,8 @@ temp.*
 test.*
 .node-persist/
 
-#images form deletthis.com
-public/deletthis/img/*
-public/deletthis/uploaded/*.*
-
-#https certificates
-*.pem
-
 # drops
 public/drop/files/*.*
 
-# radio
-stations.json
+# enviroment variables
+env.json
