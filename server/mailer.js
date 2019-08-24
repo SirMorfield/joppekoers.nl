@@ -1,19 +1,16 @@
 const nodemailer = require('nodemailer')
-// const { google } = require('googleapis')
-// const OAuth2 = google.auth.OAuth2
 const OAuth2 = require('googleapis').google.auth.OAuth2
+const path = require('path')
+const env = require(path.join(process.env.PWD, '/configs/env.json'))
 
-const auth = require('../../configs/env.json')
-
-console.log(auth)
 const oauth2Client = new OAuth2(
-  auth.clientID,
-  auth.clientSecret,
+  env.googleMailer.clientID,
+  env.googleMailer.clientSecret,
   'https://developers.google.com/oauthplayground'
 )
 
 oauth2Client.setCredentials({
-  refresh_token: auth.refreshToken
+  refresh_token: env.googleMailer.refreshToken
 })
 
 function isValidEmail(email) {
@@ -38,16 +35,16 @@ async function sendEmail(to, subject, html) {
     service: 'gmail',
     auth: {
       type: 'OAuth2',
-      user: auth.realEmail,
-      clientId: auth.clientID,
-      clientSecret: auth.clientSecret,
-      refreshToken: auth.refreshToken,
+      user: env.realEmail,
+      clientId: env.googleMailer.clientID,
+      clientSecret: env.googleMailer.clientSecret,
+      refreshToken: env.googleMailer.refreshToken,
       accessToken: oauth2Client.getAccessToken()
     }
   })
 
   const mailOptions = {
-    from: auth.email,
+    from: env.email,
     to: to,
     subject: subject,
     generateTextFromHTML: true,
@@ -59,7 +56,7 @@ async function sendEmail(to, subject, html) {
       if (err) {
         resolve({ error: err })
       } else if (response.rejected.length > 0) {
-        resolve({ error: 'Email rejected' })
+        resolve({ error: 'email rejected' })
       } else {
         resolve({})
       }

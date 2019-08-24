@@ -1,7 +1,6 @@
 (async () => {
   const production = process.env.NODE_ENV == 'production'
   const path = require('path')
-  const fs = require('fs').promises
 
   const express = require('express')
   let app = express()
@@ -35,6 +34,7 @@
   app.use('/', router)
 
   httpServer.listen(8080, () => {
+    console.clear()
     console.log('NODE_ENV:', process.env.NODE_ENV)
   })
 })()

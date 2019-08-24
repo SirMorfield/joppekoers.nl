@@ -1,10 +1,13 @@
-module.exports = (db, options) => {
+module.exports = (db, standardOptions) => {
   async function route(req, res) {
-    let wolmolen = options
-    wolmolen.partials = ['partials/wolmolen.ejs']
+    let options = standardOptions
+    options.partials = ['partials/wolmolen.ejs']
 
-    const wolmolenStock = await db.getWolmolenStock()
-    wolmolen.partialOptions = { wolmolenStock }
+    const wolmolenInfo = await db.getItem('wolmolen')
+    options.partialOptions = {
+      stock: wolmolenInfo.stock,
+      priceIncBtw: wolmolenInfo.priceStr.incBtw
+    }
 
     res.render('index.ejs', wolmolen)
   }

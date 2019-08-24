@@ -1,3 +1,9 @@
 {
-  "wolmolenStock": 1
+  "warehouse": [
+    {
+      "id": "wolmolen",
+      "stock": 1,
+      "priceExBtw": 111.39
+    }
+  ]
 }
