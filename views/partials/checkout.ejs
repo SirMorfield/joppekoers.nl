@@ -1,0 +1,72 @@
+<!-- <%= wolmolenStock %> -->
+
+<style>
+  .inputBox {
+    padding: 8px;
+    border: none;
+    border: solid 1px rgb(0, 0, 0);
+    border-radius: 10px;
+  }
+
+  #fromWrapper {
+    display: grid;
+    grid-template-columns: 1.5fr 0.5fr 2fr;
+    grid-template-rows: repeat(4, 40px);
+    grid-gap: 5px;
+    grid-template-areas:
+      "firstName firstName lastName"
+      "zip houseNumber country"
+      "street street city"
+      "email email email";
+  }
+
+  #firstName {
+    grid-area: firstName;
+  }
+
+  #lastName {
+    grid-area: lastName;
+  }
+
+  #zip {
+    grid-area: zip;
+  }
+
+  #houseNumber {
+    grid-area: houseNumber
+  }
+
+  #country {
+    grid-area: country;
+  }
+
+  #street {
+    grid-area: street;
+  }
+
+  #city {
+    grid-area: city;
+  }
+
+  #email {
+    grid-area: email;
+  }
+</style>
+
+<div id="fromWrapper">
+
+  <input type="text" id="firstName" class="inputBox">
+  <input type="text" id="lastName" class="inputBox">
+
+  <input type="text" id="zip" class="inputBox">
+  <input type="text" id="houseNumber" class="inputBox">
+  <input type="text" id="country" class="inputBox">
+
+  <input type="text" id="street" class="inputBox">
+  <input type="text" id="city" class="inputBox">
+
+  <input type="text" id="email" class="inputBox">
+
+
+
+</div>

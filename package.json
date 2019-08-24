@@ -14,6 +14,8 @@
     "lowdb": "^1.0.0",
     "mime-types": "^2.1.22",
     "nodemailer": "^6.3.0",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.7",
     "serve-favicon": "^2.5.0",
     "socket.io": "~2.2.0"
   },
@@ -21,7 +23,7 @@
     "nodemon": "~1.18.3"
   },
   "scripts": {
-    "debug": "nodemon ./app.js --config configs/nodemon.json",
+    "dev": "nodemon ./app.js --config configs/nodemon.json",
     "production": "NODE_ENV=production pm2 start ./configs/app.json"
   },
   "repository": {

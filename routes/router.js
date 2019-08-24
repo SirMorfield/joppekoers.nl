@@ -1,7 +1,8 @@
 const rateLimit = require("express-rate-limit")
 const production = process.env.NODE_ENV == "production"
 const path = require('path')
-const fs = require('fs')
+const fs = require('fs').promises
+const env = require('../configs/env.json')
 
 function limiter(max, mins) {
   // max requests per minute for this route
@@ -17,11 +18,8 @@ const express = require("express")
 let router = express.Router()
 
 module.exports = (io, db) => {
-  router.get("/", (req, res) => {
-    res.redirect("/home")
-  })
-
   const index = require("./index.js")
+  router.get("/", index.home)
   router.get("/home", index.home)
   router.get("/contact", index.contact)
   router.get("/guestProjects", index.guestProjects)
@@ -29,17 +27,19 @@ module.exports = (io, db) => {
   const wolmolen = require('./wolmolen.js')(db, index.standardOptions)
   router.get("/wolmolen", wolmolen.route)
 
-  const drop = require("./drop.js")(path, fs)
-  router.get("/drop", drop.drop)
-  router.post("/drop/upload", drop.upload)
-  router.get("/drop/:name", drop.get)
+  const checkout = require('./checkout.js')(db, index.standardOptions)
+  router.get("/checkout", checkout.route)
 
+  // const drop = require("./drop.js")()
+  // router.get("/drop", drop.drop)
+  // router.post("/drop/upload", drop.upload)
+  // router.get("/drop/:name", drop.get)
+
+  // page not found error handling
   router.get('*', (req, res) => {
     const options = {
-      error: {
-        code: 404,
-        message: 'Not found'
-      }
+      errorCode: 404,
+      errorMessage: 'Not found'
     }
     res.render('error.ejs', options)
   })
