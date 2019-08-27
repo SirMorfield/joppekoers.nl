@@ -1,7 +1,7 @@
 const low = require('lowdb')
 const FileAsync = require('lowdb/adapters/FileAsync')
 const path = require('path')
-const env = require(path.join(process.env.PWD, 'configs/env.json'))
+const env = require(path.join(process.env.root, 'configs/env.json'))
 
 const adapter = new FileAsync(path.join(__dirname, 'db.json'))
 
@@ -10,7 +10,9 @@ module.exports = async () => {
 
   async function getItem(itemID) {
     try {
-      if (typeof itemId !== 'string' || itemID.length === 0) return { error: `invalid itemID ${itemID}` }
+      if (typeof itemID !== 'string' || itemID.length === 0) {
+        return { error: `invalid itemID ${itemID}` }
+      }
       const items = await db.get('warehouse').value()
 
       for (let item of items) {

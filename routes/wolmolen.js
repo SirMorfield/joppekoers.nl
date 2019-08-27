@@ -3,13 +3,23 @@ module.exports = (db, standardOptions) => {
     let options = standardOptions
     options.partials = ['partials/wolmolen.ejs']
 
-    const wolmolenInfo = await db.getItem('wolmolen')
-    options.partialOptions = {
-      stock: wolmolenInfo.stock,
-      priceIncBtw: wolmolenInfo.priceStr.incBtw
+    let partialOptions = {
+      stock: 0,
+      priceIncBtw: '0.00'
     }
 
-    res.render('index.ejs', wolmolen)
+    const wolmolenInfo = await db.getItem('wolmolen')
+    if (!wolmolenInfo.error) {
+      partialOptions = {
+        stock: wolmolenInfo.stock,
+        priceIncBtw: wolmolenInfo.priceStr.incBtw
+      }
+    }
+
+    options.partialOptions = partialOptions
+    res.render('index.ejs', options)
   }
+
+
   return { route }
 }

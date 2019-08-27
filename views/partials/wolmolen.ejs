@@ -76,6 +76,14 @@
     padding: 0 0 0 100px;
   }
 </style>
+<script src="/lib/cookies.min.js"></script>
+<script>
+  function order() {
+    docCookies.setItem('basket', [{ id: 'wolmolen', quantity: 1 }])
+    document.location.href = '/checkout'
+  }
+
+</script>
 
 <div id="wolmolenMain">
   <div id="title">
@@ -100,7 +108,7 @@
   </div>
 
   <div id="order">
-    <div id="orderButton">
+    <div id="orderButton" onclick="order()">
       Order Now
     </div>
 
