@@ -1,5 +1,6 @@
 (async () => {
   const production = process.env.NODE_ENV == 'production'
+  process.env.root = __dirname
   const path = require('path')
 
   const express = require('express')

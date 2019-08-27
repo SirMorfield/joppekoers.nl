@@ -1,7 +1,7 @@
 const request = require('request-promise-native')
 
 const path = require('path')
-const env = require(path.join(process.env.PWD, '/configs/env.json'))
+const env = require(path.join(process.env.root, '/configs/env.json'))
 
 let options = {
   url: env.postNL.reqUrl,
@@ -22,8 +22,7 @@ async function completeAddress(addr) {
     if (addr.postalCode.length < 6) return { error: 'wrong length addr.postalCode (<6)' }
 
     let formattedPostalCode = addr.postalCode.replace(/\s/g, '')
-    formattedPostalCode = formattedPostalCode.toUpperCase()
-    if (!formattedPostalCode.match(/\d\d\d\d[A-Z][A-Z]/)) return { error: 'invalid addr.postalCode' }
+    if (!formattedPostalCode.match(/\d\d\d\d[A-Z][A-Z]/i)) return { error: 'invalid addr.postalCode' }
 
     // all tests for addr.postalCode passed, adding to query
     query.PostalCode = formattedPostalCode
@@ -47,7 +46,6 @@ async function completeAddress(addr) {
     }
 
     options.json = query
-
     const response = await request(options)
 
     let places = []

@@ -18,7 +18,6 @@ function randomStr(length, { numbers = true, capitalLetters = true, lowerCaseLet
   return text
 }
 
-
 const filesDir = path.join(__dirname, '../public/drop/files')
 
 function drop(req, res) {
