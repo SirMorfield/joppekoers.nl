@@ -1,8 +1,6 @@
 const rateLimit = require('express-rate-limit')
 const production = process.env.NODE_ENV == 'production'
 const path = require('path')
-const fs = require('fs').promises
-const env = require('../configs/env.json')
 
 function limiter(max, mins) {
   // max requests per minute for this route
@@ -36,8 +34,8 @@ module.exports = (io, db) => {
   // router.get('/drop/:name', drop.get)
 
 
-  const startserver3 = require('./startserver3.js')
-  router.get('/startserver3', startserver3.route)
+  const server3 = require('./server3.js')
+  router.get('/server3(/:service|)', server3.route)
 
   // page not found error handling
   router.get('*', (req, res) => {
@@ -50,7 +48,7 @@ module.exports = (io, db) => {
 
   io.on('connection', socket => {
     socket.on('validateContact', (inp) => checkout.validateContact(socket, inp))
-    socket.on('startServer3', (inp) => startserver3.startserver3(socket, inp))
+    socket.on('server3', (inp) => server3.server3(socket, inp))
   })
 
   return router

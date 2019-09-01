@@ -4,10 +4,10 @@ var Buffer = require('buffer').Buffer;
 var macBytes = 6;
 
 exports.createMagicPacket = function (macAddress) {
-  var macBuffer = new Buffer(macBytes);
+  var macBuffer = Buffer.alloc(macBytes);
   var i;
   var numMacs = 16;
-  var buffer = new Buffer((1 + numMacs) * macBytes);
+  var buffer = new Buffer.alloc((1 + numMacs) * macBytes);
 
   if (macAddress.length === (2 * macBytes + (macBytes - 1))) {
     macAddress = macAddress.replace(new RegExp(macAddress[2], 'g'), '');
@@ -65,7 +65,7 @@ function wake(macAddress, options, callback) {
   });
 };
 
-exports.wake = (macAddress, options) => {
+exports.wake = (macAddress, options = {}) => {
   return new Promise((resolve) => {
     wake(macAddress, options, resolve)
   })
