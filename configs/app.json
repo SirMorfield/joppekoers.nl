@@ -1,10 +1,13 @@
 {
-  "apps": [
-    {
-      "name": "joppekoers.nl",
-      "script": "./app.js",
-      "exec_mode": "fork",
-      "max_restarts": 1000
-    }
-  ]
+	"apps": [
+		{
+			"name": "joppekoers.nl",
+			"script": "./app.js",
+			"exec_mode": "fork",
+			"max_restarts": 1000,
+			"env": {
+				"NODE_ENV": "production"
+			}
+		}
+	]
 }
