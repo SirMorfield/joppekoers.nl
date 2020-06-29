@@ -2,64 +2,64 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <meta name="google" content="notranslate">
-  <meta name="description" content="This is a webside build, hosted and maintened by Joppe Koers">
-  <meta name="keywords" content="Joppe, Koers, J.E. Koers, Portfolio, joppe@joppekoers.nl, joppe.koers@gmail.com, 73820857">
-  <meta name="author" content="Joppe Koers">
-  <title>
-    <%= title %>
-  </title>
-  <link rel="stylesheet" href="/lib/normalize.css">
-  <link rel="stylesheet" href="/css/style.css">
-  <script src="/socket.io/socket.io.js"></script>
-  <script> const socket = io(); </script>
-  <script src="/lib/lazysizes.min.js"></script>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<meta name="google" content="notranslate">
+	<meta name="description" content="This is a webside build, hosted and maintened by Joppe Koers">
+	<meta name="keywords" content="Joppe, Koers, J.E. Koers, Portfolio, joppe@joppekoers.nl, joppe.koers@gmail.com, 73820857">
+	<meta name="author" content="Joppe Koers">
+	<title>
+		<%= title %>
+	</title>
+	<link rel="stylesheet" href="/lib/normalize.css">
+	<link rel="stylesheet" href="/css/style.css">
+	<script src="/socket.io/socket.io.js"></script>
+	<script> const socket = io(); </script>
+	<script src="/lib/lazysizes.min.js"></script>
 </head>
 
 <body>
-  <div id="container">
-    <div id="menu">
-      <img src="/logo/logoW160px.png" id="topLogo">
+	<div id="container">
+		<div id="menu">
+			<img src="/logo/logoW160px.png" id="topLogo">
 
-      <a href="/home">
-        <div id="home" class="menuItem">
-          <%= home %>
-        </div>
-      </a>
+			<a href="/home">
+				<div id="home" class="menuItem">
+					<%= home %>
+				</div>
+			</a>
 
-      <a href="/contact">
-        <div id="contact" class="menuItem">
-          <%= contact %>
-        </div>
-      </a>
+			<a href="/contact">
+				<div id="contact" class="menuItem">
+					<%= contact %>
+				</div>
+			</a>
 
-      <a href="/guestProjects">
-        <div id="guestProjects" class="menuItem">
-          <%= guestProjects %>
-        </div>
-      </a>
+			<a href="/guestProjects">
+				<div id="guestProjects" class="menuItem">
+					<%= guestProjects %>
+				</div>
+			</a>
 
-      <a href="/wolmolen">
-        <div id="wolmolen" class="menuItem">
-          <%= wolmolen %>
-        </div>
-      </a>
-    </div>
+			<a href="/wolmolen">
+				<div id="wolmolen" class="menuItem">
+					<%= wolmolen %>
+				</div>
+			</a>
+		</div>
 
-    <div id="mid1">
-      <% partials.forEach(function(partial){ %>
-      <%- include(partial, partialOptions)-%>
-      <% }); %>
-    </div>
+		<div id="mid1">
+			<% partials.forEach(function(partial){ %>
+			<%- include(partial, partialOptions)-%>
+			<% }); %>
+		</div>
 
-    <div id="footer">
-      <div id="copyright">
-        &copy; 2019 Joppe Koers
-      </div>
-    </div>
-  </div>
+		<div id="footer">
+			<div id="copyright">
+				2020 Joppe Koers
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>
