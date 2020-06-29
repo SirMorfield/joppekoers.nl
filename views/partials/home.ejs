@@ -1,38 +1,54 @@
 <link href="/lib/Flexbin/flexbinCustom.css" type="text/css" rel="stylesheet" media="all" />
 
 <style>
-  #home {
-    background-color: rgba(244, 241, 187, 1);
-  }
+	#home {
+		background-color: rgba(244, 241, 187, 1);
+	}
 
-  .flexbinImage {
-    cursor: pointer;
-  }
+	. {
+		cursor: pointer;
+	}
 
-  .flexbinImage:hover {
-    outline: 3px solid rgba(244, 241, 187, 1);
-  }
+	.:hover {
+		outline: 3px solid rgba(244, 241, 187, 1);
+	}
+
+	#projects {
+		display: flex;
+	}
+
+	.projectsRow {
+		width: 50%;
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+	}
 </style>
 
 <h1>Home</h1>
 <p>
-  Hello and welcome to Joppe Koers' website. This is where you'll find my portfolio, personal projects and a mix of programming related stuff. <br>
-  Since I can remember I've always wanted to make stuff. <br>
-  To accomplish this I acquired a number of skills of which you can see the result below. <br>
-  Do you want me to make you something? See the projects below to see what I'm capable of. You can contact me form the <a href="/contact" class="internalLink">/contact</a> page. <br>
+	Hello and welcome to Joppe Koers' website. This is where you'll find my portfolio, personal projects and a mix of programming related stuff. <br>
+	Since I can remember I've always wanted to make stuff. <br>
+	To accomplish this I acquired a number of skills of which you can see the result below. <br>
+	Do you want me to make you something? See the projects below to see what I'm capable of. You can contact me form the <a href="/contact" class="internalLink">/contact</a> page. <br>
 </p>
 
 <script src="/js/openPopup.js"></script>
-<div class="flexbin">
-  <img src="/img/projectImg/wolmolen/0h300px.jpg" onclick='openPopup([{src:"000.jpg",w:2756,h:1550},{src:"001.jpg",w:2756,h:1550},{src:"002.jpg",w:2756,h:1550},{src:"003.jpg",w:2756,h:1550},{src:"004.jpg",w:2756,h:1550},{src:"005.jpg",w:2756,h:1550},{src:"006.jpg",w:2756,h:1550},{src:"007.jpg",w:2756,h:1550},{src:"008.jpg",w:2756,h:1550},{src:"009.jpg",w:2756,h:1550},{src:"010.jpg",w:2756,h:1550},{src:"011.jpg",w:2756,h:1550},{src:"012.jpg",w:2756,h:1550}],"/img/projectImg/wolmolen/")' class="lazyload">
-  <img src="/img/projectImg/hammer/0h300px.jpg" onclick='openPopup([{src:"/img/projectImg/hammer/0.jpg",w:1200,h:1600},{src:"/img/projectImg/hammer/1.jpg",w:1200,h:1600},{src:"/img/projectImg/hammer/2.jpg",w:1200,h:1600}])' class="flexbinImage lazyload" id="hammer">
-  <img src="/img/projectImg/jacobsLadder/0h300px.jpg" onclick='openPopup([{src:"/img/projectImg/jacobsLadder/0.jpg",w:1200,h:1600},{src:"/img/projectImg/jacobsLadder/1.jpg",w:1200,h:1600},{src:"/img/projectImg/jacobsLadder/2.jpg",w:1200,h:1600}])' class="flexbinImage lazyload" id="jacobsLadder">
-  <img src="/img/projectImg/knife/0h300px.jpg" onclick='openPopup([{src:"/img/projectImg/knife/0.jpg",w:3264,h:2448},{src:"/img/projectImg/knife/1.jpg",w:3264,h:2448}])' class="flexbinImage lazyload" id="knife">
-  <img src="/img/projectImg/smallBox/0h300px.jpg" onclick='openPopup([{src:"/img/projectImg/smallBox/0.jpg",w:3264,h:2448},{src:"/img/projectImg/smallBox/1.jpg",w:3264,h:2448}])' class="flexbinImage lazyload" id="smallBox">
-  <img src="/img/projectImg/speakers/0h300px.jpg" onclick='openPopup([{src:"/img/projectImg/speakers/0.jpg",w:3264,h:2448},{src:"/img/projectImg/speakers/1.jpg",w:1920,h:1080}])' class="flexbinImage lazyload" id="speakers">
-  <img src="/img/projectImg/sword/0h300px.jpg" onclick='openPopup([{src:"/img/projectImg/sword/0.jpg",w:1200,h:1600},{src:"/img/projectImg/sword/1.jpg",w:1200,h:1600},{src:"/img/projectImg/sword/2.jpg",w:1200,h:1600}])' class="flexbinImage lazyload" id="sword">
-  <img src="/img/projectImg/sword2/0h300px.jpg" onclick='openPopup([{src:"/img/projectImg/sword2/0.jpg",w:1200,h:1600},{src:"/img/projectImg/sword2/1.jpg",w:1200,h:1600},{src:"/img/projectImg/sword2/2.jpg",w:1200,h:1600}])' class="flexbinImage lazyload" id="sword2">
-  <img src="/img/projectImg/table/0h300px.jpg" onclick='openPopup([{src:"/img/projectImg/table/0.jpg",w:3264,h:2448},{src:"/img/projectImg/table/1.jpg",w:3264,h:2448},{src:"/img/projectImg/table/2.jpg",w:2448,h:3246}])' class="flexbinImage lazyload" id="table">
+<div id="projects">
+	<div class="projectsRow">
+		<img src="/img/projectImg/wolmolen/0h300px.jpg" onclick="openPopup('wolmolen')"" class=" lazyload">
+		<img src="/img/projectImg/hammer/0h300px.jpg" onclick="openPopup('hammer')" class="lazyload" id="hammer">
+		<img src="/img/projectImg/jacobsLadder/0h300px.jpg" onclick="openPopup('jacobsLadder')" class=" lazyload" id="jacobsLadder">
+		<img src="/img/projectImg/knife/0h300px.jpg" onclick="openPopup('knife')" class=" lazyload" id="knife">
+		<img src="/img/projectImg/smallBox/0h300px.jpg" onclick="openPopup('smallBox')"" class=" lazyload" id="smallBox">
+	</div>
+
+	<div class="projectsRow">
+		<img src="/img/projectImg/speakers/0h300px.jpg" onclick="openPopup('speakers')" class=" lazyload" id="speakers">
+		<img src="/img/projectImg/sword/0h300px.jpg" onclick="openPopup('sword')" class=" lazyload" id="sword">
+		<img src="/img/projectImg/sword2/0h300px.jpg" onclick="openPopup('sword2')" class=" lazyload" id="sword2">
+		<img src="/img/projectImg/table/0h300px.jpg" onclick="openPopup('table')" class=" lazyload" id="table">
+	</div>
 </div>
 
 <link rel="stylesheet" href="/lib/PhotoSwipe/photoswipe.css">
@@ -41,32 +57,32 @@
 <script src="/lib/PhotoSwipe/photoswipe-ui-default.min.js"></script>
 <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
-  <div class="pswp__bg"></div>
+	<div class="pswp__bg"></div>
 
-  <div class="pswp__scroll-wrap">
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    <div class="pswp__ui pswp__ui--hidden">
-      <div class="pswp__top-bar">
-        <div class="pswp__counter"></div> <button class="pswp__button pswp__button--close" title="Close (Esc)"></button> <button class="pswp__button pswp__button--share" title="Share"></button> <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button> <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-        <div class="pswp__preloader">
-          <div class="pswp__preloader__icn">
-            <div class="pswp__preloader__cut">
-              <div class="pswp__preloader__donut"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-        <div class="pswp__share-tooltip"></div>
-      </div> <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"> </button> <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"> </button>
-      <div class="pswp__caption">
-        <div class="pswp__caption__center"></div>
-      </div>
-    </div>
-  </div>
+	<div class="pswp__scroll-wrap">
+		<div class="pswp__container">
+			<div class="pswp__item"></div>
+			<div class="pswp__item"></div>
+			<div class="pswp__item"></div>
+		</div>
+		<div class="pswp__ui pswp__ui--hidden">
+			<div class="pswp__top-bar">
+				<div class="pswp__counter"></div> <button class="pswp__button pswp__button--close" title="Close (Esc)"></button> <button class="pswp__button pswp__button--share" title="Share"></button> <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button> <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+				<div class="pswp__preloader">
+					<div class="pswp__preloader__icn">
+						<div class="pswp__preloader__cut">
+							<div class="pswp__preloader__donut"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+				<div class="pswp__share-tooltip"></div>
+			</div> <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"> </button> <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"> </button>
+			<div class="pswp__caption">
+				<div class="pswp__caption__center"></div>
+			</div>
+		</div>
+	</div>
 
 </div>

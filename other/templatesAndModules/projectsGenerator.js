@@ -4,42 +4,42 @@ const path = require('path')
 const fs = require('fs');
 
 (async () => {
-  const project = process.argv[2]
-  const individual = process.argv[3] == 1
-  const folderPath = path.join(__dirname, '../public/img/projectImg', project)
+	const project = process.argv[2]
+	const individual = process.argv[3] == 1
+	const folderPath = path.join(__dirname, '../public/img/projectImg', project)
 
 
-  let filesFormated = []
+	let filesFormated = []
 
-  const files = fs.readdirSync(folderPath)
+	const files = fs.readdirSync(folderPath)
 
-  for (const file of files) {
-    let src = path.join('/img/projectImg/', project, file)
-    let dimensions = await sizeOf(path.join(__dirname, '../public/', src))
+	for (const file of files) {
+		let src = path.join('/img/projectImg/', project, file)
+		let dimensions = await sizeOf(path.join(__dirname, '../public/', src))
 
-    filesFormated.push({
-      src: individual ? src : file,
-      w: dimensions.width,
-      h: dimensions.height
-    })
-  }
+		filesFormated.push({
+			src: individual ? src : file,
+			w: dimensions.width,
+			h: dimensions.height
+		})
+	}
 
-  let thumbnail = path.join('/img/projectImg/', project, files[0])
+	let thumbnail = path.join('/img/projectImg/', project, files[0])
 
-  // JSON to object, eg "foo": "bar" --> foo:"bar"
-  filesFormated = JSON.stringify(filesFormated)
-  filesFormated = filesFormated.replace(/\"src\"/g, 'src')
-  filesFormated = filesFormated.replace(/\"w\"/g, 'w')
-  filesFormated = filesFormated.replace(/\"h\"/g, 'h')
+	// JSON to object, eg "foo": "bar" --> foo:"bar"
+	filesFormated = JSON.stringify(filesFormated)
+	filesFormated = filesFormated.replace(/\"src\"/g, 'src')
+	filesFormated = filesFormated.replace(/\"w\"/g, 'w')
+	filesFormated = filesFormated.replace(/\"h\"/g, 'h')
 
 
-  let img
-  if (individual) img = `<img src="${thumbnail}" onclick='openPopup(${filesFormated})' class="lazyload flexbinImage" id="${project}">`
-  else {
-    const root = path.join('/img/projectImg/', project) + '/'
-    img = `<img src="${thumbnail}" onclick='openPopup(${filesFormated},"${root}")' class="lazyload flexbinImage" id="${project}">`
-  }
-  console.log(img)
+	let img
+	if (individual) img = `<img src="${thumbnail}" onclick='openPopup(${filesFormated})' class="lazyload flexbinImage" id="${project}">`
+	else {
+		const root = path.join('/img/projectImg/', project) + '/'
+		img = `<img src="${thumbnail}" onclick='openPopup(${filesFormated},"${root}")' class="lazyload flexbinImage" id="${project}">`
+	}
+	console.log(img)
 
 })()
 // used to generate new project img tag used by flexbin on the home page
