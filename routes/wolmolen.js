@@ -1,7 +1,9 @@
-module.exports = (db, standardOptions) => {
-	async function route(req, res) {
-		let options = standardOptions
-		options.partials = ['partials/wolmolen.ejs']
+module.exports = (title, db) => {
+	async function router(req, res) {
+		let options = {
+			title,
+			partial: 'partials/wolmolen.ejs'
+		}
 
 		let partialOptions = {
 			stock: 0,
@@ -20,6 +22,5 @@ module.exports = (db, standardOptions) => {
 		res.render('index.ejs', options)
 	}
 
-
-	return { route }
+	return router
 }

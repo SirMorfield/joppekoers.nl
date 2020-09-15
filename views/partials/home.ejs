@@ -1,18 +1,4 @@
-<link href="/lib/Flexbin/flexbinCustom.css" type="text/css" rel="stylesheet" media="all" />
-
 <style>
-	#home {
-		background-color: rgba(244, 241, 187, 1);
-	}
-
-	. {
-		cursor: pointer;
-	}
-
-	.:hover {
-		outline: 3px solid rgba(244, 241, 187, 1);
-	}
-
 	#projects {
 		display: flex;
 	}
@@ -23,66 +9,76 @@
 		flex-direction: column;
 		flex-wrap: wrap;
 	}
+
+	.text {
+		background-color: rgba(255, 255, 255, 1);
+		padding: 0px 35px;
+		width: 300px;
+		vertical-align: top;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.block {
+		height: 300px;
+		margin: 0px 15px 15px 0px;
+	}
+
+	#all {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		/* max-width: 80vw; */
+		/* justify-content: space-evenly; */
+	}
+
+	.projectImg {
+		/* position: relative; */
+		/* max-width: 100%; */
+		height: 100%;
+		max-height: 100%;
+	}
 </style>
-
-<h1>Home</h1>
-<p>
-	Hello and welcome to Joppe Koers' website. This is where you'll find my portfolio, personal projects and a mix of programming related stuff. <br>
-	Since I can remember I've always wanted to make stuff. <br>
-	To accomplish this I acquired a number of skills of which you can see the result below. <br>
-	Do you want me to make you something? See the projects below to see what I'm capable of. You can contact me form the <a href="/contact" class="internalLink">/contact</a> page. <br>
-</p>
-
 <script src="/js/openPopup.js"></script>
-<div id="projects">
-	<div class="projectsRow">
-		<img src="/img/projectImg/wolmolen/0h300px.jpg" onclick="openPopup('wolmolen')"" class=" lazyload">
-		<img src="/img/projectImg/hammer/0h300px.jpg" onclick="openPopup('hammer')" class="lazyload" id="hammer">
-		<img src="/img/projectImg/jacobsLadder/0h300px.jpg" onclick="openPopup('jacobsLadder')" class=" lazyload" id="jacobsLadder">
-		<img src="/img/projectImg/knife/0h300px.jpg" onclick="openPopup('knife')" class=" lazyload" id="knife">
-		<img src="/img/projectImg/smallBox/0h300px.jpg" onclick="openPopup('smallBox')"" class=" lazyload" id="smallBox">
+
+<div id="all">
+
+	<div class="text block">
+		<p>
+			Hello and welcome to Joppe Koers' website. This is where you'll find my portfolio, personal projects and a mix of programming related stuff.
+			Since I can remember I've always wanted to make stuff.
+			To accomplish this I acquired a number of skills of which you can see the result below.
+			Do you want me to make you something? See the projects below to see what I'm capable of. You can contact me form the <a href="/contact" class="internalLink">/contact</a> page.
+		</p>
 	</div>
 
-	<div class="projectsRow">
-		<img src="/img/projectImg/speakers/0h300px.jpg" onclick="openPopup('speakers')" class=" lazyload" id="speakers">
-		<img src="/img/projectImg/sword/0h300px.jpg" onclick="openPopup('sword')" class=" lazyload" id="sword">
-		<img src="/img/projectImg/sword2/0h300px.jpg" onclick="openPopup('sword2')" class=" lazyload" id="sword2">
-		<img src="/img/projectImg/table/0h300px.jpg" onclick="openPopup('table')" class=" lazyload" id="table">
+	<div class="project block scale-up">
+		<img src="/img/projectImg/wolmolen/0h300px.jpg" onclick="openPopup('wolmolen')" class="lazyload projectImg">
 	</div>
-</div>
-
-<link rel="stylesheet" href="/lib/PhotoSwipe/photoswipe.css">
-<link rel="stylesheet" href="/lib/PhotoSwipe/default-skin/default-skin-custom.css">
-<script src="/lib/PhotoSwipe/photoswipe.min.js"></script>
-<script src="/lib/PhotoSwipe/photoswipe-ui-default.min.js"></script>
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-	<div class="pswp__bg"></div>
-
-	<div class="pswp__scroll-wrap">
-		<div class="pswp__container">
-			<div class="pswp__item"></div>
-			<div class="pswp__item"></div>
-			<div class="pswp__item"></div>
-		</div>
-		<div class="pswp__ui pswp__ui--hidden">
-			<div class="pswp__top-bar">
-				<div class="pswp__counter"></div> <button class="pswp__button pswp__button--close" title="Close (Esc)"></button> <button class="pswp__button pswp__button--share" title="Share"></button> <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button> <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-				<div class="pswp__preloader">
-					<div class="pswp__preloader__icn">
-						<div class="pswp__preloader__cut">
-							<div class="pswp__preloader__donut"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-				<div class="pswp__share-tooltip"></div>
-			</div> <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"> </button> <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"> </button>
-			<div class="pswp__caption">
-				<div class="pswp__caption__center"></div>
-			</div>
-		</div>
+	<div class="project block scale-up">
+		<img src="/img/projectImg/hammer/0h300px.jpg" onclick="openPopup('hammer')" class="lazyload projectImg" id="hammer">
+	</div>
+	<div class="project block scale-up">
+		<img src="/img/projectImg/jacobsLadder/0h300px.jpg" onclick="openPopup('jacobsLadder')" class="lazyload projectImg" id="jacobsLadder">
+	</div>
+	<div class="project block scale-up">
+		<img src="/img/projectImg/knife/0h300px.jpg" onclick="openPopup('knife')" class="lazyload projectImg" id="knife">
+	</div>
+	<div class="project block scale-up">
+		<img src="/img/projectImg/smallBox/0h300px.jpg" onclick="openPopup('smallBox')" class="lazyload projectImg" id="smallBox">
+	</div>
+	<div class="project block scale-up">
+		<img src="/img/projectImg/speakers/0h300px.jpg" onclick="openPopup('speakers')" class="lazyload projectImg" id="speakers">
+	</div>
+	<div class="project block scale-up">
+		<img src="/img/projectImg/sword/0h300px.jpg" onclick="openPopup('sword')" class="lazyload projectImg" id="sword">
+	</div>
+	<div class="project block scale-up">
+		<img src="/img/projectImg/sword2/0h300px.jpg" onclick="openPopup('sword2')" class="lazyload projectImg" id="sword2">
+	</div>
+	<div class="project block scale-up">
+		<img src="/img/projectImg/table/0h300px.jpg" onclick="openPopup('table')" class="lazyload projectImg" id="table">
 	</div>
 
-</div>
+	<%- include('photoSwipe.ejs')-%>
