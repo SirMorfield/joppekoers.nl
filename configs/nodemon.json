@@ -15,7 +15,7 @@
 	],
 	"verbose": false,
 	"execMap": {
-		"js": "node --inspect"
+		"js": "node"
 	},
 	"watch": [
 		"."

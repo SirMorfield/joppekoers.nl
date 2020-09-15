@@ -30,9 +30,20 @@
 	app.use(express.static(path.join(__dirname, 'public/')))
 
 	const db = await require('./server/db/db.js')()
+	const title = process.env.NODE_ENV == 'production' ? 'Joppe Koers.nl' : 'localhost'
 
-	const router = require('./routes/router.js')(io, db)
-	app.use('/', router)
+	const home = require('./routes/home.js')(title)
+	const contact = require('./routes/contact.js')(title)
+	const wolmolen = require('./routes/wolmolen.js')(title, db)
+	const code = require('./routes/code.js')(title)
+	const error = require('./routes/error.js')(title)
+
+	app.get('/', home)
+	app.get('/home', home)
+	app.get('/contact', contact)
+	app.get('/wolmolen', wolmolen)
+	app.get('/code', code)
+	app.get('*', error)
 
 	httpServer.listen(8080, () => {
 		console.clear()
