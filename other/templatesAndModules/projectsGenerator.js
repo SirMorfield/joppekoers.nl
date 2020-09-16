@@ -1,56 +1,46 @@
 const { promisify } = require('util')
-const sizeOf = promisify(require('image-size'))
+const imageSize = promisify(require('image-size'))
 const path = require('path')
-const fs = require('fs');
+const fs = require('fs')
 
-(async () => {
-	const project = process.argv[2]
-	const individual = process.argv[3] == 1
-	const folderPath = path.join(__dirname, '../public/img/projectImg', project)
+const projectsPath = path.join(__dirname, '../../public/img/projectImg/')
 
-
-	let filesFormated = []
-
-	const files = fs.readdirSync(folderPath)
-
-	for (const file of files) {
-		let src = path.join('/img/projectImg/', project, file)
-		let dimensions = await sizeOf(path.join(__dirname, '../public/', src))
-
-		filesFormated.push({
-			src: individual ? src : file,
+async function parseImages(projectPath) {
+	const images = await fs.promises.readdir(projectPath)
+	let imageDb = []
+	for (const image of images) {
+		if (image.match(/^thumbnail.*/))
+			continue
+		let dimensions = await imageSize(path.join(projectPath, image))
+		imageDb.push({
+			src: image,
 			w: dimensions.width,
 			h: dimensions.height
 		})
 	}
+	return imageDb
+}
 
-	let thumbnail = path.join('/img/projectImg/', project, files[0])
-
-	// JSON to object, eg "foo": "bar" --> foo:"bar"
-	filesFormated = JSON.stringify(filesFormated)
-	filesFormated = filesFormated.replace(/\"src\"/g, 'src')
-	filesFormated = filesFormated.replace(/\"w\"/g, 'w')
-	filesFormated = filesFormated.replace(/\"h\"/g, 'h')
-
-
-	let img
-	if (individual) img = `<img src="${thumbnail}" onclick='openPopup(${filesFormated})' class="lazyload flexbinImage" id="${project}">`
-	else {
-		const root = path.join('/img/projectImg/', project) + '/'
-		img = `<img src="${thumbnail}" onclick='openPopup(${filesFormated},"${root}")' class="lazyload flexbinImage" id="${project}">`
+(async () => {
+	const projectIDs = await fs.promises.readdir(projectsPath)
+	let projectsDb = {}
+	for (const projectID of projectIDs) {
+		projectsDb[projectID] = {}
+		projectsDb[projectID].imgs = await parseImages(path.join(projectsPath, projectID))
+		projectsDb[projectID].root = path.join('/img/projectImg/', projectID) + '/'
 	}
-	console.log(img)
+	projectsDb = JSON.stringify(projectsDb)
+	projectsDb = projectsDb.replace(/\"src\"\:/g, 'src:')
+	projectsDb = projectsDb.replace(/\"imgs\"\:/g, 'imgs:')
+	projectsDb = projectsDb.replace(/\"root\"\:/g, 'root:')
+	projectsDb = projectsDb.replace(/\"w\"\:/g, 'w:')
+	projectsDb = projectsDb.replace(/\"h\"\:/g, 'h:')
 
+	let publicOpenPopup = await fs.promises.readFile(path.join(__dirname, 'openPopupTemplate.js'))
+	publicOpenPopup += 'const projects = '
+	publicOpenPopup += projectsDb
+	await fs.promises.writeFile(path.join(__dirname, '../../public/js/openPopup.js'), publicOpenPopup)
 })()
-// used to generate new project img tag used by flexbin on the home page
-
-// node templatesAndModules/projectsGenerator.js folder individual
-// folder:STR       name of folder in /public/img/projectImg
-// individual:BOOL  show full path in image:
-//                  <img src="/img/projectImg/hammer/0.jpg" onclick='openPopup([{src:"/img/projectImg/hammer/0.jpg",w:1200,h:1600}])' class="flexbinImage" id="hammer">
-//                  or show with rootLocation:
-//                  <img src="/img/projectImg/wolmolen/0.jpg" onclick='openPopup([{src:"0.jpg",w:2756,h:1550}],"/img/projectImg/wolmolen/")' class="flexbinImage" id="wolmolen">
-//                  default FALSE
 
 // create small preview image with
 // convert -resize 'X300' 0.jpg 0h300px.jpg
