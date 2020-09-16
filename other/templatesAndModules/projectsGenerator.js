@@ -6,23 +6,22 @@ const projectsPath = path.join(__dirname, '../../public/img/projectImg/')
 
 async function createThumbnail(imagePath, thumbnailPath) {
 	const extention = imagePath.match(/\.[0-9a-z]+$/)[0] || '.jpg'
-	const uncompressed = `/tmp/${Date.now()}${extention}`
-	let { stderr } = await exec(`convert -resize 'X300' '${imagePath}' '${uncompressed}'`)
+
+	const uncompressedFile = `/tmp/${Date.now()}${extention}`
+	let { stderr } = await exec(`convert -resize 'X300' '${imagePath}' '${uncompressedFile}'`)
+	const uncompressedSize = (await fs.promises.stat(uncompressedFile)).size
 	if (stderr) console.error(stderr)
 
-	const compressed = `/tmp/${Date.now()}${extention}`
-	// from: https://web.dev/uses-optimized-images/?utm_source=lighthouse&utm_medium=unknown
-	let { stderr2 } = await exec(`convert -quality 85 '${uncompressed}' ${compressed}`)
+	let { stderr2 } = await exec(`jpegoptim '${uncompressedFile}'`)
 	if (stderr2) console.error(stderr2)
-	const sizeDelta = (await fs.promises.stat(compressed)).size - (await fs.promises.stat(uncompressed)).size
-	if (sizeDelta > 4 * 1024) {
-		await fs.promises.rename(compressed, thumbnailPath)
-		await fs.promises.unlink(uncompressed)
-		console.log(`Saved ${sizeDelta / 1024} KiB on ${thumbnailPath}`)
-	} else {
-		await fs.promises.rename(uncompressed, thumbnailPath)
-		await fs.promises.unlink(compressed)
-	}
+	const compressedFile = uncompressedFile
+	const compressedSize = (await fs.promises.stat(compressedFile)).size
+	const sizeDelta = `${((uncompressedSize - compressedSize) / 1024).toFixed(3)} KiB`.padStart('1024.000 KiB'.length, ' ')
+	const sizeDeltaPercent = `${((uncompressedSize - compressedSize) / uncompressedSize).toFixed(3)}%`.padEnd('100.000%'.length, ' ')
+	const uncompressedSizeStr = `${(uncompressedSize / 1024).toFixed(3)} KiB`.padStart('1024.000 KiB'.length, ' ')
+	const compressedSizeStr = `${(uncompressedSize / 1024).toFixed(3)} KiB`.padStart('1024.000 KiB'.length, ' ')
+	console.log(`${sizeDeltaPercent} ${sizeDelta} ${uncompressedSizeStr} -> ${compressedSizeStr} - ${imagePath}`)
+	await fs.promises.rename(compressedFile, thumbnailPath)
 }
 
 async function imageSize(path) {
@@ -45,7 +44,6 @@ async function imageSize(path) {
 			const temp = result.width
 			result.width = result.height
 			result.height = temp
-			console.log(`Swapped ${path}`)
 		}
 	} catch (err) { }
 	return result
@@ -55,7 +53,7 @@ async function parseImages(projectPath) {
 	const images = await fs.promises.readdir(projectPath)
 	if (images.length == 0)
 		return []
-	const thumbnailPath = path.join(projectPath, `thumbnail${images[0].match(/\..*$/)[0]}`)
+	const thumbnailPath = path.join(projectPath, `thumbnail${images[0].match(/\.[0-9a-z]+$/)[0]}`)
 	await createThumbnail(path.join(projectPath, images[0]), thumbnailPath)
 	let imageDb = []
 	for (const image of images) {
@@ -75,13 +73,16 @@ async function getProject(projectID) {
 	let res = {}
 	res.imgs = await parseImages(path.join(projectsPath, projectID))
 	res.root = path.join('/img/projectImg/', projectID) + '/'
-	console.log(`Done: ${projectID}\n`)
+	// console.log(`Done: ${projectID}\n`)
 	return res
 }
 
 (async () => {
-	let projectsDb = await fs.promises.readdir(projectsPath)
-	Promise.all(projectsDb.map(getProject))
+	let projects = await fs.promises.readdir(projectsPath)
+	let projectsDb = {}
+	for (const project of projects) {
+		projectsDb[project] = await getProject(project)
+	}
 	projectsDb = JSON.stringify(projectsDb)
 	projectsDb = projectsDb.replace(/\"src\"\:/g, 'src:')
 	projectsDb = projectsDb.replace(/\"imgs\"\:/g, 'imgs:')
