@@ -1,24 +1,27 @@
 const mime = require('mime-types')
 const path = require('path')
 const exec = require('util').promisify(require('child_process').exec);
-const fs = require('fs').promises
-async function diskUsagePercent() {
-	const { stdout, stderr } = await exec("df / | awk '{ print $5 }' | tail -n 1");
-	if (stderr) return 100
-	return parseInt(stdout.replace(/^\D+/g, ''))
+const fs = require('fs')
+
+const dbPath = path.join(__dirname, '../server/dropDb.json')
+if (!fs.existsSync(dbPath)) fs.writeFileSync(dbPath, '{}')
+const db = JSON.parse(fs.readFileSync(dbPath))
+
+const dbFilesPath = path.join(__dirname, '../server/drop/')
+if (!fs.existsSync(dbFilesPath)) fs.mkdirSync(dbFilesPath)
+
+async function getSize(path) {
+	const { stdout, stderr } = await exec(`du -s -B1 '${path}'`)
+	if (stderr) return -1
+	return parseInt(stdout.split(' ')[0])
 }
 
-function randomStr(length, { numbers = true, capitalLetters = true, lowerCaseLetters = true }) {
-	let text = ''
-	let possible = ''
-	if (numbers) possible += '1234567890'
-	if (capitalLetters) possible += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-	if (lowerCaseLetters) possible += 'abcdefghijklmnopqrstuvwxyz'
-	for (let i = 0; i < length; i++) text += possible.charAt(Math.floor(Math.random() * possible.length))
-	return text
+function formattedTimestamp(d) {
+	const date = d.toISOString().split('T')[0]
+	const time = d.toTimeString().split(' ')[0]
+	const ms = `${d.getMilliseconds()}`.padStart(3, '0')
+	return `${date} ${time}:${ms}`
 }
-
-const filesDir = path.join(__dirname, '../public/drop/files')
 
 function drop(req, res) {
 	res.render('drop.ejs')
@@ -26,49 +29,62 @@ function drop(req, res) {
 
 async function upload(req, res) {
 	const file = req.files.upfile
+	const identifier = req.body.identifier
+
 	if (!file) {
-		res.send("No File selected !")
+		res.send('No File selected')
+		return
+	}
+	if (identifier.length == 0 || dbFilesPath[identifier]) {
+		res.send('Identifier already in use')
+		return
+	}
+	if ((await getSize(dbFilesPath)) > 2.147e10) { // 20 GB
+		res.send('Server is full')
 		return
 	}
 
-	const name = randomStr(3, { capitalLetters: false, lowerCaseLetters: false })
-	const fileName = name + '.' + mime.extension(file.mimetype)
-	const savePath = path.join(filesDir, fileName)
-
-	const free = await diskUsagePercent()
-	if (free < 80) {
-		const files = await fs.readdir(filesDir)
-
-		let oldest = { file: 'testfile123', birthtimeMs: Infinity }
-		for (const file of files) {
-			let stats = await fs.stat(path.join(filesDir, file))
-			if (stats.birthtimeMs < oldest.birthtimeMs) oldest = { file, birthtimeMs: stats.birthtimeMs }
-		}
-
-		if (oldest.file !== 'testfile123') {
-			await fs.unlink(path.join(filesDir, oldest.file))
-		}
-	}
+	const saveName = `${formattedTimestamp(new Date())}.${mime.extension(file.mimetype)}`
+	const savePath = path.join(dbFilesPath, saveName)
 
 	file.mv(savePath, (err) => {
 		if (err) {
 			console.error(err)
-			return res.send("Error Occured!")
+			res.send('Error occurred')
+			return
 		} else {
-			return res.send(`DONE, go to joppekoers.nl/drop/${name} to download it`)
+			db[identifier] = [
+				{
+					path: savePath,
+					name: file.name
+				}
+			]
+			res.send(`Done, go to joppekoers.nl/drop/${identifier} to download it`)
+			fs.promises.writeFile(dbPath, JSON.stringify(db))
+			return
 		}
 	})
 }
 
-async function get(req, res) {
-	const files = await fs.readdir(filesDir)
-	const file = files.find(file => file.includes(req.params.name))
-	if (!file) return res.send('Not found')
-	res.download(path.join(filesDir, file))
+async function download(req, res) {
+	const identifier = req.params.identifier
+	if (identifier.length == 0)
+	{
+		res.send('Empty identifier')
+		return
+	}
+	if (!db[identifier])
+	{
+		res.send('Identifier not found')
+		return
+	}
+	for (const file of db[identifier]) {
+		res.download(file.path, file.name)
+	}
 }
 
 module.exports = {
 	drop,
 	upload,
-	get
+	download
 }

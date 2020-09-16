@@ -16,8 +16,10 @@
 
 	const fileUpload = require('express-fileupload')
 	app.use(fileUpload({
-		limits: { fileSize: 3.221e9 }, // 3 GiB
-		abortOnLimit: true
+		limits: { fileSize: 10.221e9 }, // 10 GiB
+		abortOnLimit: true,
+		useTempFiles : true,
+		tempFileDir : '/tmp/'
 	}))
 
 	const favicon = require('serve-favicon')
@@ -27,6 +29,7 @@
 	app.set('view engine', 'ejs')
 
 	app.use(express.urlencoded({ extended: false }))
+	app.use(express.json())
 	app.use(express.static(path.join(__dirname, 'public/')))
 
 	const db = await require('./server/db/db.js')()
@@ -34,15 +37,19 @@
 
 	const home = require('./routes/home.js')(title)
 	const contact = require('./routes/contact.js')(title)
-	const wolmolen = require('./routes/wolmolen.js')(title, db)
-	const code = require('./routes/code.js')(title)
+	// const wolmolen = require('./routes/wolmolen.js')(title, db)
+	// const code = require('./routes/code.js')(title)
 	const error = require('./routes/error.js')(title)
+	const drop = require('./routes/drop.js')
 
 	app.get('/', home)
 	app.get('/home', home)
 	app.get('/contact', contact)
-	app.get('/wolmolen', wolmolen)
-	app.get('/code', code)
+	// app.get('/wolmolen', wolmolen)
+	// app.get('/code', code)
+	app.get('/drop', drop.drop)
+	app.post('/drop/upload', drop.upload)
+	app.get('/drop/:identifier', drop.download)
 	app.get('*', error)
 
 	httpServer.listen(8080, () => {
