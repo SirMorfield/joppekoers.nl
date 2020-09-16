@@ -13,7 +13,7 @@ test.*
 .node-persist/
 
 # drops
-public/drop/files/*.*
-
+server/drop/
+server/dropDb.json
 # enviroment variables
 env.json
