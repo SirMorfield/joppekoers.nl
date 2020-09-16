@@ -1,14 +1,30 @@
 const path = require('path')
 const fs = require('fs')
+const exec = require('util').promisify(require('child_process').exec)
 
 const projectsPath = path.join(__dirname, '../../public/img/projectImg/')
 
 async function createThumbnail(imagePath, thumbnailPath) {
-	const { stderr } = await exec(`convert -resize 'X400' '${imagePath}' '${thumbnailPath}'`)
+	const extention = imagePath.match(/\.[0-9a-z]+$/)[0] || '.jpg'
+	const uncompressed = `/tmp/${Date.now()}${extention}`
+	let { stderr } = await exec(`convert -resize 'X300' '${imagePath}' '${uncompressed}'`)
 	if (stderr) console.error(stderr)
+
+	const compressed = `/tmp/${Date.now()}${extention}`
+	// from: https://web.dev/uses-optimized-images/?utm_source=lighthouse&utm_medium=unknown
+	let { stderr2 } = await exec(`convert -quality 85 '${uncompressed}' ${compressed}`)
+	if (stderr2) console.error(stderr2)
+	const sizeDelta = (await fs.promises.stat(compressed)).size - (await fs.promises.stat(uncompressed)).size
+	if (sizeDelta > 4 * 1024) {
+		await fs.promises.rename(compressed, thumbnailPath)
+		await fs.promises.unlink(uncompressed)
+		console.log(`Saved ${sizeDelta / 1024} KiB on ${thumbnailPath}`)
+	} else {
+		await fs.promises.rename(uncompressed, thumbnailPath)
+		await fs.promises.unlink(compressed)
+	}
 }
 
-const exec = require('util').promisify(require('child_process').exec)
 async function imageSize(path) {
 	const identity = await exec(`identify -format "%wx%h" '${path}'`)
 	if (identity.stderr) console.error(stderr)
@@ -55,15 +71,17 @@ async function parseImages(projectPath) {
 	return imageDb
 }
 
+async function getProject(projectID) {
+	let res = {}
+	res.imgs = await parseImages(path.join(projectsPath, projectID))
+	res.root = path.join('/img/projectImg/', projectID) + '/'
+	console.log(`Done: ${projectID}\n`)
+	return res
+}
+
 (async () => {
-	const projectIDs = await fs.promises.readdir(projectsPath)
-	let projectsDb = {}
-	for (const projectID of projectIDs) {
-		projectsDb[projectID] = {}
-		projectsDb[projectID].imgs = await parseImages(path.join(projectsPath, projectID))
-		projectsDb[projectID].root = path.join('/img/projectImg/', projectID) + '/'
-		console.log(`Done: ${projectID}\n`)
-	}
+	let projectsDb = await fs.promises.readdir(projectsPath)
+	Promise.all(projectsDb.map(getProject))
 	projectsDb = JSON.stringify(projectsDb)
 	projectsDb = projectsDb.replace(/\"src\"\:/g, 'src:')
 	projectsDb = projectsDb.replace(/\"imgs\"\:/g, 'imgs:')
