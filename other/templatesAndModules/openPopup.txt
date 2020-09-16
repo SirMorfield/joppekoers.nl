@@ -1,9 +1,5 @@
 function openPopup(id) {
-	const { imgs, root } = projects[id]
-
-	for (const img of imgs) {
-		img.src = `${root}${img.src}`
-	}
+	const { imgs } = projects[id]
 
 	let options = {
 		loop: false,
@@ -16,4 +12,12 @@ function openPopup(id) {
 	let pswpElement = document.querySelectorAll('.pswp')[0]
 	let gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, imgs, options)
 	gallery.init()
+}
+
+// projectsPlaceholder
+
+for (const project of Object.keys(projects)) {
+	for (const img of projects[project].imgs) {
+		img.src = `${projects[project].root}${img.src}`
+	}
 }
