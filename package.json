@@ -24,7 +24,7 @@
 	},
 	"scripts": {
 		"dev": "nodemon ./app.js --config configs/nodemon.json",
-		"production": "NODE_ENV=production pm2 start ./configs/app.json"
+		"production": "NODE_ENV=production pm2 start ./configs/app.json; pm2 save"
 	},
 	"repository": {
 		"type": "git",
