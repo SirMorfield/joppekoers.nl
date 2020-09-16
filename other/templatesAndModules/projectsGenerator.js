@@ -2,11 +2,19 @@ const { promisify } = require('util')
 const imageSize = promisify(require('image-size'))
 const path = require('path')
 const fs = require('fs')
+const exec = require('util').promisify(require('child_process').exec)
 
 const projectsPath = path.join(__dirname, '../../public/img/projectImg/')
 
+async function createThumbnail(imagePath, thumbnailPath) {
+	const { stderr } = await exec(`convert -resize 'X400' '${imagePath}' '${thumbnailPath}'`)
+	if (stderr) console.error(stderr)
+}
+
 async function parseImages(projectPath) {
 	const images = await fs.promises.readdir(projectPath)
+	const thumbnailPath = path.join(projectPath, `thumbnail${images[0].match(/\..*$/)[0]}`)
+	await createThumbnail(path.join(projectPath, images[0]), thumbnailPath)
 	let imageDb = []
 	for (const image of images) {
 		if (image.match(/^thumbnail.*/))
@@ -28,6 +36,7 @@ async function parseImages(projectPath) {
 		projectsDb[projectID] = {}
 		projectsDb[projectID].imgs = await parseImages(path.join(projectsPath, projectID))
 		projectsDb[projectID].root = path.join('/img/projectImg/', projectID) + '/'
+		console.log(`Done: ${projectID}`)
 	}
 	projectsDb = JSON.stringify(projectsDb)
 	projectsDb = projectsDb.replace(/\"src\"\:/g, 'src:')
