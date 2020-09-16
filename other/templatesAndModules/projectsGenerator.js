@@ -18,9 +18,14 @@ async function imageSize(path) {
 		width: parseInt(identity.stdout[0]),
 		height: parseInt(identity.stdout[1])
 	}
+	// account for some android phones in which
+	//the data is stored in portrait mode, but the photo was taken in vertical
 	try {
 		const exif = await exec(`exif -t Orientation -m '${path}'`)
-		if (exif.stdout.match(/Right\-top/m)) {
+		if (
+			exif.stdout.match(/Right\-top/m) ||
+			exif.stdout.match(/Left\-bottom/m)
+		) {
 			const temp = result.width
 			result.width = result.height
 			result.height = temp
