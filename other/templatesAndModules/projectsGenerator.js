@@ -5,23 +5,8 @@ const exec = require('util').promisify(require('child_process').exec)
 const projectsPath = path.join(__dirname, '../../public/img/projectImg/')
 
 async function createThumbnail(imagePath, thumbnailPath) {
-	const extention = imagePath.match(/\.[0-9a-z]+$/)[0] || '.jpg'
-
-	const uncompressedFile = `/tmp/${Date.now()}${extention}`
-	let { stderr } = await exec(`convert -resize 'X300' '${imagePath}' '${uncompressedFile}'`)
-	const uncompressedSize = (await fs.promises.stat(uncompressedFile)).size
+	let { stderr } = await exec(`convert -resize 'X300' '${imagePath}' '${thumbnailPath}'`)
 	if (stderr) console.error(stderr)
-
-	let { stderr2 } = await exec(`jpegoptim '${uncompressedFile}'`)
-	if (stderr2) console.error(stderr2)
-	const compressedFile = uncompressedFile
-	const compressedSize = (await fs.promises.stat(compressedFile)).size
-	const sizeDelta = `${((uncompressedSize - compressedSize) / 1024).toFixed(3)} KiB`.padStart('1024.000 KiB'.length, ' ')
-	const sizeDeltaPercent = `${((uncompressedSize - compressedSize) / uncompressedSize).toFixed(3)}%`.padEnd('100.000%'.length, ' ')
-	const uncompressedSizeStr = `${(uncompressedSize / 1024).toFixed(3)} KiB`.padStart('1024.000 KiB'.length, ' ')
-	const compressedSizeStr = `${(uncompressedSize / 1024).toFixed(3)} KiB`.padStart('1024.000 KiB'.length, ' ')
-	console.log(`${sizeDeltaPercent} ${sizeDelta} ${uncompressedSizeStr} -> ${compressedSizeStr} - ${imagePath}`)
-	await fs.promises.rename(compressedFile, thumbnailPath)
 }
 
 async function imageSize(path) {
@@ -41,6 +26,7 @@ async function imageSize(path) {
 			exif.stdout.match(/Right\-top/m) ||
 			exif.stdout.match(/Left\-bottom/m)
 		) {
+			console.log(`Flipped ${path}`)
 			const temp = result.width
 			result.width = result.height
 			result.height = temp
@@ -49,12 +35,23 @@ async function imageSize(path) {
 	return result
 }
 
+function hasThumbnail(images) {
+	for (const image of images) {
+		if (image.match(/^thumbnail.*/))
+			return true
+	}
+	return false
+}
+
 async function parseImages(projectPath) {
 	const images = await fs.promises.readdir(projectPath)
 	if (images.length == 0)
 		return []
-	const thumbnailPath = path.join(projectPath, `thumbnail${images[0].match(/\.[0-9a-z]+$/)[0]}`)
-	await createThumbnail(path.join(projectPath, images[0]), thumbnailPath)
+	if (!hasThumbnail(images)) {
+		const thumbnailPath = path.join(projectPath, `thumbnail${images[0].match(/\.[0-9a-z]+$/)[0]}`)
+		createThumbnail(path.join(projectPath, images[0]), thumbnailPath)
+		console.log(`Created thumbnail ${thumbnailPath}`)
+	}
 	let imageDb = []
 	for (const image of images) {
 		if (image.match(/^thumbnail.*/))
@@ -81,7 +78,9 @@ async function getProject(projectID) {
 	let projects = await fs.promises.readdir(projectsPath)
 	let projectsDb = {}
 	for (const project of projects) {
+		console.log(`> ${project}`)
 		projectsDb[project] = await getProject(project)
+		console.log(' ')
 	}
 	projectsDb = JSON.stringify(projectsDb)
 	projectsDb = projectsDb.replace(/\"src\"\:/g, 'src:')

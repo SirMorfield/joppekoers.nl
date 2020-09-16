@@ -4,6 +4,7 @@
 	"description": "Joppe Koers' website",
 	"main": "app.js",
 	"dependencies": {
+		"compression": "^1.7.4",
 		"ejs": "^2.6.1",
 		"express": "~4.16.0",
 		"express-fileupload": "^1.2.0",
