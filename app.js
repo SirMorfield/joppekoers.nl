@@ -8,8 +8,11 @@
 
 	const http = require('http')
 	const httpServer = http.createServer(app)
-	let io = require('socket.io')(httpServer)
+	// let io = require('socket.io')(httpServer)
 	app.enable('trust proxy')
+
+	const compression = require('compression')
+	app.use(compression({ level: 9 }))
 
 	const fileUpload = require('express-fileupload')
 	app.use(fileUpload({
