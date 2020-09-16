@@ -11,15 +11,12 @@
 	let io = require('socket.io')(httpServer)
 	app.enable('trust proxy')
 
-	const compression = require('compression')
-	app.use(compression({ level: 9 }))
-
 	const fileUpload = require('express-fileupload')
 	app.use(fileUpload({
 		limits: { fileSize: 10.221e9 }, // 10 GiB
 		abortOnLimit: true,
-		useTempFiles : true,
-		tempFileDir : '/tmp/'
+		useTempFiles: true,
+		tempFileDir: '/tmp/'
 	}))
 
 	const favicon = require('serve-favicon')

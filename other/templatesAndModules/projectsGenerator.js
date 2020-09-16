@@ -1,5 +1,3 @@
-const { promisify } = require('util')
-const imageSize = promisify(require('image-size'))
 const path = require('path')
 const fs = require('fs')
 const exec = require('util').promisify(require('child_process').exec)
@@ -9,6 +7,14 @@ const projectsPath = path.join(__dirname, '../../public/img/projectImg/')
 async function createThumbnail(imagePath, thumbnailPath) {
 	const { stderr } = await exec(`convert -resize 'X400' '${imagePath}' '${thumbnailPath}'`)
 	if (stderr) console.error(stderr)
+}
+
+async function imageSize(path) {
+	let { stderr, stdout } = await exec(`identify -format "%wx%h" '${path}'`)
+	if (stderr) return { width: 0, height: 0 }
+	stdout = stdout.trim()
+	stdout = stdout.split('x')
+	return { width: parseInt(stdout[0]), height: parseInt(stdout[1]) }
 }
 
 async function parseImages(projectPath) {
@@ -44,10 +50,11 @@ async function parseImages(projectPath) {
 	projectsDb = projectsDb.replace(/\"root\"\:/g, 'root:')
 	projectsDb = projectsDb.replace(/\"w\"\:/g, 'w:')
 	projectsDb = projectsDb.replace(/\"h\"\:/g, 'h:')
+	projectsDb = `const projects = ${projectsDb}`
 
-	let publicOpenPopup = await fs.promises.readFile(path.join(__dirname, 'openPopupTemplate.js'))
-	publicOpenPopup += 'const projects = '
-	publicOpenPopup += projectsDb
+	let publicOpenPopup = await fs.promises.readFile(path.join(__dirname, 'openPopup.txt'))
+	publicOpenPopup = publicOpenPopup.toString()
+	publicOpenPopup = publicOpenPopup.replace('// projectsPlaceholder', projectsDb)
 	await fs.promises.writeFile(path.join(__dirname, '../../public/js/openPopup.js'), publicOpenPopup)
 })()
 
