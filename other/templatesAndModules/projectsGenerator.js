@@ -1,6 +1,5 @@
 const path = require('path')
 const fs = require('fs')
-const exec = require('util').promisify(require('child_process').exec)
 
 const projectsPath = path.join(__dirname, '../../public/img/projectImg/')
 
@@ -9,16 +8,32 @@ async function createThumbnail(imagePath, thumbnailPath) {
 	if (stderr) console.error(stderr)
 }
 
+const exec = require('util').promisify(require('child_process').exec)
 async function imageSize(path) {
-	let { stderr, stdout } = await exec(`identify -format "%wx%h" '${path}'`)
-	if (stderr) return { width: 0, height: 0 }
-	stdout = stdout.trim()
-	stdout = stdout.split('x')
-	return { width: parseInt(stdout[0]), height: parseInt(stdout[1]) }
+	const identity = await exec(`identify -format "%wx%h" '${path}'`)
+	if (identity.stderr) console.error(stderr)
+	identity.stdout = identity.stdout.trim()
+	identity.stdout = identity.stdout.split('x')
+	result = {
+		width: parseInt(identity.stdout[0]),
+		height: parseInt(identity.stdout[1])
+	}
+	try {
+		const exif = await exec(`exif -t Orientation -m '${path}'`)
+		if (exif.stdout.match(/Right\-top/m)) {
+			const temp = result.width
+			result.width = result.height
+			result.height = temp
+			console.log(`Swapped ${path}`)
+		}
+	} catch (err) { }
+	return result
 }
 
 async function parseImages(projectPath) {
 	const images = await fs.promises.readdir(projectPath)
+	if (images.length == 0)
+		return []
 	const thumbnailPath = path.join(projectPath, `thumbnail${images[0].match(/\..*$/)[0]}`)
 	await createThumbnail(path.join(projectPath, images[0]), thumbnailPath)
 	let imageDb = []
@@ -42,7 +57,7 @@ async function parseImages(projectPath) {
 		projectsDb[projectID] = {}
 		projectsDb[projectID].imgs = await parseImages(path.join(projectsPath, projectID))
 		projectsDb[projectID].root = path.join('/img/projectImg/', projectID) + '/'
-		console.log(`Done: ${projectID}`)
+		console.log(`Done: ${projectID}\n`)
 	}
 	projectsDb = JSON.stringify(projectsDb)
 	projectsDb = projectsDb.replace(/\"src\"\:/g, 'src:')
