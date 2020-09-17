@@ -23,7 +23,8 @@
 	},
 	"scripts": {
 		"dev": "nodemon ./app.js --config configs/nodemon.json",
-		"production": "NODE_ENV=production pm2 start ./configs/app.json; pm2 save"
+		"production": "NODE_ENV=production pm2 start ./configs/app.json; pm2 save",
+		"images": "node other/templatesAndModules/projectsGenerator.js"
 	},
 	"repository": {
 		"type": "git",
