@@ -8,13 +8,9 @@
 		"ejs": "^2.6.1",
 		"express": "~4.16.0",
 		"express-fileupload": "^1.2.0",
-		"express-rate-limit": "^3.4.0",
 		"googleapis": "^41.0.1",
-		"lowdb": "^1.0.0",
 		"mime-types": "^2.1.22",
 		"nodemailer": "^6.3.0",
-		"request": "^2.88.0",
-		"request-promise-native": "^1.0.7",
 		"serve-favicon": "^2.5.0",
 		"socket.io": "~2.2.0"
 	},
