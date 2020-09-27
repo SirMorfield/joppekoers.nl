@@ -47,7 +47,7 @@
 	app.get('*', error)
 
 	httpServer.listen(8080, () => {
-		console.clear()
+		// console.clear()
 		console.log('NODE_ENV:', process.env.NODE_ENV)
 	})
 })()
