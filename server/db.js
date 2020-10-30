@@ -27,7 +27,7 @@ async function DBFull(newFile) {
 }
 
 function validateIdentifier(dbContents, identifier) {
-	if (identifier.length == 0) {
+	if (identifier.length <= 1) {
 		return { error: 'Identifier too short' }
 	}
 	if (identifier.length > 20) {
@@ -60,6 +60,8 @@ async function saveFiles(files, identifier) {
 		return { error: 'Database is full' }
 	}
 	const dbContents = await fs.promises.readdir(db.contentDir)
+	if (identifier.length <= 1)
+		identifier = `${Date.now()}`.substr(0, 4)
 	const validIdentifier = validateIdentifier(dbContents, identifier)
 	if (validIdentifier.error) return validIdentifier
 
