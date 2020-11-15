@@ -7,7 +7,7 @@ function timestamp(d) {
 	const date = d.toISOString().split('T')[0]
 	const time = d.toTimeString().split(' ')[0]
 	const ms = `${d.getMilliseconds()}`.padStart(3, '0')
-	return `${date} ${time}:${ms}`
+	return `${date} ${time}:${ms}`.replace(/\:/g, '.')
 }
 
 let db = {}
