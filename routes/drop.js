@@ -6,25 +6,20 @@ function drop(req, res) {
 }
 
 async function upload(req, res) {
-	if (!req.files.upfile) {
+	let files = req.files.upfile
+	if (!files) {
 		res.send('No File selected')
 		return
 	}
-	const file = req.files.upfile
-	const identifier = req.body.identifier
-	const savePath = await db.getSavePath(identifier, file.name, file.size)
-	if (savePath.error) {
-		res.send(savePath.error)
+	if (!Array.isArray(files)) { // if there is only one file
+		files = [files]
+	}
+	const msg = await db.saveFiles(files, req.body.identifier)
+	if (msg.error) {
+		res.send(msg.error)
 		return
 	}
-	file.mv(savePath, (err) => {
-		if (err) {
-			console.error(err)
-			res.send('Error occurred')
-			return
-		}
-		res.send(`Done, go to <b>joppekoers.nl/drop/${identifier}</b> to download it`)
-	})
+	res.send(`Done, go to <b>joppekoers.nl/drop/${req.body.identifier}</b> to download it`)
 }
 
 async function download(req, res) {
@@ -33,11 +28,13 @@ async function download(req, res) {
 		res.send('Empty identifier')
 		return
 	}
-	if (!db.info[identifier]) {
+	const files = await db.getFiles(identifier)
+	if (files.length == 0) {
 		res.send('Identifier not found')
 		return
 	}
-	for (const file of db.info[identifier]) {
+	for (const file of files) {
+		console.log(file)
 		res.download(file.path, file.name)
 	}
 }
