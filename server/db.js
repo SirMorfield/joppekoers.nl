@@ -3,7 +3,6 @@ const path = require('path')
 const env = require(path.join(process.env.root, 'configs/env.json'))
 const exec = require('util').promisify(require('child_process').exec)
 
-<<<<<<< HEAD
 function timestamp(d) {
 	const date = d.toISOString().split('T')[0]
 	const time = d.toTimeString().split(' ')[0]
@@ -11,8 +10,6 @@ function timestamp(d) {
 	return `${date} ${time}:${ms}`.replace(/\:/g, '.')
 }
 
-=======
->>>>>>> 5a5b7b18d2948eb4d8ab6679101524a41e8af8f2
 let db = {}
 if (process.env.NODE_ENV == 'production') {
 	Object.assign(db, env.drop.db)
