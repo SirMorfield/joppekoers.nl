@@ -10,6 +10,16 @@ function timestamp(d) {
 	return `${date} ${time}:${ms}`.replace(/\:/g, '.')
 }
 
+function logDBinfo(name, testPath) {
+	if (!fs.existsSync(testPath)) {
+		console.log(`${name} ${testPath} does not exist`)
+		return 1
+	} else {
+		console.log(`${name} ${testPath}`)
+		return 0
+	}
+}
+
 let db = {}
 if (process.env.NODE_ENV == 'production') {
 	Object.assign(db, env.drop.db)
@@ -24,11 +34,16 @@ if (process.env.NODE_ENV == 'production') {
 	if (!fs.existsSync(db.contentDir)) fs.mkdirSync(db.contentDir)
 	if (!fs.existsSync(db.dbFile)) fs.writeFileSync(db.dbFile, '{}')
 }
-if (!fs.existsSync(db.contentDir)) console.log(`contentDir ${db.contentDir} does not exist`)
-else console.log(`Using ${db.contentDir} for /drop`)
-if (!fs.existsSync(db.tmpDir)) console.log(`tmpDir     ${db.tmpDir} does not exist`)
-if (!fs.existsSync(db.dbFile)) console.log(`dbFile     ${db.contentDir} does not exist`)
-db.info = require(db.dbFile)
+let errors = 0
+console.log(`/drop`)
+errors += logDBinfo(`  contentDir`, db.contentDir)
+errors += logDBinfo(`  tmpDir    `, db.tmpDir)
+errors += logDBinfo(`  dbFile    `, db.dbFile)
+if (errors == 0) {
+	db.info = require(db.dbFile)
+	console.log(`  files      ${Object.keys(db.info).length}`)
+}
+console.log('')
 
 async function DBFull(newFile) {
 	const { stdout, stderr } = await exec(`du -s -B1 '${db.contentDir}'`)
@@ -107,6 +122,7 @@ const fileUploadSettings = {
 }
 
 const fileUpload = require('express-fileupload')
+const { DH_UNABLE_TO_CHECK_GENERATOR } = require('constants')
 module.exports = {
 	...db,
 	saveFiles,
