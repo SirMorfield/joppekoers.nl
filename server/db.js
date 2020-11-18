@@ -24,6 +24,10 @@ if (process.env.NODE_ENV == 'production') {
 	if (!fs.existsSync(db.contentDir)) fs.mkdirSync(db.contentDir)
 	if (!fs.existsSync(db.dbFile)) fs.writeFileSync(db.dbFile, '{}')
 }
+if (!fs.existsSync(db.contentDir)) console.log(`contentDir ${db.contentDir} does not exist`)
+else console.log(`Using ${db.contentDir} for /drop`)
+if (!fs.existsSync(db.tmpDir)) console.log(`tmpDir     ${db.tmpDir} does not exist`)
+if (!fs.existsSync(db.dbFile)) console.log(`dbFile     ${db.contentDir} does not exist`)
 db.info = require(db.dbFile)
 
 async function DBFull(newFile) {
