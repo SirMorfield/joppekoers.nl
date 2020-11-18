@@ -49,6 +49,9 @@ async function DBFull(newFile) {
 }
 
 function validateIdentifier(dbContents, identifier) {
+	if (identifier == 'upload') {
+		return { error: 'Identifier is reserved' }
+	}
 	if (identifier.length == 0) {
 		return { error: 'Identifier too short' }
 	}
