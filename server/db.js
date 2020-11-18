@@ -10,7 +10,7 @@ function timestamp(d) {
 	return `${date} ${time}:${ms}`.replace(/\:/g, '.')
 }
 
-function logDBinfo(name, testPath) {
+function logDB(name, testPath) {
 	if (!fs.existsSync(testPath)) {
 		console.log(`${name} ${testPath} does not exist`)
 		return 1
@@ -27,21 +27,17 @@ if (process.env.NODE_ENV == 'production') {
 	db = {
 		contentDir: path.join(process.env.root, 'server/drop'),
 		tmpDir: '/tmp/',
-		dbFile: path.join(process.env.root, 'server/dropDB.json'),
 		maxDBSize: 1.1e+10,
 		maxFileSize: 1.074e+9,
 	}
 	if (!fs.existsSync(db.contentDir)) fs.mkdirSync(db.contentDir)
-	if (!fs.existsSync(db.dbFile)) fs.writeFileSync(db.dbFile, '{}')
 }
-let errors = 0
+let er = 0
 console.log(`/drop`)
-errors += logDBinfo(`  contentDir`, db.contentDir)
-errors += logDBinfo(`  tmpDir    `, db.tmpDir)
-errors += logDBinfo(`  dbFile    `, db.dbFile)
-if (errors == 0) {
-	db.info = require(db.dbFile)
-	console.log(`  files      ${Object.keys(db.info).length}`)
+er += logDB(`  contentDir`, db.contentDir)
+er += logDB(`  tmpDir    `, db.tmpDir)
+if (er == 0) {
+	console.log(`  files     `, `${(fs.readdirSync(db.contentDir)).length}`)
 }
 console.log('')
 
@@ -56,11 +52,11 @@ function validateIdentifier(dbContents, identifier) {
 	if (identifier.length == 0) {
 		return { error: 'Identifier too short' }
 	}
-	if (identifier.length > 20) {
-		return { error: 'Identifier and/or filename too long' }
+	if (identifier.length > 254) {
+		return { error: 'Identifier too long' }
 	}
 	if (identifier.match(/[^\w\d]/)) {
-		return { error: 'Invalid identifier' }
+		return { error: 'Invalid identifier, only use letters and numbers' }
 	}
 	for (const file of dbContents) {
 		if (file.match(/^[\w\d]*-/) == `${identifier}-`) {
