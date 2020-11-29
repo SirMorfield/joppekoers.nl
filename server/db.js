@@ -3,6 +3,23 @@ const path = require('path')
 const env = require(path.join(process.env.root, 'configs/env.json'))
 const exec = require('util').promisify(require('child_process').exec)
 
+function timestamp(d) {
+	const date = d.toISOString().split('T')[0]
+	const time = d.toTimeString().split(' ')[0]
+	const ms = `${d.getMilliseconds()}`.padStart(3, '0')
+	return `${date} ${time}:${ms}`.replace(/\:/g, '.')
+}
+
+function logDB(name, testPath) {
+	if (!fs.existsSync(testPath)) {
+		console.log(`${name} ${testPath} does not exist`)
+		return 1
+	} else {
+		console.log(`${name} ${testPath}`)
+		return 0
+	}
+}
+
 let db = {}
 if (process.env.NODE_ENV == 'production') {
 	Object.assign(db, env.drop.db)
@@ -10,14 +27,19 @@ if (process.env.NODE_ENV == 'production') {
 	db = {
 		contentDir: path.join(process.env.root, 'server/drop'),
 		tmpDir: '/tmp/',
-		dbFile: path.join(process.env.root, 'server/dropDB.json'),
 		maxDBSize: 1.1e+10,
 		maxFileSize: 1.074e+9,
 	}
 	if (!fs.existsSync(db.contentDir)) fs.mkdirSync(db.contentDir)
-	if (!fs.existsSync(db.dbFile)) fs.writeFileSync(db.dbFile, '{}')
 }
-db.info = require(db.dbFile)
+let er = 0
+console.log(`/drop`)
+er += logDB(`  contentDir`, db.contentDir)
+er += logDB(`  tmpDir    `, db.tmpDir)
+if (er == 0) {
+	console.log(`  files     `, `${(fs.readdirSync(db.contentDir)).length}`)
+}
+console.log('')
 
 async function DBFull(newFile) {
 	const { stdout, stderr } = await exec(`du -s -B1 '${db.contentDir}'`)
@@ -27,14 +49,17 @@ async function DBFull(newFile) {
 }
 
 function validateIdentifier(dbContents, identifier) {
-	if (identifier.length <= 1) {
+	if (identifier == 'upload') {
+		return { error: 'Identifier is reserved' }
+	}
+	if (identifier.length == 0) {
 		return { error: 'Identifier too short' }
 	}
-	if (identifier.length > 20) {
-		return { error: 'Identifier and/or filename too long' }
+	if (identifier.length > 254) {
+		return { error: 'Identifier too long' }
 	}
 	if (identifier.match(/[^\w\d]/)) {
-		return { error: 'Invalid identifier' }
+		return { error: 'Invalid identifier, only use letters and numbers' }
 	}
 	for (const file of dbContents) {
 		if (file.match(/^[\w\d]*-/) == `${identifier}-`) {
@@ -98,6 +123,7 @@ const fileUploadSettings = {
 }
 
 const fileUpload = require('express-fileupload')
+const { DH_UNABLE_TO_CHECK_GENERATOR } = require('constants')
 module.exports = {
 	...db,
 	saveFiles,
