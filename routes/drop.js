@@ -19,7 +19,12 @@ async function upload(req, res) {
 		res.send(msg.error)
 		return
 	}
-	res.send(`Done, go to <b>joppekoers.nl/drop/${req.body.identifier}</b> to download it`)
+	const userAgent = (req.get('user-agent')).toLowerCase()
+	if (userAgent.indexOf('curl') != -1 || userAgent.indexOf('wget') != -1) {
+		res.send(`joppekoers.nl/drop/${req.body.identifier}`)
+	} else {
+		res.send(`Done, go to <b>joppekoers.nl/drop/${req.body.identifier}</b> to download it`)
+	}
 }
 
 async function download(req, res) {
