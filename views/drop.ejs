@@ -5,13 +5,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>DROP</title>
+	<style>
+		body {
+			background-color: rgb(20, 20, 20);
+			color: rgb(255, 255, 255);
+		}
+	</style>
 </head>
 
 <body>
 	<form class="fileupload" action="/drop/upload" method="post" enctype="multipart/form-data">
-		<input type="file" name="upfile" value="" multiple>
-		<br>
-		<input type="text" name="identifier" value="">
+		<input type="file" name="upfile" value="" multiple="multiple">
 		<input type="submit" />
 	</form>
 </body>
