@@ -1,30 +1,45 @@
+const fs = require('fs')
 const path = require('path')
 const db = require(path.join(process.env.root, 'server/db.js'))
+const Busboy = require('busboy')
 
 function drop(req, res) {
 	res.render('drop.ejs')
 }
 
 async function upload(req, res) {
-	let files = req.files.upfile
-	if (!files) {
-		res.send('No File selected')
-		return
-	}
-	if (!Array.isArray(files)) { // if there is only one file
-		files = [files]
-	}
-	const msg = await db.saveFiles(files, req.body.identifier)
-	if (msg.error) {
-		res.send(msg.error)
-		return
-	}
-	const userAgent = (req.get('user-agent')).toLowerCase()
-	if (userAgent.indexOf('curl') != -1 || userAgent.indexOf('wget') != -1) {
-		res.send(`joppekoers.nl/drop/${req.body.identifier}`)
-	} else {
-		res.send(`Done, go to <b>joppekoers.nl/drop/${req.body.identifier}</b> to download it`)
-	}
+	let busboy = new Busboy({ headers: req.headers })
+	let files = []
+
+	busboy.on('file', async (fieldName, stream, filename, encoding, mimetype) => {
+		let file = {
+			name: null,
+			path: null,
+		}
+		file.path = await db.newFilePath()
+		if (!file.path) {
+			stream.resume() // aka stream.close()
+			return
+		}
+		file.name = filename
+		files.push(file)
+		stream.pipe(fs.createWriteStream(file.path))
+		stream.on('end', () => { })
+	})
+
+	busboy.on('finish', () => {
+		if (files.length == 0) {
+			res.send('No files uploaded')
+		}
+		let id = db.addToDb(files)
+		const userAgent = (req.get('user-agent')).toLowerCase()
+		if (userAgent.includes('curl') || userAgent.includes('wget')) {
+			res.send(`joppekoers.nl/drop/${id}`)
+		} else {
+			res.send(`Done, go to <b>joppekoers.nl/drop/${id}</b> to download it`)
+		}
+	})
+	req.pipe(busboy)
 }
 
 async function download(req, res) {
@@ -33,14 +48,15 @@ async function download(req, res) {
 		res.send('Empty identifier')
 		return
 	}
-	const files = await db.getFiles(identifier)
-	if (files.length == 0) {
+	const files = db.files[identifier]
+	if (!files || files.length == 0) {
 		res.send('Identifier not found')
 		return
 	}
-	for (const file of files) {
-		console.log(file)
-		res.download(file.path, file.name)
+	if (files.length === 1) {
+		res.download(files[0].path, files[0].name)
+	} else {
+		res.zip(files, `${identifier}.zip`);
 	}
 }
 
@@ -48,5 +64,4 @@ module.exports = {
 	drop,
 	upload,
 	download,
-	fileUpload: db.fileUpload
 }

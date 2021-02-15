@@ -39,7 +39,7 @@
 	// app.get('/wolmolen', wolmolen)
 	// app.get('/code', code)
 
-	app.use(drop.fileUpload)
+	const zip = require('express-zip')
 	app.get('/drop', drop.drop)
 	app.post('/drop/upload', drop.upload)
 	app.get('/drop/:identifier', drop.download)

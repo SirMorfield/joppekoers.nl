@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const env = require(path.join(process.env.root, 'configs/env.json'))
 const exec = require('util').promisify(require('child_process').exec)
+const os = require('os')
 
 function timestamp(d) {
 	const date = d.toISOString().split('T')[0]
@@ -10,123 +11,96 @@ function timestamp(d) {
 	return `${date} ${time}:${ms}`.replace(/\:/g, '.')
 }
 
-function logDB(name, testPath) {
-	if (!fs.existsSync(testPath)) {
-		console.log(`${name} ${testPath} does not exist`)
-		return 1
+function initDB() {
+	let db
+	if (process.env.NODE_ENV == 'production' && (os.hostname()).match(/server1/i)) {
+		Object.assign(db, env.drop.db)
 	} else {
-		console.log(`${name} ${testPath}`)
-		return 0
+		db = {
+			contentDir: path.join(process.env.root, 'server/drop/'),
+			dbFile: path.join(process.env.root, 'server/dropDB.json'),
+			tmpDir: '/tmp/',
+			maxDBSize: 1.1e+10,
+			maxFileSize: 1.074e+9,
+		}
+		if (!fs.existsSync(db.contentDir)) fs.mkdirSync(db.contentDir)
 	}
+	if (!fs.existsSync(db.dbFile)) {
+		fs.writeFileSync(db.dbFile, '{}')
+	}
+	try {
+		db.files = JSON.parse((fs.readFileSync(db.dbFile)).toString())
+	} catch (err) {
+		console.error('Failed to read dbFile ', db.dbFile)
+	}
+	return db
 }
 
-let db = {}
-if (process.env.NODE_ENV == 'production') {
-	Object.assign(db, env.drop.db)
-} else {
-	db = {
-		contentDir: path.join(process.env.root, 'server/drop'),
-		tmpDir: '/tmp/',
-		maxDBSize: 1.1e+10,
-		maxFileSize: 1.074e+9,
-	}
-	if (!fs.existsSync(db.contentDir)) fs.mkdirSync(db.contentDir)
-}
-let er = 0
-console.log(`/drop`)
-er += logDB(`  contentDir`, db.contentDir)
-er += logDB(`  tmpDir    `, db.tmpDir)
-if (er == 0) {
-	console.log(`  files     `, `${(fs.readdirSync(db.contentDir)).length}`)
-}
-console.log('')
+let db = initDB()
 
-async function DBFull(newFile) {
+function logDBinfo(db) {
+	console.log(`/drop`)
+	let table = {}
+
+	table.contentDir = db.contentDir
+	try {
+		table.filesSaved = (fs.readdirSync(db.contentDir)).length
+	} catch (err) {
+		table.filesSaved = `Error reading contentDir`
+	}
+	table.filesInDBfile = 0
+	for (const identifier in db.files) {
+		table.filesInDBfile += db.files[identifier].length
+	}
+	table.tmpDir = db.tmpDir
+	table.dbFile = db.dbFile
+	console.table(table)
+}
+
+logDBinfo(db)
+
+async function DBFull() {
 	const { stdout, stderr } = await exec(`du -s -B1 '${db.contentDir}'`)
 	if (stderr) return true
-	const newSize = parseInt(stdout.split(' ')[0]) + newFile
-	return newSize > db.maxDBSize
+	return parseInt(stdout.split(' ')[0]) > db.maxDBSize
 }
 
-function validateIdentifier(dbContents, identifier) {
-	if (identifier == 'upload') {
-		return { error: 'Identifier is reserved' }
-	}
-	if (identifier.length == 0) {
-		return { error: 'Identifier too short' }
-	}
-	if (identifier.length > 254) {
-		return { error: 'Identifier too long' }
-	}
-	if (identifier.match(/[^\w\d]/)) {
-		return { error: 'Invalid identifier, only use letters and numbers' }
-	}
-	for (const file of dbContents) {
-		if (file.match(/^[\w\d]*-/) == `${identifier}-`) {
-			return { error: 'Identifier already in use' }
-		}
-	}
-	return { error: null }
+async function saveDBStatus() {
+	await fs.promises.writeFile(db.dbFile, JSON.stringify(db.files))
 }
 
-function getSavePath(dbContents, identifier, filename) {
-	let n = 0
-	let dbFilename
+function addToDb(files) {
+	let n = 4
+	let id
 	do {
-		dbFilename = `${identifier}-${n}-${filename}`
-		n++
-	} while (dbContents.includes(filename))
-	return path.join(db.contentDir, dbFilename)
+		id = `${Date.now()}`.slice(-Math.round(n))
+		n += 0.001
+	} while (db.files[id])
+	db.files[id] = files
+	saveDBStatus()
+	return id
 }
 
-async function saveFiles(files, identifier) {
-	const totalFileSize = files.reduce((acc, cur) => cur.size + acc)
-	if (await DBFull(totalFileSize)) {
-		return { error: 'Database is full' }
+async function newFilePath() {
+	if (await DBFull()) {
+		return null
 	}
-	const dbContents = await fs.promises.readdir(db.contentDir)
-	if (identifier.length <= 1)
-		identifier = `${Date.now()}`.substr(0, 4)
-	const validIdentifier = validateIdentifier(dbContents, identifier)
-	if (validIdentifier.error) return validIdentifier
+	return path.join(db.contentDir, `${(new Date()).toISOString()}`)
+}
 
-	for (const file of files) {
-		const dbPath = getSavePath(dbContents, identifier, file.name)
-		try {
-			await file.mv(dbPath)
-		} catch (err) {
-			return { error: `Failed to save file "${file.name}"` }
-		}
+async function deleteFile(savePath) {
+	if (savePath.indexOf(db.contentDir) == 0) {
+		await fs.promises.unlink(savePath)
 	}
-	return { error: null }
+	for (const identifier in db.files) {
+		db.files[identifier] = db.files[identifier].filter((file) => file.savePath != savePath)
+	}
+	saveDBStatus()
 }
 
-async function getFiles(identifier) {
-	let files = await fs.promises.readdir(db.contentDir)
-	files = files.filter(file => file.match(/^[\w\d]*-/) == `${identifier}-`)
-	files = files.map((file) => {
-		return {
-			path: path.join(db.contentDir, file),
-			name: file.replace(/^[\w\d]*-\d*-/, '')
-		}
-	})
-	return files
-}
-
-const fileUploadSettings = {
-	limits: { fileSize: db.maxFileSize },
-	abortOnLimit: true,
-	useTempFiles: true,
-	tempFileDir: db.tmpDir,
-	preserveExtension: true,
-	saveFileNames: true
-}
-
-const fileUpload = require('express-fileupload')
-const { DH_UNABLE_TO_CHECK_GENERATOR } = require('constants')
 module.exports = {
-	...db,
-	saveFiles,
-	getFiles,
-	fileUpload: fileUpload(fileUploadSettings)
+	files: db.files,
+	addToDb,
+	newFilePath,
+	deleteFile
 }
