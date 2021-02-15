@@ -12,7 +12,7 @@ function timestamp(d) {
 }
 
 function initDB() {
-	let db
+	let db = {}
 	if (process.env.NODE_ENV == 'production' && (os.hostname()).match(/server1/i)) {
 		Object.assign(db, env.drop.db)
 	} else {
