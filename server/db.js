@@ -85,7 +85,7 @@ async function newFilePath() {
 	if (await DBFull()) {
 		return null
 	}
-	return path.join(db.contentDir, `${(new Date()).toISOString()}`)
+	return path.join(db.contentDir, `${Date.now()}`)
 }
 
 async function deleteFile(savePath) {
