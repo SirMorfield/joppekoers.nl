@@ -13,18 +13,17 @@ async function upload(req, res) {
 
 	busboy.on('file', async (fieldName, stream, filename, encoding, mimetype) => {
 		let file = {
-			name: null,
-			path: null,
+			name: filename,
+			path: await db.newFilePath(),
 		}
-		file.path = await db.newFilePath()
 		if (!file.path) {
 			stream.resume() // aka stream.close()
 			return
 		}
-		file.name = filename
 		files.push(file)
+		console.log(file.path)
 		stream.pipe(fs.createWriteStream(file.path))
-		stream.on('end', () => { })
+		// stream.on('end', () => { })
 	})
 
 	busboy.on('finish', () => {
