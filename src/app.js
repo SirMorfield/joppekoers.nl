@@ -1,9 +1,8 @@
 (async () => {
-	const production = process.env.NODE_ENV == 'production'
-
 	const path = require('path')
-	process.env.root = path.join(__dirname, '../')
-	process.env.srcRoot = __dirname
+	const isProduction = process.env['NODE_ENV'] == 'production'
+	process.env['root'] = path.join(__dirname, '../')
+	process.env['srcRoot'] = __dirname
 
 	const express = require('express')
 	let app = express()
@@ -17,17 +16,16 @@
 	app.use(compression({ level: 9 }))
 
 	const favicon = require('serve-favicon')
-	app.use(favicon(path.join(process.env.root, 'public/logo/favicon.ico')))
+	app.use(favicon(path.join(process.env['root'], 'public/logo/favicon.ico')))
 
-	app.set('views', path.join(process.env.srcRoot, 'views/'))
+	app.set('views', path.join(process.env['srcRoot'], 'views/'))
 	app.set('view engine', 'ejs')
 
 	app.use(express.urlencoded({ extended: false }))
 	app.use(express.json())
-	app.use(express.static(path.join(process.env.root, 'public/')))
+	app.use(express.static(path.join(process.env['root'], 'public/')))
 
-	const title = process.env.NODE_ENV == 'production' ? 'Joppe Koers.nl' : 'localhost'
-
+	const title = isProduction ? 'Joppe Koers.nl' : 'localhost'
 	const home = require('./routes/home.js')(title)
 	const contact = require('./routes/contact.js')(title)
 	// const wolmolen = require('./routes/wolmolen.js')(title, db)
@@ -41,7 +39,6 @@
 	// app.get('/wolmolen', wolmolen)
 	// app.get('/code', code)
 
-	const zip = require('express-zip')
 	app.get('/drop', drop.drop)
 	app.post('/drop/upload', drop.upload)
 	app.get('/drop/:identifier', drop.download)
@@ -50,6 +47,6 @@
 
 	httpServer.listen(8080, () => {
 		// console.clear()
-		console.log('NODE_ENV:', process.env.NODE_ENV)
+		console.log('NODE_ENV:', process.env['NODE_ENV'])
 	})
 })()
