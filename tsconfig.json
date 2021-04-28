@@ -9,7 +9,7 @@
 		"rootDir": "./src/",
 		"removeComments": true,
 		"downlevelIteration": true,
-		"strict": true,
+		// "strict": true,
 		// "noImplicitAny": true,
 		"strictNullChecks": true,
 		"strictFunctionTypes": true,
@@ -30,7 +30,8 @@
 	},
 	"exclude": [
 		"node_modules/",
-		"public/"
+		"public/",
+		"unfinishedProjects/"
 	],
 	"include": ["src/"]
 }

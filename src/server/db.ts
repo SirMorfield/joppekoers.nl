@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const env = require(path.join(process.env.root, 'configs/env.json'))
+const env = require(path.join(process.env['root'], 'configs/env.json'))
 const exec = require('util').promisify(require('child_process').exec)
 const os = require('os')
 
@@ -17,8 +17,8 @@ function initDB() {
 		Object.assign(db, env.drop.db)
 	} else {
 		db = {
-			contentDir: path.join(process.env.root, 'server/drop/'),
-			dbFile: path.join(process.env.root, 'server/dropDB.json'),
+			contentDir: path.join(process.env['root'], 'server/drop/'),
+			dbFile: path.join(process.env['root'], 'server/dropDB.json'),
 			tmpDir: '/tmp/',
 			maxDBSize: 1.1e+10,
 			maxFileSize: 1.074e+9,

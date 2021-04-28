@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const db = require(path.join(process.env.srcRoot, 'server/db.js'))
+const db = require(path.join(process.env['srcRoot'], 'server/db'))
 const Busboy = require('busboy')
 
 function drop(req, res) {
