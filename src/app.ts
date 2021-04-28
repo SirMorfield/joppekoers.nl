@@ -26,12 +26,12 @@
 	app.use(express.static(path.join(process.env['root'], 'public/')))
 
 	const title = isProduction ? 'Joppe Koers.nl' : 'localhost'
-	const home = require('./routes/home.js')(title)
-	const contact = require('./routes/contact.js')(title)
-	// const wolmolen = require('./routes/wolmolen.js')(title, db)
-	// const code = require('./routes/code.js')(title)
-	const drop = require('./routes/drop.js')
-	const error = require('./routes/error.js')(title)
+	const home = require('./routes/home')(title)
+	const contact = require('./routes/contact')(title)
+	// const wolmolen = require('./routes/wolmolen')(title, db)
+	// const code = require('./routes/code')(title)
+	const drop = require('./routes/drop')
+	const error = require('./routes/error')(title)
 
 	app.get('/', home)
 	app.get('/home', home)

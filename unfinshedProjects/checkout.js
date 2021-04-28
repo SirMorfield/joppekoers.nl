@@ -1,5 +1,5 @@
 const path = require('path')
-const completeAddress = require(path.join(process.env.srcRoot, 'server/completeAddress.js'))
+const completeAddress = require(path.join(process.env['srcRoot'], 'server/completeAddress.js'))
 
 module.exports = (db, options) => {
 	async function route(req, res) {
