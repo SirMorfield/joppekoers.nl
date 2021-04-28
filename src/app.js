@@ -1,7 +1,9 @@
 (async () => {
 	const production = process.env.NODE_ENV == 'production'
-	process.env.root = __dirname
+
 	const path = require('path')
+	process.env.root = path.join(__dirname, '../')
+	process.env.srcRoot = __dirname
 
 	const express = require('express')
 	let app = express()
@@ -15,14 +17,14 @@
 	app.use(compression({ level: 9 }))
 
 	const favicon = require('serve-favicon')
-	app.use(favicon(path.join(__dirname, 'public/logo/favicon.ico')))
+	app.use(favicon(path.join(process.env.root, 'public/logo/favicon.ico')))
 
-	app.set('views', path.join(__dirname, 'views/'))
+	app.set('views', path.join(process.env.srcRoot, 'views/'))
 	app.set('view engine', 'ejs')
 
 	app.use(express.urlencoded({ extended: false }))
 	app.use(express.json())
-	app.use(express.static(path.join(__dirname, 'public/')))
+	app.use(express.static(path.join(process.env.root, 'public/')))
 
 	const title = process.env.NODE_ENV == 'production' ? 'Joppe Koers.nl' : 'localhost'
 

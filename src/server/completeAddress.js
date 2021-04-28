@@ -1,7 +1,7 @@
 const request = require('request-promise-native')
 
 const path = require('path')
-const env = require(path.join(process.env.root, '/configs/env.json'))
+const env = require(path.join(process.env.srcRoot, '/configs/env.json'))
 
 let options = {
 	url: env.postNL.reqUrl,

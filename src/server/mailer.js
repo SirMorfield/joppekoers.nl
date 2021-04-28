@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer')
 const OAuth2 = require('googleapis').google.auth.OAuth2
 const path = require('path')
-const env = require(path.join(process.env.root, '/configs/env.json'))
+const env = require(path.join(process.env.srcRoot, '/configs/env.json'))
 
 const oauth2Client = new OAuth2(
 	env.googleMailer.clientID,
