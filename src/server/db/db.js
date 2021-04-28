@@ -1,7 +1,7 @@
 const low = require('lowdb')
 const FileAsync = require('lowdb/adapters/FileAsync')
 const path = require('path')
-const env = require(path.join(process.env.root, 'configs/env.json'))
+const env = require(path.join(process.env.srcRoot, 'configs/env.json'))
 
 const adapter = new FileAsync(path.join(__dirname, 'db.json'))
 

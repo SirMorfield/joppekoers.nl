@@ -23,7 +23,7 @@ function initDB() {
 			maxDBSize: 1.1e+10,
 			maxFileSize: 1.074e+9,
 		}
-		if (!fs.existsSync(db.contentDir)) fs.mkdirSync(db.contentDir)
+		if (!fs.existsSync(db.contentDir)) fs.mkdirSync(db.contentDir, { recursive: true })
 	}
 	if (!fs.existsSync(db.dbFile)) {
 		fs.writeFileSync(db.dbFile, '{}')
