@@ -1,5 +1,5 @@
 const path = require('path')
-const fs = require('fs')
+import * as path from 'path'
 const exec = require('util').promisify(require('child_process').exec)
 
 const projectsPath = path.join(__dirname, '../../public/img/projectImg/')
