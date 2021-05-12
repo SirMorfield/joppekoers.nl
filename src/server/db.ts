@@ -1,46 +1,60 @@
-const fs = require('fs')
-const path = require('path')
-const env = require(path.join(process.env['root'], 'configs/env.json'))
-const exec = require('util').promisify(require('child_process').exec)
-const os = require('os')
+import * as path from 'path'
+import * as fs from 'fs'
+import * as os from 'os'
+import { promisify } from 'util'
+import { exec } from 'child_process'
+const env = require(path.join(process.env['root']!, 'configs/env.json'))
+const execPromise = promisify(exec)
 
-function timestamp(d) {
-	const date = d.toISOString().split('T')[0]
-	const time = d.toTimeString().split(' ')[0]
-	const ms = `${d.getMilliseconds()}`.padStart(3, '0')
-	return `${date} ${time}:${ms}`.replace(/\:/g, '.')
+export interface Db {
+	contentDir: string,
+	dbFile: string,
+	tmpDir: string,
+	maxDBSize: number,
+	maxFileSize: number,
+	files: any
 }
 
-function initDB() {
-	let db = {}
-	if (process.env.NODE_ENV == 'production' && (os.hostname()).match(/server1/i)) {
-		Object.assign(db, env.drop.db)
-	} else {
-		db = {
-			contentDir: path.join(process.env['root'], 'server/drop/'),
-			dbFile: path.join(process.env['root'], 'server/dropDB.json'),
+// export class DB
+// {
+// 	constructor
+// }
+
+
+function loadDbConfig(): Db {
+	if (process.env['NODE_ENV'] == 'production' && (os.hostname()).match(/server1/i)) {
+		return env.drop.db
+	}
+	else {
+		return {
+			contentDir: path.join(process.env['root']!, 'server/drop/'),
+			dbFile: path.join(process.env['root']!, 'server/dropDB.json'),
 			tmpDir: '/tmp/',
 			maxDBSize: 1.1e+10,
 			maxFileSize: 1.074e+9,
+			files: {}
 		}
-		if (!fs.existsSync(db.contentDir)) fs.mkdirSync(db.contentDir, { recursive: true })
 	}
-	if (!fs.existsSync(db.dbFile)) {
-		fs.writeFileSync(db.dbFile, '{}')
-	}
+}
+
+function initDB(): Db {
+	let db: Db = loadDbConfig()
+
+	if (!fs.existsSync(db.contentDir)) fs.mkdirSync(db.contentDir, { recursive: true })
+	if (!fs.existsSync(db.dbFile)) fs.writeFileSync(db.dbFile, '{}')
+
 	try {
 		db.files = JSON.parse((fs.readFileSync(db.dbFile)).toString())
 	} catch (err) {
+		db.files = {}
 		console.error('Failed to read dbFile ', db.dbFile)
 	}
 	return db
 }
 
-let db = initDB()
-
 function logDBinfo(db) {
 	console.log(`/drop`)
-	let table = {}
+	let table: any = {}
 
 	table.contentDir = db.contentDir
 	try {
@@ -57,38 +71,27 @@ function logDBinfo(db) {
 	console.table(table)
 }
 
+export let db = initDB()
+
 logDBinfo(db)
 
-async function DBFull() {
-	const { stdout, stderr } = await exec(`du -s -B1 '${db.contentDir}'`)
+export async function DBFull(): Promise<boolean> {
+	const { stdout, stderr } = await execPromise(`du -s -B1 '${db.contentDir}'`)
 	if (stderr) return true
-	return parseInt(stdout.split(' ')[0]) > db.maxDBSize
+	return parseInt(stdout.split(' ')[0]!) > db.maxDBSize
 }
 
 async function saveDBStatus() {
 	await fs.promises.writeFile(db.dbFile, JSON.stringify(db.files))
 }
 
-function addToDb(files) {
-	let n = 4
-	let id
-	do {
-		id = `${Date.now()}`.slice(-Math.round(n))
-		n += 0.001
-	} while (db.files[id])
-	db.files[id] = files
-	saveDBStatus()
-	return id
-}
-
-async function newFilePath() {
-	if (await DBFull()) {
+export async function newFilePath(): Promise<string | null> {
+	if (await DBFull())
 		return null
-	}
 	return path.join(db.contentDir, `${Date.now()}`)
 }
 
-async function deleteFile(savePath) {
+export async function deleteFile(savePath): Promise<void> {
 	if (savePath.indexOf(db.contentDir) == 0) {
 		await fs.promises.unlink(savePath)
 	}
@@ -96,11 +99,4 @@ async function deleteFile(savePath) {
 		db.files[identifier] = db.files[identifier].filter((file) => file.savePath != savePath)
 	}
 	saveDBStatus()
-}
-
-module.exports = {
-	files: db.files,
-	addToDb,
-	newFilePath,
-	deleteFile
 }
