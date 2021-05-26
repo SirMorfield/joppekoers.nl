@@ -1,8 +1,7 @@
 const path = require('path')
-import * as path from 'path'
 const exec = require('util').promisify(require('child_process').exec)
-
-const projectsPath = path.join(__dirname, '../../public/img/projectImg/')
+const fs = require('fs')
+const projectsPath = path.join(__dirname, '../../../public/img/projectImg/')
 
 async function createThumbnail(imagePath, thumbnailPath) {
 	let { stderr } = await exec(`convert -resize 'X300' '${imagePath}' '${thumbnailPath}'`)
@@ -93,7 +92,7 @@ async function getProject(projectID) {
 	let publicOpenPopup = await fs.promises.readFile(path.join(__dirname, 'openPopup.txt'))
 	publicOpenPopup = publicOpenPopup.toString()
 	publicOpenPopup = publicOpenPopup.replace('// projectsPlaceholder', projectsDb)
-	await fs.promises.writeFile(path.join(__dirname, '../../public/js/openPopup.js'), publicOpenPopup)
+	await fs.promises.writeFile(path.join(__dirname, '../../../public/js/openPopup.js'), publicOpenPopup)
 })()
 
 // create small preview image with
