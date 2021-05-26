@@ -15,12 +15,6 @@ export interface Db {
 	files: any
 }
 
-// export class DB
-// {
-// 	constructor
-// }
-
-
 function loadDbConfig(): Db {
 	if (process.env['NODE_ENV'] == 'production' && (os.hostname()).match(/server1/i)) {
 		return env.drop.db
@@ -32,7 +26,7 @@ function loadDbConfig(): Db {
 			tmpDir: '/tmp/',
 			maxDBSize: 1.1e+10,
 			maxFileSize: 1.074e+9,
-			files: {}
+			files: {},
 		}
 	}
 }
@@ -41,6 +35,7 @@ function initDB(): Db {
 	let db: Db = loadDbConfig()
 
 	if (!fs.existsSync(db.contentDir)) fs.mkdirSync(db.contentDir, { recursive: true })
+	if (!fs.existsSync(db.tmpDir)) fs.mkdirSync(db.tmpDir, { recursive: true })
 	if (!fs.existsSync(db.dbFile)) fs.writeFileSync(db.dbFile, '{}')
 
 	try {
@@ -52,7 +47,7 @@ function initDB(): Db {
 	return db
 }
 
-function logDBinfo(db) {
+function logDBinfo(db: Db) {
 	console.log(`/drop`)
 	let table: any = {}
 
@@ -71,7 +66,7 @@ function logDBinfo(db) {
 	console.table(table)
 }
 
-export let db = initDB()
+export let db: Db = initDB()
 
 logDBinfo(db)
 
@@ -85,10 +80,21 @@ async function saveDBStatus() {
 	await fs.promises.writeFile(db.dbFile, JSON.stringify(db.files))
 }
 
-export async function newFilePath(): Promise<string | null> {
+export interface DBFile {
+	name: string,
+	path: string,
+	id: string
+}
+
+export async function newFilePath(filename: string): Promise<DBFile | null> {
 	if (await DBFull())
 		return null
-	return path.join(db.contentDir, `${Date.now()}`)
+	const id = String(Date.now())
+	return {
+		name: filename,
+		path: path.join(db.contentDir, id),
+		id,
+	}
 }
 
 export async function deleteFile(savePath): Promise<void> {
