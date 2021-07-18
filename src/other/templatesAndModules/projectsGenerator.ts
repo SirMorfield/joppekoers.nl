@@ -10,10 +10,10 @@ async function createThumbnail(imagePath, thumbnailPath) {
 
 async function imageSize(path) {
 	const identity = await exec(`identify -format "%wx%h" '${path}'`)
-	if (identity.stderr) console.error(stderr)
+	if (identity.stderr) console.error(identity.stderr)
 	identity.stdout = identity.stdout.trim()
 	identity.stdout = identity.stdout.split('x')
-	result = {
+	let result = {
 		width: parseInt(identity.stdout[0]),
 		height: parseInt(identity.stdout[1])
 	}
@@ -42,7 +42,13 @@ function hasThumbnail(images) {
 	return false
 }
 
-async function parseImages(projectPath) {
+interface Image {
+	src: string
+	w: number
+	h: number
+}
+
+async function parseImages(projectPath): Promise<Image[]> {
 	const images = await fs.promises.readdir(projectPath)
 	if (images.length == 0)
 		return []
@@ -51,7 +57,7 @@ async function parseImages(projectPath) {
 		createThumbnail(path.join(projectPath, images[0]), thumbnailPath)
 		console.log(`Created thumbnail ${thumbnailPath}`)
 	}
-	let imageDb = []
+	let imageDb: Image[] = []
 	for (const image of images) {
 		if (image.match(/^thumbnail.*/))
 			continue
@@ -66,9 +72,10 @@ async function parseImages(projectPath) {
 }
 
 async function getProject(projectID) {
-	let res = {}
-	res.imgs = await parseImages(path.join(projectsPath, projectID))
-	res.root = path.join('/img/projectImg/', projectID) + '/'
+	let res = {
+		imgs: await parseImages(path.join(projectsPath, projectID)),
+		root: path.join('/img/projectImg/', projectID) + '/'
+	}
 	// console.log(`Done: ${projectID}\n`)
 	return res
 }
@@ -81,17 +88,18 @@ async function getProject(projectID) {
 		projectsDb[project] = await getProject(project)
 		console.log(' ')
 	}
-	projectsDb = JSON.stringify(projectsDb)
-	projectsDb = projectsDb.replace(/\"src\"\:/g, 'src:')
-	projectsDb = projectsDb.replace(/\"imgs\"\:/g, 'imgs:')
-	projectsDb = projectsDb.replace(/\"root\"\:/g, 'root:')
-	projectsDb = projectsDb.replace(/\"w\"\:/g, 'w:')
-	projectsDb = projectsDb.replace(/\"h\"\:/g, 'h:')
-	projectsDb = `const projects = ${projectsDb}`
 
-	let publicOpenPopup = await fs.promises.readFile(path.join(__dirname, 'openPopup.txt'))
+	let projectsDbStr = JSON.stringify(projectsDb)
+	projectsDbStr = projectsDbStr.replace(/\"src\"\:/g, 'src:')
+	projectsDbStr = projectsDbStr.replace(/\"imgs\"\:/g, 'imgs:')
+	projectsDbStr = projectsDbStr.replace(/\"root\"\:/g, 'root:')
+	projectsDbStr = projectsDbStr.replace(/\"w\"\:/g, 'w:')
+	projectsDbStr = projectsDbStr.replace(/\"h\"\:/g, 'h:')
+	projectsDbStr = `const projects = ${projectsDbStr}`
+
+	let publicOpenPopup = await fs.promises.readFile(path.join(__dirname, '../../../src/other/templatesAndModules/openPopup.txt'))
 	publicOpenPopup = publicOpenPopup.toString()
-	publicOpenPopup = publicOpenPopup.replace('// projectsPlaceholder', projectsDb)
+	publicOpenPopup = publicOpenPopup.replace('// projectsPlaceholder', projectsDbStr)
 	await fs.promises.writeFile(path.join(__dirname, '../../../public/js/openPopup.js'), publicOpenPopup)
 })()
 

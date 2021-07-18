@@ -30,10 +30,10 @@ export async function upload(req, res) {
 
 		const userAgent = (req.get('user-agent')).toLowerCase()
 		if (userAgent.includes('curl') || userAgent.includes('wget')) {
-			res.send(`joppekoers.nl/drop/${files[0].id}`)
+			res.send(`joppekoers.nl/drop/${files[0]!.id}`)
 		}
 		else {
-			res.send(`Done, go to <b>joppekoers.nl/drop/${files[0].id}</b> to download it`)
+			res.send(`Done, go to <b>joppekoers.nl/drop/${files[0]!.id}</b> to download it`)
 		}
 	})
 	req.pipe(busboy)
@@ -51,7 +51,7 @@ export async function download(req, res) {
 		return
 	}
 	if (files.length === 1) {
-		res.download(files[0].path, files[0].name)
+		res.download(files[0]!.path, files[0]!.name)
 	}
 	else {
 		res.zip(files, `${identifier}.zip`);
