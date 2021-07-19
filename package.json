@@ -24,7 +24,7 @@
 	"scripts": {
 		"dev": "ts-node-dev --quiet --clear --rs --respawn --transpile-only src/app.ts",
 		"build": "tsc",
-		"start": "NODE_ENV=production node build/app.js",
+		"start": "npm run build && NODE_ENV=production node build/app.js",
 		"production": "npm build && pm2 start ./configs/app.json && pm2 save",
 		"images": "node build/other/templatesAndModules/projectsGenerator.js"
 	},
