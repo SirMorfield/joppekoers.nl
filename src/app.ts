@@ -18,7 +18,7 @@
 	const favicon = require('serve-favicon')
 	app.use(favicon(path.join(process.env['root'], 'public/logo/favicon.ico')))
 
-	app.set('views', path.join(process.env['srcRoot'], 'views/'))
+	app.set('views', path.join(process.env['root'], 'views/'))
 	app.set('view engine', 'ejs')
 
 	app.use(express.urlencoded({ extended: false }))
