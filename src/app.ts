@@ -21,6 +21,9 @@
 	app.set('views', path.join(process.env['root'], 'views/'))
 	app.set('view engine', 'ejs')
 
+	const zip = require('express-easy-zip')
+	app.use(zip())
+
 	app.use(express.urlencoded({ extended: false }))
 	app.use(express.json())
 	app.use(express.static(path.join(process.env['root'], 'public/')))

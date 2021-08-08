@@ -8,7 +8,7 @@
 		"compression": "^1.7.4",
 		"ejs": "^2.6.1",
 		"express": "~4.16.0",
-		"express-zip": "^3.0.0",
+		"express-easy-zip": "^1.1.5",
 		"googleapis": "^65.0.0",
 		"mime-types": "^2.1.22",
 		"nodemailer": "^6.3.0",
