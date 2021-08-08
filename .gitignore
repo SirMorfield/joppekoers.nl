@@ -1,19 +1,9 @@
-# framework, editor, macos, cache ed.
 *.log
-npm-debug.log*
 .DS_Store*
 node_modules/
-.npm
-.eslintcache
 *.pem
 .vscode/
-temp.*
+tmp*
 test.*
-.node-persist/
-
-# drops
-server/drop/
-server/dropDB.json
-# enviroment variables
 env.json
 build/
