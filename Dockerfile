@@ -1,14 +1,6 @@
-FROM node:lts
-
-WORKDIR /home/node/
+FROM node:16
+WORKDIR /app
 EXPOSE 8080
-
-COPY package*.json ./
-RUN npm install
-
-COPY . .
-
-RUN npm install -g typescript
-RUN tsc
-
-ENTRYPOINT [ "npm", "run", "start" ]
+CMD npm install && \
+	npm run build && \
+	npm run start
