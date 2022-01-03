@@ -1,6 +1,14 @@
-FROM node:16
+FROM node:16-alpine
+
 WORKDIR /app
+# RUN chown -R node:node /app
+
+COPY package.json package-lock.json ./
+RUN npm install --production
+COPY . .
+RUN npm run build
+
 EXPOSE 8080
-CMD npm install && \
-	npm run build && \
-	npm run start
+
+USER node
+ENTRYPOINT [ "npm", "run", "start" ]
