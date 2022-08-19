@@ -14,7 +14,7 @@
 		"nodemailer": "^6.3.0",
 		"serve-favicon": "^2.5.0",
 		"socket.io": "~2.4.0",
-		"tar": "^6.1.0"
+		"tar": "^6.1.9"
 	},
 	"devDependencies": {
 		"@types/node": "^17.0.23",
