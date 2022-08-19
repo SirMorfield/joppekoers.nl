@@ -1,10 +1,10 @@
-FROM node:16-alpine
+FROM node:17-alpine
 
 WORKDIR /app
 # RUN chown -R node:node /app
 
 COPY package.json package-lock.json ./
-RUN npm install --production
+RUN npm install --omit=dev
 COPY . .
 RUN npm run build
 
