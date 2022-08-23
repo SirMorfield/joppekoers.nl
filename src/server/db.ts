@@ -2,7 +2,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { exec } from 'child_process'
 import { PathLike } from 'node:fs'
-const env = require(path.join(process.env['root']!, 'configs/env.json'))
+const env = require(path.join(process.env['root']!, 'env.json'))
 
 async function execAsync(command): Promise<{ stdout: string, stderr: string }> {
 	return new Promise((resolve, reject) => {
