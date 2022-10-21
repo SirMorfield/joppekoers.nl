@@ -1,6 +1,6 @@
 import fs from 'fs-extra'
 import path from 'path'
-import { Image, Path, Project, createThumbnail, imageSize, hasThumbnail, exit, Job } from "./util"
+import { Image, Path, Project, createThumbnail, imageSize, hasThumbnail, exit, Job, FileName } from "./util"
 
 const inputPath: Path = path.join(__dirname, 'input')
 fs.mkdirSync(inputPath, { recursive: true })
@@ -9,8 +9,18 @@ fs.mkdirSync(outputPath, { recursive: true })
 
 // const inputPath: Path = path.join(__dirname, '../public/img/projectImg/')
 
+function normalizeName(name: FileName, index: number) {
+	if (index > 99)
+		throw new Error('Index too large')
+	return `${index.toString().padStart(2, '0')}.${path.extname(name)}`
+}
+
 async function runJob(job: Job): Promise<Image[]> {
+	// remove all previously generated files
+	await fs.emptyDir(job.output)
+
 	const imageDb: Image[] = []
+	let i = 0;
 	for (const image of job.imgs) {
 		if (image.match(/\/thumbnail/))
 			continue
@@ -22,8 +32,8 @@ async function runJob(job: Job): Promise<Image[]> {
 			width: dimensions.width,
 			height: dimensions.height
 		})
-
-		await fs.copy(image, path.join(job.output, path.basename(image)))
+		const newName = normalizeName(path.basename(image), i++)
+		await fs.copy(image, path.join(job.output, newName))
 	}
 
 	if (!hasThumbnail(job.imgs)) {
@@ -35,11 +45,11 @@ async function runJob(job: Job): Promise<Image[]> {
 	return imageDb
 }
 
-async function jobToProject(input: Job): Promise<Project> {
-	const images = await runJob(input)
+async function generateProjectFromJob(job: Job): Promise<Project> {
+	const images = await runJob(job)
 	const res = {
 		imgs: images.map(image => ({ src: image.name, w: image.width, h: image.height })),
-		root: path.join('/img/projectImg/', input.id) + '/'
+		root: path.join('/img/projectImg/', job.id) + '/'
 	}
 	// console.log(`Done: ${projectID}\n`)
 	return res
@@ -86,7 +96,7 @@ async function getJobs(inputsPath: Path): Promise<Job[]> {
 		if (projectsDb[job.id])
 			exit(`Project ${job.id} already exists`)
 
-		projectsDb[job.id] = await jobToProject(job)
+		projectsDb[job.id] = await generateProjectFromJob(job)
 	}
 
 	await installProjects(projectsDb)
