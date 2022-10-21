@@ -83,10 +83,17 @@ async function getJobs(inputsPath: Path): Promise<Job[]> {
 
 	const inputs = dirs.map(async (dir) => {
 		const inputPath = path.join(inputsPath, dir)
-		const imgs = await fs.promises.readdir(inputPath)
+		const imgs = (await fs.promises.readdir(inputPath))
+			.map((img) => path.join(inputPath, img))
+			.filter((name) => {
+				const isImage = !!name.match(/\.jpg$/)
+				if (!isImage)
+					console.log(`WARNING: ignoring non-image file ${name}`)
+				return isImage
+			})
 		return {
 			id: sanatize(dir),
-			imgs: imgs.map((img) => path.join(inputPath, img)),
+			imgs,
 			output: sanatize(path.join(outputPath, dir)),
 		}
 	})
