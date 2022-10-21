@@ -6,3 +6,9 @@ node_modules/
 tmp*
 test.*
 build/
+
+projectGenerator/input/*
+projectGenerator/output/*
+!.gitkeep
+
+/public/img/projectImg/*
