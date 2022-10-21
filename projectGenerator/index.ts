@@ -17,7 +17,7 @@ fs.mkdirSync(outputPath, { recursive: true })
 function normalizeName(name: FileName, index: number) {
 	if (index > 99)
 		throw new Error('Index too large')
-	return `${index.toString().padStart(2, '0')}.${path.extname(name)}`
+	return `${index.toString().padStart(2, '0')}${path.extname(name)}`
 }
 
 async function runJob(job: Job): Promise<Image[]> {
