@@ -1,11 +1,13 @@
 import fs from 'fs-extra'
 import path from 'path'
-import { Image, Path, Project, createThumbnail, imageSize, hasThumbnail, exit, Job, FileName } from "./util"
+import { Image, Path, Project, exec, createThumbnail, imageSize, hasThumbnail, exit, Job, FileName } from "./util"
 import { default as sanitizeFilename } from 'sanitize-filename'
 
 function sanatize(path: string): string {
 	return path.split('/').map(name => sanitizeFilename(name.replace(/\s/g, '-').toLowerCase())).join('/')
 }
+
+const JPEG_QUALITY = 50
 
 const inputPath: Path = path.join(__dirname, 'input')
 fs.mkdirSync(inputPath, { recursive: true })
@@ -40,6 +42,10 @@ async function runJob(job: Job): Promise<Image[]> {
 		const newName = normalizeName(path.basename(image), i++)
 		const newPath = sanatize(path.join(job.output, newName))
 		await fs.copy(image, newPath)
+
+		// TODO instead of copy and overwrite optimized version write optimized version straigth to new location
+		// TODO display sizes
+		await exec(`jpegotim --quiet --max=${JPEG_QUALITY} ${newPath}`)
 	}
 
 	if (!hasThumbnail(job.imgs)) {

@@ -21,7 +21,7 @@ export interface Project {
 }
 
 
-const exec = require('util').promisify(require('child_process').exec)
+export const exec = require('util').promisify(require('child_process').exec)
 
 export async function createThumbnail(imagePath: string, thumbnailPath: string): Promise<void> {
 	const { stderr } = await exec(`convert -resize 'X300' '${imagePath}' '${thumbnailPath}'`)
