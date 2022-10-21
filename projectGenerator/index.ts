@@ -1,37 +1,45 @@
 import fs from 'fs-extra'
 import path from 'path'
-import { Image, Path, Project, createThumbnail, imageSize, hasThumbnail, exit } from "./util"
+import { Image, Path, Project, createThumbnail, imageSize, hasThumbnail, exit, Job } from "./util"
 
 const inputPath: Path = path.join(__dirname, 'input')
+fs.mkdirSync(inputPath, { recursive: true })
+const outputPath: Path = path.join(__dirname, 'output')
+fs.mkdirSync(outputPath, { recursive: true })
+
 // const inputPath: Path = path.join(__dirname, '../public/img/projectImg/')
 
-async function parseImages(projectPath): Promise<Image[]> {
-	const images = await fs.promises.readdir(projectPath)
+async function runJob(job: Job): Promise<Image[]> {
+	const imageDb: Image[] = []
+	for (const image of job.imgs) {
+		if (image.match(/\/thumbnail/))
+			continue
 
-	if (!hasThumbnail(images)) {
-		const thumbnailPath = path.join(projectPath, `thumbnail${images[0]!.match(/\.[0-9a-z]+$/)![0]}`)
-		createThumbnail(path.join(projectPath, images[0]!), thumbnailPath)
+		const dimensions = await imageSize(image)
+		imageDb.push({
+			name: path.basename(image),
+			path: image,
+			width: dimensions.width,
+			height: dimensions.height
+		})
+
+		await fs.copy(image, path.join(job.output, path.basename(image)))
+	}
+
+	if (!hasThumbnail(job.imgs)) {
+		const thumbnailPath = path.join(job.output, `thumbnail${job.imgs[0]!.match(/\.[0-9a-z]+$/)![0]}`)
+		createThumbnail(job.imgs[0]!, thumbnailPath)
 		console.log(`Created thumbnail ${thumbnailPath}`)
 	}
 
-	let imageDb: Image[] = []
-	for (const image of images) {
-		if (image.match(/^thumbnail.*/))
-			continue
-		let dimensions = await imageSize(path.join(projectPath, image))
-		imageDb.push({
-			src: image,
-			w: dimensions.width,
-			h: dimensions.height
-		})
-	}
 	return imageDb
 }
 
-async function getProject(projectID): Promise<Project> {
+async function jobToProject(input: Job): Promise<Project> {
+	const images = await runJob(input)
 	const res = {
-		imgs: await parseImages(path.join(inputPath, projectID)),
-		root: path.join('/img/projectImg/', projectID) + '/'
+		imgs: images.map(image => ({ src: image.name, w: image.width, h: image.height })),
+		root: path.join('/img/projectImg/', input.id) + '/'
 	}
 	// console.log(`Done: ${projectID}\n`)
 	return res
@@ -52,22 +60,33 @@ async function installProjects(projectsDb: { [key: string]: Project }): Promise<
 	await fs.promises.writeFile(path.join(__dirname, '../public/js/openPopup.js'), publicOpenPopup)
 }
 
-async function getInput(inputPath: Path): Promise<Path[]> {
-	const files = await fs.promises.readdir(inputPath)
+// Generate TODOs
+async function getJobs(inputsPath: Path): Promise<Job[]> {
+	const files = await fs.promises.readdir(inputsPath)
 	const dirs = files.filter((file) => fs.statSync(path.join(inputPath, file)).isDirectory())
-	return dirs
+
+	const inputs = dirs.map(async (dir) => {
+		const inputPath = path.join(inputsPath, dir)
+		const imgs = await fs.promises.readdir(inputPath)
+		return {
+			id: dir,
+			imgs: imgs.map((img) => path.join(inputPath, img)),
+			output: path.join(outputPath, dir),
+		}
+	})
+	return Promise.all(inputs)
 }
 
 (async () => {
-	const projects: Path[] = await getInput(inputPath)
+	const jobs = await getJobs(inputPath)
 	const projectsDb: { [key: string]: Project } = {}
 
-	for (const project of projects) {
-		console.log(`Project ${project}`)
-		if (projectsDb[project])
-			exit(`Project ${project} already exists`)
+	for (const job of jobs) {
+		console.log(`Project ${job.id}`)
+		if (projectsDb[job.id])
+			exit(`Project ${job.id} already exists`)
 
-		projectsDb[project] = await getProject(project)
+		projectsDb[job.id] = await jobToProject(job)
 	}
 
 	await installProjects(projectsDb)

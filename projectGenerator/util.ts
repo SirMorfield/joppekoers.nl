@@ -1,15 +1,25 @@
 export type Path = string
+export type FileName = string
 
 export interface Image {
-	src: string
-	w: number
-	h: number
+	name: FileName // eg. 01.jpg
+	path: Path      // eg. /path/to/01.jpg
+	width: number
+	height: number
+}
+
+export interface Job {
+	id: string   // id / slug of the project
+	imgs: Path[] // the full image paths of the job
+	output: Path
 }
 
 export interface Project {
-	imgs: Image[]
+	// thumbnail: Image[]
+	imgs: { src: string, w: number, h: number }[]
 	root: Path
 }
+
 
 const exec = require('util').promisify(require('child_process').exec)
 

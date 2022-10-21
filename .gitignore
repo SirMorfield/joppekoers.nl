@@ -9,4 +9,5 @@ env.json
 build/
 
 projectGenerator/input/*
+projectGenerator/output/*
 !.gitkeep
