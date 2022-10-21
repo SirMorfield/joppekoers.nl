@@ -17,6 +17,7 @@
 		"express": "~4.16.0",
 		"express-easy-zip": "^1.1.5",
 		"fs-extra": "^10.1.0",
+		"sanitize-filename": "^1.6.3",
 		"serve-favicon": "^2.5.0",
 		"typescript": "^4.6.3"
 	},

@@ -1,6 +1,11 @@
 import fs from 'fs-extra'
 import path from 'path'
 import { Image, Path, Project, createThumbnail, imageSize, hasThumbnail, exit, Job, FileName } from "./util"
+import { default as sanitizeFilename } from 'sanitize-filename'
+
+function sanatize(path: string): string {
+	return path.split('/').map(name => sanitizeFilename(name.replace(/\s/g, '-').toLowerCase())).join('/')
+}
 
 const inputPath: Path = path.join(__dirname, 'input')
 fs.mkdirSync(inputPath, { recursive: true })
@@ -33,7 +38,8 @@ async function runJob(job: Job): Promise<Image[]> {
 			height: dimensions.height
 		})
 		const newName = normalizeName(path.basename(image), i++)
-		await fs.copy(image, path.join(job.output, newName))
+		const newPath = sanatize(path.join(job.output, newName))
+		await fs.copy(image, newPath)
 	}
 
 	if (!hasThumbnail(job.imgs)) {
@@ -79,9 +85,9 @@ async function getJobs(inputsPath: Path): Promise<Job[]> {
 		const inputPath = path.join(inputsPath, dir)
 		const imgs = await fs.promises.readdir(inputPath)
 		return {
-			id: dir,
+			id: sanatize(dir),
 			imgs: imgs.map((img) => path.join(inputPath, img)),
-			output: path.join(outputPath, dir),
+			output: sanatize(path.join(outputPath, dir)),
 		}
 	})
 	return Promise.all(inputs)
