@@ -9,6 +9,6 @@ build/
 
 projectGenerator/input/*
 projectGenerator/output/*
-!.gitkeep
-
 /public/img/projectImg/*
+
+!.gitkeep
