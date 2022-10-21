@@ -9,7 +9,8 @@ function sanatize(path: string): string {
 
 const JPEG_QUALITY = 50
 
-const inputPath: Path = path.join(__dirname, 'input')
+// const inputPath: Path = path.join(__dirname, 'input')
+const inputPath: Path = path.join(__dirname, '../../projects/projects')
 fs.mkdirSync(inputPath, { recursive: true })
 // const outputPath: Path = path.join(__dirname, 'output')
 const outputPath: Path = path.join(__dirname, '../public/img/projectImg')
@@ -31,7 +32,7 @@ async function processImage(image: Path, output: Path, index: number): Promise<I
 
 	// TODO instead of copy and overwrite optimized version write optimized version straigth to new location
 	// TODO display sizes
-	const { stdout, stderr } = await exec(`jpegoptim --max=${JPEG_QUALITY} ${newPath}`)
+	const { stderr } = await exec(`jpegoptim --max=${JPEG_QUALITY} ${newPath}`)
 	// console.log(stdout.replace(/\n+$/, ''))
 	if (stderr)
 		throw new Error(stderr)
