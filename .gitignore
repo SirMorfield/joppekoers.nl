@@ -7,3 +7,6 @@ tmp*
 test.*
 env.json
 build/
+
+projectGenerator/input/*
+!.gitkeep
