@@ -137,3 +137,5 @@ async function getJobs(inputsPath: Path): Promise<Job[]> {
 
 // create small preview image with
 // convert -resize 'X300' 0.jpg 0h300px.jpg
+// copy to prod:
+// scp -r ~/git/joppekoers.nl/public/img/projectImg/door-frame/00.jpg joppe@joppekoers.nl:~/server1/nodejs/public/img/projectImg/
