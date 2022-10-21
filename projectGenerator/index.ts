@@ -11,7 +11,8 @@ const JPEG_QUALITY = 50
 
 const inputPath: Path = path.join(__dirname, 'input')
 fs.mkdirSync(inputPath, { recursive: true })
-const outputPath: Path = path.join(__dirname, 'output')
+// const outputPath: Path = path.join(__dirname, 'output')
+const outputPath: Path = path.join(__dirname, '../public/img/projectImg')
 fs.mkdirSync(outputPath, { recursive: true })
 
 // const inputPath: Path = path.join(__dirname, '../public/img/projectImg/')
@@ -20,6 +21,27 @@ function normalizeName(name: FileName, index: number) {
 	if (index > 99)
 		throw new Error('Index too large')
 	return `${index.toString().padStart(2, '0')}${path.extname(name)}`
+}
+
+async function processImage(image: Path, output: Path, index: number): Promise<Image> {
+	const dimensions = await imageSize(image)
+	const newName = normalizeName(path.basename(image), index)
+	const newPath = sanatize(path.join(output, newName))
+	await fs.copy(image, newPath)
+
+	// TODO instead of copy and overwrite optimized version write optimized version straigth to new location
+	// TODO display sizes
+	const { stdout, stderr } = await exec(`jpegoptim --max=${JPEG_QUALITY} ${newPath}`)
+	// console.log(stdout.replace(/\n+$/, ''))
+	if (stderr)
+		throw new Error(stderr)
+
+	return {
+		name: newName,
+		path: newPath,
+		width: dimensions.width,
+		height: dimensions.height
+	}
 }
 
 async function runJob(job: Job): Promise<Image[]> {
@@ -32,20 +54,7 @@ async function runJob(job: Job): Promise<Image[]> {
 		if (image.match(/\/thumbnail/))
 			continue
 
-		const dimensions = await imageSize(image)
-		imageDb.push({
-			name: path.basename(image),
-			path: image,
-			width: dimensions.width,
-			height: dimensions.height
-		})
-		const newName = normalizeName(path.basename(image), i++)
-		const newPath = sanatize(path.join(job.output, newName))
-		await fs.copy(image, newPath)
-
-		// TODO instead of copy and overwrite optimized version write optimized version straigth to new location
-		// TODO display sizes
-		await exec(`jpegotim --quiet --max=${JPEG_QUALITY} ${newPath}`)
+		imageDb.push(await processImage(image, job.output, i++))
 	}
 
 	if (!hasThumbnail(job.imgs)) {
@@ -119,6 +128,10 @@ async function getJobs(inputsPath: Path): Promise<Job[]> {
 	}
 
 	await installProjects(projectsDb)
+
+	for (const project of Object.keys(projectsDb)) {
+		console.log(`<div class="project block scale-up"><img src="/img/projectImg/${project}/thumbnail.jpg" onclick="openPopup('${project}')" class="lazyload projectImg"></div>`)
+	}
 })()
 
 // create small preview image with
