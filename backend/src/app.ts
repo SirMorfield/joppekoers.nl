@@ -1,4 +1,4 @@
-(async () => {
+;(async () => {
 	const path = require('path')
 	const isProduction = process.env['NODE_ENV'] == 'production'
 	process.env['root'] = path.join(__dirname, '../')

@@ -29,11 +29,10 @@ export async function upload(req, res) {
 			return
 		}
 
-		const userAgent = (req.get('user-agent')).toLowerCase()
+		const userAgent = req.get('user-agent').toLowerCase()
 		if (userAgent.includes('curl') || userAgent.includes('wget')) {
 			res.send(`joppekoers.nl/drop/${id}`)
-		}
-		else {
+		} else {
 			res.send(`Done, go to <b>joppekoers.nl/drop/${id}</b> to download it`)
 		}
 	})
@@ -53,11 +52,12 @@ export async function download(req, res) {
 	}
 	if (files.length === 1) {
 		res.download(files[0]!.path, files[0]!.name)
-	}
-	else {
+	} else {
 		res.zip({
-			files: files.map(file => { return { path: file.path, name: file.name } }),
-			filename: `${id}.zip`
+			files: files.map((file) => {
+				return { path: file.path, name: file.name }
+			}),
+			filename: `${id}.zip`,
 		})
 	}
 }

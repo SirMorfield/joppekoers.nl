@@ -4,7 +4,7 @@ import { exec } from 'child_process'
 import { PathLike } from 'node:fs'
 const env = require(path.join(process.env['root']!, 'env.json'))
 
-async function execAsync(command): Promise<{ stdout: string, stderr: string }> {
+async function execAsync(command): Promise<{ stdout: string; stderr: string }> {
 	return new Promise((resolve, reject) => {
 		exec(`${command}`, (error, stdout, stderr) => {
 			resolve({ stdout, stderr })
@@ -13,17 +13,17 @@ async function execAsync(command): Promise<{ stdout: string, stderr: string }> {
 }
 
 export interface DBFile {
-	name: string,
-	path: PathLike,
+	name: string
+	path: PathLike
 	id: string
 }
 
 export interface Db {
-	contentDir: string,
-	dbFile: string,
-	tmpDir: string,
-	maxDBSize: number,
-	maxFileSize: number,
+	contentDir: string
+	dbFile: string
+	tmpDir: string
+	maxDBSize: number
+	maxFileSize: number
 	files: DBFile[]
 }
 
@@ -41,7 +41,7 @@ function initDB(): Db {
 	}
 
 	try {
-		db.files = JSON.parse((fs.readFileSync(db.dbFile)).toString())
+		db.files = JSON.parse(fs.readFileSync(db.dbFile).toString())
 	} catch (err) {
 		db.files = []
 		console.error('Failed to read dbFile ', db.dbFile)
@@ -55,7 +55,7 @@ function logDBinfo(db: Db) {
 
 	table.contentDir = db.contentDir
 	try {
-		table.filesSaved = (fs.readdirSync(db.contentDir)).length
+		table.filesSaved = fs.readdirSync(db.contentDir).length
 	} catch (err) {
 		table.filesSaved = `Error reading contentDir`
 	}
@@ -83,8 +83,9 @@ async function saveDBStatus() {
 function randomNumber(length: number): string {
 	let table = '0123456789'
 	let text = ''
-	while (length-- > 0)
+	while (length-- > 0) {
 		text += table.charAt(Math.round(Math.random() * (table.length - 1)))
+	}
 	return text
 }
 
@@ -114,8 +115,9 @@ export function newID(): string {
 }
 
 export async function newDBFile(filename: string, id: string): Promise<DBFile | null> {
-	if (await DBFull())
+	if (await DBFull()) {
 		return null
+	}
 
 	const dbFIle = {
 		name: filename,
