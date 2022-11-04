@@ -1,40 +1,43 @@
 <script lang="ts">
 	import ImageGallery from './lib/ImageGallery.svelte'
+	import Photoswipe from './lib/Photoswipe.svelte'
+
+	const images = [
+		{
+			largeURL: 'https://cdn.photoswipe.com/photoswipe-demo-images/photos/1/img-2500.jpg',
+			thumbnailURL: 'https://cdn.photoswipe.com/photoswipe-demo-images/photos/1/img-200.jpg',
+			width: 1875,
+			height: 2500,
+		},
+		{
+			largeURL: 'https://cdn.photoswipe.com/photoswipe-demo-images/photos/2/img-2500.jpg',
+			thumbnailURL: 'https://cdn.photoswipe.com/photoswipe-demo-images/photos/2/img-200.jpg',
+			width: 1669,
+			height: 2500,
+		},
+		{
+			largeURL: 'https://cdn.photoswipe.com/photoswipe-demo-images/photos/3/img-2500.jpg',
+			thumbnailURL: 'https://cdn.photoswipe.com/photoswipe-demo-images/photos/3/img-200.jpg',
+			width: 2500,
+			height: 1666,
+		},
+	]
+
+	interface Project {
+		imgs: { src: string; w: number; h: number }[]
+		root: string
+	}
+
+	//  prettier-ignore
+	let  projects1: Project[]= [{"imgs":[{"src":"00.jpg","w":3024,"h":4032},{"src":"01.jpg","w":3024,"h":4032},{"src":"02.jpg","w":3024,"h":4032},{"src":"03.jpg","w":3024,"h":4032},{"src":"04.jpg","w":2448,"h":3264},{"src":"05.jpg","w":3024,"h":4032},{"src":"06.jpg","w":2448,"h":3264},{"src":"07.jpg","w":2448,"h":3264},{"src":"08.jpg","w":2448,"h":3264},{"src":"09.jpg","w":2448,"h":3264},{"src":"10.jpg","w":2448,"h":3264},{"src":"11.jpg","w":2448,"h":3264},{"src":"12.jpg","w":3264,"h":2448},{"src":"13.jpg","w":2448,"h":3264},{"src":"14.jpg","w":2448,"h":3264},{"src":"15.jpg","w":3264,"h":2448},{"src":"16.jpg","w":4032,"h":3024},{"src":"17.jpg","w":3024,"h":4032},{"src":"18.jpg","w":4032,"h":3024},{"src":"19.jpg","w":3024,"h":4032},{"src":"20.jpg","w":3024,"h":4032}],"root":"/img/projectImg/arcade-machine/"},{"imgs":[{"src":"00.jpg","w":2268,"h":4032},{"src":"01.jpg","w":2268,"h":4032},{"src":"02.jpg","w":2268,"h":4032},{"src":"03.jpg","w":4032,"h":2268},{"src":"04.jpg","w":4032,"h":2268},{"src":"05.jpg","w":2268,"h":4032},{"src":"06.jpg","w":2268,"h":4032},{"src":"07.jpg","w":2268,"h":4032},{"src":"08.jpg","w":2268,"h":4032},{"src":"09.jpg","w":2268,"h":4032},{"src":"10.jpg","w":2268,"h":4032},{"src":"11.jpg","w":2268,"h":4032},{"src":"12.jpg","w":2268,"h":4032},{"src":"13.jpg","w":2268,"h":4032},{"src":"14.jpg","w":2268,"h":4032}],"root":"/img/projectImg/audio-cart-storage/"},{"imgs":[{"src":"00.jpg","w":1200,"h":1600},{"src":"01.jpg","w":1200,"h":1600},{"src":"02.jpg","w":3024,"h":4032},{"src":"03.jpg","w":1200,"h":1600}],"root":"/img/projectImg/audio-cart-storage-2/"},{"imgs":[{"src":"00.jpg","w":3024,"h":4032},{"src":"01.jpg","w":3024,"h":4032},{"src":"02.jpg","w":3024,"h":4032},{"src":"03.jpg","w":3024,"h":4032}],"root":"/img/projectImg/big-hammer/"},{"imgs":[{"src":"00.jpg","w":3024,"h":4032},{"src":"01.jpg","w":3024,"h":4032},{"src":"02.jpg","w":3024,"h":4032}],"root":"/img/projectImg/boom-mic-stand/"},{"imgs":[{"src":"00.jpg","w":3024,"h":4032},{"src":"01.jpg","w":2268,"h":4032},{"src":"02.jpg","w":2268,"h":4032},{"src":"03.jpg","w":3024,"h":4032}],"root":"/img/projectImg/cork-screw/"},{"imgs":[{"src":"00.jpg","w":3024,"h":4032},{"src":"01.jpg","w":3024,"h":4032},{"src":"02.jpg","w":3024,"h":4032},{"src":"03.jpg","w":3024,"h":4032},{"src":"04.jpg","w":3024,"h":4032},{"src":"05.jpg","w":3024,"h":4032},{"src":"06.jpg","w":3024,"h":4032},{"src":"07.jpg","w":3024,"h":4032},{"src":"08.jpg","w":4032,"h":3024},{"src":"09.jpg","w":3024,"h":4032},{"src":"10.jpg","w":3024,"h":4032},{"src":"11.jpg","w":3024,"h":4032},{"src":"12.jpg","w":4032,"h":3024},{"src":"13.jpg","w":4032,"h":3024},{"src":"14.jpg","w":3024,"h":4032},{"src":"15.jpg","w":3024,"h":4032}],"root":"/img/projectImg/door-frame/"},{"imgs":[{"src":"00.jpg","w":4032,"h":3024},{"src":"01.jpg","w":4032,"h":3024}],"root":"/img/projectImg/electric-car/"},{"imgs":[{"src":"00.jpg","w":3024,"h":4032},{"src":"01.jpg","w":4032,"h":3024}],"root":"/img/projectImg/electric-kettle/"},{"imgs":[{"src":"00.jpg","w":3024,"h":4032},{"src":"01.jpg","w":3024,"h":4032},{"src":"02.jpg","w":4032,"h":3024},{"src":"03.jpg","w":3024,"h":4032},{"src":"04.jpg","w":4032,"h":3024},{"src":"05.jpg","w":3024,"h":4032},{"src":"06.jpg","w":4032,"h":3024},{"src":"07.jpg","w":4032,"h":3024},{"src":"08.jpg","w":3024,"h":4032},{"src":"09.jpg","w":3024,"h":4032},{"src":"10.jpg","w":4032,"h":3024},{"src":"11.jpg","w":3024,"h":4032},{"src":"12.jpg","w":4032,"h":3024},{"src":"13.jpg","w":4032,"h":3024}],"root":"/img/projectImg/greenhouse/"},{"imgs":[{"src":"00.jpg","w":1200,"h":1600},{"src":"01.jpg","w":1200,"h":1600},{"src":"02.jpg","w":1200,"h":1600}],"root":"/img/projectImg/hammer/"},{"imgs":[{"src":"00.jpg","w":1200,"h":1600},{"src":"01.jpg","w":1200,"h":1600}],"root":"/img/projectImg/jacob-s-ladder/"},{"imgs":[{"src":"00.jpg","w":3264,"h":2448},{"src":"01.jpg","w":3264,"h":2448}],"root":"/img/projectImg/knife/"},{"imgs":[{"src":"00.jpg","w":3024,"h":4032},{"src":"01.jpg","w":3024,"h":4032},{"src":"02.jpg","w":3024,"h":4032},{"src":"03.jpg","w":3024,"h":4032},{"src":"04.jpg","w":3024,"h":4032},{"src":"05.jpg","w":4032,"h":3024}],"root":"/img/projectImg/lab-power-supply/"},{"imgs":[{"src":"00.jpg","w":1440,"h":2560},{"src":"01.jpg","w":2560,"h":1440},{"src":"02.jpg","w":4032,"h":2268},{"src":"03.jpg","w":2268,"h":4032},{"src":"04.jpg","w":4032,"h":3024},{"src":"05.jpg","w":3024,"h":4032},{"src":"06.jpg","w":3024,"h":4032},{"src":"07.jpg","w":3024,"h":4032},{"src":"08.jpg","w":4032,"h":3024}],"root":"/img/projectImg/matrix/"},{"imgs":[{"src":"00.jpg","w":4032,"h":2268},{"src":"01.jpg","w":2268,"h":4032},{"src":"02.jpg","w":2268,"h":4032},{"src":"03.jpg","w":3024,"h":4032},{"src":"04.jpg","w":4032,"h":2268}],"root":"/img/projectImg/raid-server/"},{"imgs":[{"src":"00.jpg","w":3024,"h":4032},{"src":"01.jpg","w":3024,"h":4032},{"src":"02.jpg","w":3024,"h":4032},{"src":"03.jpg","w":3024,"h":4032},{"src":"04.jpg","w":3024,"h":4032}],"root":"/img/projectImg/rainbarrel-stand/"},{"imgs":[{"src":"00.jpg","w":3024,"h":4032},{"src":"01.jpg","w":4032,"h":3024},{"src":"02.jpg","w":3024,"h":4032},{"src":"03.jpg","w":4032,"h":3024},{"src":"04.jpg","w":3024,"h":4032},{"src":"05.jpg","w":3024,"h":4032},{"src":"06.jpg","w":3024,"h":4032},{"src":"07.jpg","w":3024,"h":4032},{"src":"08.jpg","w":3024,"h":4032},{"src":"09.jpg","w":3024,"h":4032},{"src":"10.jpg","w":3024,"h":4032}],"root":"/img/projectImg/rattan-doors/"},{"imgs":[{"src":"00.jpg","w":4032,"h":3024},{"src":"01.jpg","w":4032,"h":3024},{"src":"02.jpg","w":4032,"h":3024},{"src":"03.jpg","w":4032,"h":3024},{"src":"04.jpg","w":4032,"h":3024},{"src":"05.jpg","w":4032,"h":3024},{"src":"06.jpg","w":4032,"h":3024},{"src":"07.jpg","w":3024,"h":4032},{"src":"08.jpg","w":3024,"h":4032}],"root":"/img/projectImg/rpi-remote-backup/"},{"imgs":[{"src":"00.jpg","w":3024,"h":4032}],"root":"/img/projectImg/screwdriver-holder/"},{"imgs":[{"src":"00.jpg","w":3264,"h":2448},{"src":"01.jpg","w":2448,"h":3264},{"src":"02.jpg","w":3264,"h":2448}],"root":"/img/projectImg/small-box/"},{"imgs":[{"src":"00.jpg","w":2448,"h":3264},{"src":"01.jpg","w":2448,"h":3264}],"root":"/img/projectImg/small-car/"},{"imgs":[{"src":"00.jpg","w":3264,"h":2448},{"src":"01.jpg","w":1920,"h":1080},{"src":"02.jpg","w":4032,"h":2268},{"src":"03.jpg","w":2268,"h":4032}],"root":"/img/projectImg/speakers/"},{"imgs":[{"src":"00.jpg","w":3024,"h":4032},{"src":"01.jpg","w":3024,"h":4032},{"src":"02.jpg","w":3024,"h":4032}],"root":"/img/projectImg/suskast/"},{"imgs":[{"src":"00.jpg","w":1200,"h":1600},{"src":"01.jpg","w":1200,"h":1600},{"src":"02.jpg","w":1200,"h":1600}],"root":"/img/projectImg/sword/"},{"imgs":[{"src":"00.jpg","w":1200,"h":1600},{"src":"01.jpg","w":1200,"h":1600},{"src":"02.jpg","w":1200,"h":1600}],"root":"/img/projectImg/sword2/"},{"imgs":[{"src":"00.jpg","w":3264,"h":2448},{"src":"01.jpg","w":3264,"h":2448},{"src":"02.jpg","w":2448,"h":3246}],"root":"/img/projectImg/table/"},{"imgs":[{"src":"00.jpg","w":2941,"h":2893},{"src":"01.jpg","w":3024,"h":4032},{"src":"02.jpg","w":3024,"h":4032},{"src":"03.jpg","w":4032,"h":3024},{"src":"04.jpg","w":4032,"h":3024},{"src":"05.jpg","w":3024,"h":4032},{"src":"06.jpg","w":3024,"h":4032},{"src":"07.jpg","w":3024,"h":4032},{"src":"08.jpg","w":4032,"h":3024},{"src":"09.jpg","w":2941,"h":2893},{"src":"10.jpg","w":4032,"h":3024},{"src":"11.jpg","w":3024,"h":4032},{"src":"12.jpg","w":3024,"h":4032},{"src":"13.jpg","w":3024,"h":4032},{"src":"14.jpg","w":4032,"h":3024},{"src":"15.jpg","w":4032,"h":3024},{"src":"16.jpg","w":3024,"h":4032},{"src":"17.jpg","w":3024,"h":4032},{"src":"18.jpg","w":4032,"h":3024},{"src":"19.jpg","w":3024,"h":4032},{"src":"20.jpg","w":4032,"h":3024},{"src":"21.jpg","w":4032,"h":3024},{"src":"22.jpg","w":4032,"h":3024},{"src":"23.jpg","w":3024,"h":4032},{"src":"24.jpg","w":3024,"h":4032},{"src":"25.jpg","w":3024,"h":4032},{"src":"26.jpg","w":3024,"h":4032},{"src":"27.jpg","w":3024,"h":4032}],"root":"/img/projectImg/table-legs/"},{"imgs":[{"src":"00.jpg","w":3024,"h":4032},{"src":"01.jpg","w":3024,"h":4032},{"src":"02.jpg","w":3024,"h":4032},{"src":"03.jpg","w":3024,"h":4032},{"src":"04.jpg","w":3024,"h":4032},{"src":"05.jpg","w":3024,"h":4032},{"src":"06.jpg","w":3024,"h":4032},{"src":"07.jpg","w":3024,"h":4032},{"src":"08.jpg","w":3024,"h":4032},{"src":"09.jpg","w":3024,"h":4032},{"src":"10.jpg","w":4032,"h":3024},{"src":"11.jpg","w":4032,"h":3024},{"src":"12.jpg","w":3024,"h":4032},{"src":"13.jpg","w":4032,"h":3024}],"root":"/img/projectImg/wheel-respoke/"},{"imgs":[{"src":"00.jpg","w":4032,"h":3024},{"src":"01.jpg","w":4032,"h":3024},{"src":"02.jpg","w":3024,"h":4032},{"src":"03.jpg","w":4032,"h":3024},{"src":"04.jpg","w":4032,"h":3024},{"src":"05.jpg","w":4032,"h":3024},{"src":"06.jpg","w":3024,"h":4032}],"root":"/img/projectImg/wheel-respoke-2/"},{"imgs":[{"src":"00.jpg","w":2756,"h":1550},{"src":"01.jpg","w":2756,"h":1550},{"src":"02.jpg","w":2756,"h":1550},{"src":"03.jpg","w":2756,"h":1550},{"src":"04.jpg","w":2756,"h":1550},{"src":"05.jpg","w":2756,"h":1550},{"src":"06.jpg","w":2756,"h":1550},{"src":"07.jpg","w":2756,"h":1550},{"src":"08.jpg","w":2756,"h":1550},{"src":"09.jpg","w":2756,"h":1550},{"src":"10.jpg","w":2756,"h":1550},{"src":"11.jpg","w":2756,"h":1550},{"src":"12.jpg","w":2756,"h":1550},{"src":"13.jpg","w":3024,"h":4032},{"src":"14.jpg","w":4032,"h":3024},{"src":"15.jpg","w":4032,"h":3024},{"src":"16.jpg","w":3024,"h":4032},{"src":"17.jpg","w":3024,"h":4032},{"src":"18.jpg","w":3024,"h":4032},{"src":"19.jpg","w":3024,"h":4032},{"src":"20.jpg","w":3024,"h":4032},{"src":"21.jpg","w":3024,"h":4032},{"src":"22.jpg","w":3024,"h":4032},{"src":"23.jpg","w":4032,"h":3024}],"root":"/img/projectImg/wolmolen/"},{"imgs":[{"src":"00.jpg","w":4032,"h":3024},{"src":"01.jpg","w":3024,"h":4032},{"src":"02.jpg","w":3024,"h":4032},{"src":"03.jpg","w":4032,"h":3024},{"src":"04.jpg","w":4032,"h":3024},{"src":"05.jpg","w":4032,"h":3024},{"src":"06.jpg","w":3024,"h":4032},{"src":"07.jpg","w":4032,"h":3024},{"src":"08.jpg","w":3024,"h":4032},{"src":"09.jpg","w":4032,"h":3024},{"src":"10.jpg","w":4032,"h":3024},{"src":"11.jpg","w":4032,"h":3024},{"src":"12.jpg","w":3024,"h":4032},{"src":"13.jpg","w":3024,"h":4032},{"src":"14.jpg","w":4032,"h":3024},{"src":"15.jpg","w":4032,"h":3024},{"src":"16.jpg","w":4032,"h":3024},{"src":"17.jpg","w":4032,"h":3024},{"src":"18.jpg","w":4032,"h":3024},{"src":"19.jpg","w":3024,"h":4032},{"src":"20.jpg","w":3024,"h":4032},{"src":"21.jpg","w":3024,"h":4032},{"src":"22.jpg","w":3024,"h":4032},{"src":"23.jpg","w":3024,"h":4032},{"src":"24.jpg","w":4032,"h":3024},{"src":"25.jpg","w":4032,"h":3024},{"src":"26.jpg","w":4032,"h":3024},{"src":"27.jpg","w":4032,"h":3024},{"src":"28.jpg","w":4032,"h":3024}],"root":"/img/projectImg/wooden-storage-sofa/"}]
+	projects1 = projects1.map((p) => ({
+		...p,
+		imgs: p.imgs.map((i) => ({ ...i, src: p.root + i.src })),
+	}))
 </script>
 
 <main>
-	<ImageGallery loading={'eager'} hover={true}>
-		<img src="/projectImg/wolmolen/thumbnail.jpg" alt="" />
-		<img src="/projectImg/hammer/thumbnail.jpg" alt="" />
-		<img src="/projectImg/arcade-machine/thumbnail.jpg" alt="" />
-		<img src="/projectImg/small-box/thumbnail.jpg" alt="" />
-		<img src="/projectImg/matrix/thumbnail.jpg" alt="" />
-		<img src="/projectImg/audio-cart-storage/thumbnail.jpg" alt="" />
-		<img src="/projectImg/audio-cart-storage-2/thumbnail.jpg" alt="" />
-		<img src="/projectImg/door-frame/thumbnail.jpg" alt="" />
-		<img src="/projectImg/wooden-storage-sofa/thumbnail.jpg" alt="" />
-		<img src="/projectImg/table-legs/thumbnail.jpg" alt="" />
-		<img src="/projectImg/speakers/thumbnail.jpg" alt="" />
-		<img src="/projectImg/sword/thumbnail.jpg" alt="" />
-		<img src="/projectImg/sword2/thumbnail.jpg" alt="" />
-		<img src="/projectImg/rainbarrel-stand/thumbnail.jpg" alt="" />
-		<img src="/projectImg/table/thumbnail.jpg" alt="" />
-		<img src="/projectImg/big-hammer/thumbnail.jpg" alt="" />
-		<img src="/projectImg/knife/thumbnail.jpg" alt="" />
-		<img src="/projectImg/jacob-s-ladder/thumbnail.jpg" alt="" />
-		<img src="/projectImg/boom-mic-stand/thumbnail.jpg" alt="" />
-		<img src="/projectImg/cork-screw/thumbnail.jpg" alt="" />
-		<img src="/projectImg/electric-car/thumbnail.jpg" alt="" />
-		<img src="/projectImg/electric-kettle/thumbnail.jpg" alt="" />
-		<img src="/projectImg/greenhouse/thumbnail.jpg" alt="" />
-		<img src="/projectImg/lab-power-supply/thumbnail.jpg" alt="" />
-		<img src="/projectImg/raid-server/thumbnail.jpg" alt="" />
-		<img src="/projectImg/rattan-doors/thumbnail.jpg" alt="" />
-		<img src="/projectImg/rpi-remote-backup/thumbnail.jpg" alt="" />
-		<img src="/projectImg/screwdriver-holder/thumbnail.jpg" alt="" />
-		<img src="/projectImg/small-car/thumbnail.jpg" alt="" />
-		<img src="/projectImg/suskast/thumbnail.jpg" alt="" />
-		<img src="/projectImg/wheel-respoke/thumbnail.jpg" alt="" />
-		<img src="/projectImg/wheel-respoke-2/thumbnail.jpg" alt="" />
-	</ImageGallery>
+	<ImageGallery loading={'lazy'} hover={true} projects={projects1} />
+
+	<Photoswipe galleryID="my-test-gallery" {images} />
 </main>

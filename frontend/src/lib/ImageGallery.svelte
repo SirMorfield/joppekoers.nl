@@ -1,16 +1,33 @@
 <!-- From: https://github.com/berkinakkaya/svelte-image-gallery#readme -->
-<script>
+<script lang="ts">
 	import { onMount, createEventDispatcher } from 'svelte'
-	import { tick } from 'svelte'
+	import PhotoSwipeLightbox from 'photoswipe/lightbox'
+	import 'photoswipe/style.css'
 
 	export let gap = 10
 	export let maxColumnWidth = 250
 	export let hover = false
-	export let loading
+	export let loading = 'lazy'
+
+	export let galleryID = 'gallery'
+
+	interface Project {
+		imgs: { src: string; w: number; h: number }[]
+		root: string
+	}
+	export let projects: Project[]
+
+	onMount(() => {
+		let lightbox = new PhotoSwipeLightbox({
+			gallery: '#' + galleryID,
+			children: 'a',
+			pswpModule: () => import('photoswipe'),
+		})
+		lightbox.init()
+	})
 
 	const dispatch = createEventDispatcher()
 
-	let slotHolder = null
 	let columns = []
 	let galleryWidth = 0
 	let columnCount = 0
@@ -31,35 +48,23 @@
 	}
 
 	async function Draw() {
-		await tick()
-
-		if (!slotHolder) {
-			return
-		}
-
-		const images = Array.from(slotHolder.childNodes).filter((child) => child.tagName === 'IMG')
+		// const imagesx = Array.from(slotHolder.childNodes).filter((child) => child.tagName === 'IMG')
 		columns = []
 
 		// Fill the columns with image URLs
-		for (let i = 0; i < images.length; i++) {
+		for (let i = 0; i < projects.length; i++) {
 			const idx = i % columnCount
-			columns[idx] = [
-				...(columns[idx] || []),
-				{ src: images[i].src, alt: images[i].alt, class: images[i].className },
-			]
+			columns[idx] = [...(columns[idx] || []), { src: projects[i].imgs[0]!.src, alt: '', class: '' }] // todo
 		}
 	}
+	Draw()
 </script>
 
-<div id="slotHolder" bind:this={slotHolder} on:DOMNodeInserted={Draw} on:DOMNodeRemoved={Draw}>
-	<slot />
-</div>
-
-{#if columns}
-	<div id="gallery" bind:clientWidth={galleryWidth} style={galleryStyle}>
-		{#each columns as column}
-			<div class="column">
-				{#each column as img}
+<div class="pswp-gallery" id={galleryID} bind:clientWidth={galleryWidth} style={galleryStyle}>
+	{#each columns as column}
+		<div class="column">
+			{#each column as img}
+				<a href={img.src} data-pswp-width={img.w} data-pswp-height={img.h} target="_blank" rel="noreferrer">
 					<img
 						src={img.src}
 						alt={img.alt}
@@ -68,11 +73,11 @@
 						class="{hover === true ? 'img-hover' : ''} {img.class}"
 						{loading}
 					/>
-				{/each}
-			</div>
-		{/each}
-	</div>
-{/if}
+				</a>
+			{/each}
+		</div>
+	{/each}
+</div>
 
 <style>
 	#slotHolder {
