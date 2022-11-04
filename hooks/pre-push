@@ -2,10 +2,13 @@
 
 set -o errexit # Exit on error
 
+echo "Checking linting..."
 cd frontend
-npm run lint
+npm run lint > /dev/null
+cd -
 
 cd backend
-npm run lint
+npm run lint > /dev/null
+cd -
 
 exit 0
