@@ -1,25 +1,25 @@
 {
-  "name": "frontend",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json",
-	"lint": "npx prettier --check 'src/**/*.{ts,html,js,svelte}' '*.{ts,html,js,svelte}'",
-	"lint:fix": "npx prettier --write 'src/**/*.{ts,html,js,svelte}' '*.{ts,html,js,svelte}'"
-  },
-  "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^1.1.0",
-    "@tsconfig/svelte": "^3.0.0",
-    "svelte": "^3.52.0",
-    "svelte-check": "^2.9.2",
-    "svelte-preprocess": "^4.10.7",
-    "tslib": "^2.4.0",
-    "typescript": "^4.6.4",
-    "vite": "^3.2.0",
-	"prettier-plugin-svelte": "^2.8.0"
-  }
+	"name": "frontend",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"lint": "npx prettier --check 'src/**/*.{ts,html,js,svelte}' '*.{ts,html,js,svelte}'",
+		"lint:fix": "npx prettier --write 'src/**/*.{ts,html,js,svelte}' '*.{ts,html,js,svelte}'"
+	},
+	"devDependencies": {
+		"@sveltejs/vite-plugin-svelte": "^1.1.0",
+		"@tsconfig/svelte": "^3.0.0",
+		"svelte": "^3.52.0",
+		"svelte-check": "^2.9.2",
+		"svelte-preprocess": "^4.10.7",
+		"tslib": "^2.4.0",
+		"typescript": "^4.6.4",
+		"vite": "^3.2.0",
+		"prettier-plugin-svelte": "^2.8.0"
+	}
 }
