@@ -28,7 +28,8 @@
 		"dev": "ts-node-dev --quiet --clear --rs --respawn --transpile-only src/app.ts",
 		"build": "tsc",
 		"start": "NODE_ENV=production node build/app.js",
-		"images": "node build/other/templatesAndModules/projectsGenerator.js"
+		"lint": "npx prettier --check 'src/**/*.{ts,html,js,svelte}'",
+		"lint:fix": "npx prettier --write 'src/**/*.{ts,html,js,svelte}'"
 	},
 	"repository": {
 		"type": "git",
