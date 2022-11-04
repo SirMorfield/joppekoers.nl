@@ -8,8 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-	"lint": "npx prettier --check '**/*.{ts,html,js,svelte}'",
-	"lint:fix": "npx prettier --write '**/*.{ts,html,js,svelte}'"
+	"lint": "npx prettier --check 'src/**/*.{ts,html,js,svelte}' '*.{ts,html,js,svelte}'",
+	"lint:fix": "npx prettier --write 'src/**/*.{ts,html,js,svelte}' '*.{ts,html,js,svelte}'"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.1.0",
