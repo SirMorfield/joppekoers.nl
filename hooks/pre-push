@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -o errexit # Exit on error
+
+cd frontend
+npm run lint
+
+cd backend
+npm run lint
+
+exit 0
