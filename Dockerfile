@@ -1,12 +1,17 @@
-FROM node:17-alpine
+FROM node:18-alpine
 
 WORKDIR /app
 # RUN chown -R node:node /app
 
-COPY package.json package-lock.json ./
-RUN npm install --omit=dev
+COPY frontend/package.json  frontend/package-lock.json ./frontend/
+RUN cd frontend && npm install
+COPY backend/package.json  backend/package-lock.json ./backend/
+RUN cd backend && npm ci --omit=dev
+
 COPY . .
-RUN npm run build
+
+RUN cd frontend && npm run build
+RUN cd backend && npm run build
 
 EXPOSE 8080
 

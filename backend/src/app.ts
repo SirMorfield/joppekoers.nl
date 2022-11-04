@@ -46,7 +46,7 @@
 	app.post('/drop/upload', drop.upload)
 	app.get('/drop/:identifier', drop.download)
 
-	app.use('/svelte', express.static(path.join(process.env['root'], '/frontend/dist')))
+	app.use('/svelte', express.static(path.join(process.env['root'], '../frontend/dist')))
 
 	app.get('*', error)
 
