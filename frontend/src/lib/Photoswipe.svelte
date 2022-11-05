@@ -10,6 +10,13 @@
 			gallery: '#' + galleryID,
 			children: 'a',
 			pswpModule: () => import('photoswipe'),
+			...{
+				loop: false,
+				bgOpacity: 0.98,
+				showAnimationDuration: 0,
+				hideAnimationDuration: 0,
+				pinchToClose: false,
+			},
 		})
 		lightbox.init()
 	})

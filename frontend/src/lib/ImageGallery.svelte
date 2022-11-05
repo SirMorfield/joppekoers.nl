@@ -2,7 +2,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import 'photoswipe/style.css'
-	import type { ImageExport, ProjectExport } from '@shared/types'
+	import type { ProjectExport } from '@shared/types'
+	import PhotoSwipe from 'photoswipe'
 
 	export let gap = 10
 	export let maxColumnWidth = 250
@@ -15,7 +16,7 @@
 	$: galleryStyle = `grid-template-columns: repeat(${columnCount}, 1fr); --gap: ${gap}px`
 
 	onMount(draw)
-	let columns: ImageExport[][] = []
+	let columns: ProjectExport[][] = []
 	function draw() {
 		// const imagesx = Array.from(slotHolder.childNodes).filter((child) => child.tagName === 'IMG')
 		columns = []
@@ -25,23 +26,48 @@
 			const column = i % columnCount
 			if (!columns[column]) columns[column] = []
 
-			columns[column].push(project.thumbnail)
+			columns[column].push(project)
 		}
 		console.log('draw', columns.length)
+	}
+
+	function openPhotoSwhipe(id: string) {
+		const { imgs } = projects.find((p) => p.id === id)
+
+		const gallery = new PhotoSwipe({
+			gallery: '#pswp-gallery-id',
+			dataSource: imgs,
+			pswpModule: () => import('photoswipe'),
+			loop: false,
+			bgOpacity: 0.9,
+			showAnimationDuration: 100,
+			hideAnimationDuration: 100,
+			pinchToClose: false,
+		})
+		gallery.init()
+		console.log('openPopup', id)
 	}
 </script>
 
 <div id="gallery" bind:clientWidth={galleryWidth} style={galleryStyle}>
 	{#each columns as column}
 		<div class="column">
-			{#each column as img}
-				<img src={img.src} alt="" on:click={() => {}} on:keydown={() => {}} class="img-hover" loading="lazy" />
+			{#each column as project}
+				<img
+					src={project.thumbnail.src}
+					alt={project.thumbnail.alt}
+					on:click={() => openPhotoSwhipe(project.id)}
+					on:keydown={() => {}}
+					class="img-hover"
+					loading="lazy"
+				/>
 			{/each}
 		</div>
 	{/each}
 </div>
 
-<!-- <div class="pswp-gallery" id={galleryID} bind:clientWidth={galleryWidth} style={galleryStyle} /> -->
+<div class="pswp-gallery" id="pswp-gallery-id" />
+
 <style>
 	#gallery {
 		width: 100%;

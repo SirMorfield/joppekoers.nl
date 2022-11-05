@@ -25,13 +25,15 @@ export interface Project {
 export function imageToImg(image: Image): ImageExport {
 	return {
 		src: image.name,
-		w: image.width,
-		h: image.height,
+		width: image.width,
+		height: image.height,
+		alt: image.name,
 	}
 }
 
 export function projectToProjectExport(project: Project): ProjectExport {
 	return {
+		id: project.id,
 		thumbnail: imageToImg(project.thumbnail),
 		imgs: project.images.map(imageToImg),
 		root: path.join('/img/projectImg/', project.id) + '/',
