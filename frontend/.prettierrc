@@ -5,14 +5,24 @@
 	"semi": false,
 	"singleQuote": true,
 	"trailingComma": "all",
-
 	"overrides": [
 		{
 			"files": ".prettierrc",
-			"options": { "parser": "json" }
+			"options": {
+				"parser": "json"
+			}
+		},
+		{
+			"files": "*.svelte",
+			"options": {
+				"parser": "svelte"
+			}
 		}
 	],
-
-	"pluginSearchDirs": ["./"],
-	"plugins": ["prettier-plugin-svelte"]
+	"pluginSearchDirs": [
+		"./"
+	],
+	"plugins": [
+		"prettier-plugin-svelte"
+	]
 }
