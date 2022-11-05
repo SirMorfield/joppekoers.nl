@@ -1,7 +1,7 @@
 import fs from 'fs-extra'
-import path from 'path'
-import { Image, Path, Project, exec, createThumbnail, imageSize, hasThumbnail, exit, Job, FileName } from './util'
+import * as path from 'path'
 import { default as sanitizeFilename } from 'sanitize-filename'
+import { Path, exec, createThumbnail, imageSize, Job, FileName, Image, Project, projectToProjectExport } from './util'
 
 function sanatize(path: string): string {
 	return path
@@ -12,11 +12,10 @@ function sanatize(path: string): string {
 
 const JPEG_QUALITY = 50
 
-// const inputPath: Path = path.join(__dirname, 'input')
-const inputPath: Path = path.join(__dirname, '../../projects/projects')
+const inputPath: Path = path.join(__dirname, '../../projects/projects') // directory inside the ~/git repo
 fs.mkdirSync(inputPath, { recursive: true })
-// const outputPath: Path = path.join(__dirname, 'output')
-const outputPath: Path = path.join(__dirname, '../public/img/projectImg')
+
+const outputPath: Path = path.join(__dirname, '../frontend/public/img/projectImg')
 fs.mkdirSync(outputPath, { recursive: true })
 
 // const inputPath: Path = path.join(__dirname, '../public/img/projectImg/')
@@ -46,39 +45,31 @@ async function processImage(image: Path, output: Path, index: number): Promise<I
 	}
 }
 
-async function runJob(job: Job): Promise<Image[]> {
+async function runJob(job: Job): Promise<Project> {
 	// remove all previously generated files
 	await fs.emptyDir(job.output)
 
-	const imageDb: Image[] = []
+	const images: Image[] = []
 	let i = 0
 	for (const image of job.imgs) {
 		if (image.match(/\/thumbnail/)) continue
 
-		imageDb.push(await processImage(image, job.output, i++))
+		images.push(await processImage(image, job.output, i++))
 	}
 
-	if (!hasThumbnail(job.imgs)) {
+	let thumbnail: Image | undefined = images.find((img) => /^thumbnail.*/.test(img.name))
+	if (!thumbnail) {
 		const thumbnailPath = path.join(job.output, `thumbnail${job.imgs[0]!.match(/\.[0-9a-z]+$/)![0]}`)
-		createThumbnail(job.imgs[0]!, thumbnailPath)
+		thumbnail = await createThumbnail(job.imgs[0]!, thumbnailPath)
 		console.log(`Created thumbnail ${thumbnailPath}`)
 	}
 
-	return imageDb
-}
-
-async function generateProjectFromJob(job: Job): Promise<Project> {
-	const images = await runJob(job)
-	const res = {
-		imgs: images.map((image) => ({ src: image.name, w: image.width, h: image.height })),
-		root: path.join('/img/projectImg/', job.id) + '/',
+	const project: Project = {
+		id: job.id,
+		thumbnail,
+		images,
 	}
-	// console.log(`Done: ${projectID}\n`)
-	return res
-}
-
-async function installProjects(projects: Project[]): Promise<void> {
-	console.log(JSON.stringify(projects))
+	return project
 }
 
 // Generate TODOs
@@ -108,22 +99,11 @@ async function getJobs(inputsPath: Path): Promise<Job[]> {
 	const jobs = await getJobs(inputPath)
 	const projects: Project[] = []
 
+	// TODO: parallelize
 	for (const job of jobs) {
 		console.log(`Project ${job.id}`)
-		if (projects[job.id]) exit(`Project ${job.id} already exists`)
-
-		projects.push(await generateProjectFromJob(job))
+		projects.push(await runJob(job))
 	}
 
-	await installProjects(projects)
-
-	for (const project of Object.keys(projects)) {
-		// prettier-ignore
-		console.log(`<div class="project block scale-up"><img src="/img/projectImg/${project}/thumbnail.jpg" onclick="openPopup('${project}')" class="lazyload projectImg"></div>`,)
-	}
+	console.log(JSON.stringify(projects.map(projectToProjectExport)))
 })()
-
-// create small preview image with
-// convert -resize 'X300' 0.jpg 0h300px.jpg
-// copy to prod:
-// scp -r ~/git/joppekoers.nl/public/img/projectImg/ joppe@joppekoers.nl:~/server1/nodejs/public/img/

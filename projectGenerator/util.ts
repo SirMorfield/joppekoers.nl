@@ -1,5 +1,7 @@
 export type Path = string
 export type FileName = string
+import { ImageExport, ProjectExport } from '@shared/types'
+import * as path from 'path'
 
 export interface Image {
 	name: FileName // eg. 01.jpg
@@ -15,16 +17,38 @@ export interface Job {
 }
 
 export interface Project {
-	// thumbnail: Image[]
-	imgs: { src: string; w: number; h: number }[]
-	root: Path
+	id: string
+	thumbnail: Image
+	images: Image[]
+}
+
+export function imageToImg(image: Image): ImageExport {
+	return {
+		src: image.name,
+		w: image.width,
+		h: image.height,
+	}
+}
+
+export function projectToProjectExport(project: Project): ProjectExport {
+	return {
+		thumbnail: imageToImg(project.thumbnail),
+		imgs: project.images.map(imageToImg),
+		root: path.join('/img/projectImg/', project.id) + '/',
+	}
 }
 
 export const exec = require('util').promisify(require('child_process').exec)
 
-export async function createThumbnail(imagePath: string, thumbnailPath: string): Promise<void> {
+export async function createThumbnail(imagePath: string, thumbnailPath: string): Promise<Image> {
 	const { stderr } = await exec(`convert -resize 'X300' '${imagePath}' '${thumbnailPath}'`)
 	if (stderr) console.error(stderr)
+	const image = {
+		...(await imageSize(thumbnailPath)),
+		path: thumbnailPath,
+		name: path.basename(thumbnailPath),
+	}
+	return image
 }
 
 export async function imageSize(path: string): Promise<{ width: number; height: number }> {
@@ -45,16 +69,4 @@ export async function imageSize(path: string): Promise<{ width: number; height: 
 		}
 	} catch (err) {}
 	return result
-}
-
-export function hasThumbnail(images: Path[]): boolean {
-	for (const image of images) {
-		if (image.match(/^thumbnail.*/)) return true
-	}
-	return false
-}
-
-export function exit(error: string): never {
-	console.error(error)
-	process.exit(1)
 }
