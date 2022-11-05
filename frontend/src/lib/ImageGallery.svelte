@@ -1,88 +1,48 @@
 <!-- From: https://github.com/berkinakkaya/svelte-image-gallery#readme -->
 <script lang="ts">
-	import { onMount, createEventDispatcher } from 'svelte'
-	import PhotoSwipeLightbox from 'photoswipe/lightbox'
+	import { onMount } from 'svelte'
 	import 'photoswipe/style.css'
+	import type { ImageExport, ProjectExport } from '@shared/types'
 
 	export let gap = 10
 	export let maxColumnWidth = 250
-	export let hover = false
-	export let loading = 'lazy'
-
-	export let galleryID = 'gallery'
-
-	interface Project {
-		imgs: { src: string; w: number; h: number }[]
-		root: string
-	}
-	export let projects: Project[]
-
-	onMount(() => {
-		let lightbox = new PhotoSwipeLightbox({
-			gallery: '#' + galleryID,
-			children: 'a',
-			pswpModule: () => import('photoswipe'),
-		})
-		lightbox.init()
-	})
-
-	const dispatch = createEventDispatcher()
-
-	let columns = []
+	export let projects: ProjectExport[]
 	let galleryWidth = 0
 	let columnCount = 0
 
 	$: columnCount = Math.floor(galleryWidth / maxColumnWidth) || 1
-	$: columnCount && Draw()
+	$: columnCount && draw()
 	$: galleryStyle = `grid-template-columns: repeat(${columnCount}, 1fr); --gap: ${gap}px`
 
-	onMount(Draw)
-
-	function HandleClick(e) {
-		dispatch('click', {
-			src: e.target.src,
-			alt: e.target.alt,
-			loading: e.target.loading,
-			class: e.target.className,
-		})
-	}
-
-	async function Draw() {
+	onMount(draw)
+	let columns: ImageExport[][] = []
+	function draw() {
 		// const imagesx = Array.from(slotHolder.childNodes).filter((child) => child.tagName === 'IMG')
 		columns = []
 
 		// Fill the columns with image URLs
-		for (let i = 0; i < projects.length; i++) {
-			const idx = i % columnCount
-			columns[idx] = [...(columns[idx] || []), { src: projects[i].imgs[0]!.src, alt: '', class: '' }] // todo
+		for (const [i, project] of projects.entries()) {
+			const column = i % columnCount
+			if (!columns[column]) columns[column] = []
+
+			columns[column].push(project.thumbnail)
 		}
+		console.log('draw', columns.length)
 	}
-	Draw()
 </script>
 
-<div class="pswp-gallery" id={galleryID} bind:clientWidth={galleryWidth} style={galleryStyle}>
+<div id="gallery" bind:clientWidth={galleryWidth} style={galleryStyle}>
 	{#each columns as column}
 		<div class="column">
 			{#each column as img}
-				<a href={img.src} data-pswp-width={img.w} data-pswp-height={img.h} target="_blank" rel="noreferrer">
-					<img
-						src={img.src}
-						alt={img.alt}
-						on:click={HandleClick}
-						on:keydown={() => {}}
-						class="{hover === true ? 'img-hover' : ''} {img.class}"
-						{loading}
-					/>
-				</a>
+				<img src={img.src} alt="" on:click={() => {}} on:keydown={() => {}} class="img-hover" loading="lazy" />
 			{/each}
 		</div>
 	{/each}
 </div>
 
+<!-- <div class="pswp-gallery" id={galleryID} bind:clientWidth={galleryWidth} style={galleryStyle} /> -->
 <style>
-	#slotHolder {
-		display: none;
-	}
 	#gallery {
 		width: 100%;
 		display: grid;
@@ -105,5 +65,6 @@
 	.img-hover:hover {
 		opacity: 1;
 		transform: scale(1.04);
+		cursor: pointer;
 	}
 </style>
