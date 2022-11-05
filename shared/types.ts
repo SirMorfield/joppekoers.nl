@@ -1,6 +1,14 @@
-export type Path = string;
-export interface Project {
-  // thumbnail: Image[]
-  imgs: { src: string; w: number; h: number }[];
-  root: Path;
+export type Path = string
+export type FileName = string
+
+export interface ImageExport {
+	src: Path
+	w: number
+	h: number
+}
+
+export interface ProjectExport {
+	thumbnail: ImageExport
+	imgs: ImageExport[]
+	root: Path
 }
