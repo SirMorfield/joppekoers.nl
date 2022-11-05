@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ImageGallery from './lib/ImageGallery.svelte'
-	import Photoswipe from './lib/Photoswipe.svelte'
+	import Header from './lib/Header.svelte'
+
 	import type { ProjectExport } from '@shared/types'
 
 	//  prettier-ignore
@@ -16,5 +17,6 @@
 </script>
 
 <main>
-	<ImageGallery hover={true} projects={projects1} />
+	<Header />
+	<ImageGallery projects={projects1} />
 </main>
