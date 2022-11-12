@@ -19,7 +19,6 @@
 
 	async function draw() {
 		await tick()
-		// const imagesx = Array.from(slotHolder.childNodes).filter((child) => child.tagName === 'IMG')
 		columns = []
 
 		// Fill the columns with image URLs
@@ -65,8 +64,6 @@
 	{/each}
 </div>
 
-<div class="pswp-gallery" id="pswp-gallery-id" />
-
 <style>
 	#gallery {
 		width: 100%;
@@ -92,8 +89,5 @@
 		opacity: 1;
 		transform: scale(1.04);
 		cursor: pointer;
-	}
-	.pswp-gallery {
-		display: none;
 	}
 </style>
