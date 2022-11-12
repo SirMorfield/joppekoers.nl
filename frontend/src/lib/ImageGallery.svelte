@@ -8,15 +8,16 @@
 	export let gap = 10
 	export let maxColumnWidth = 250
 	export let projects: ProjectExport[]
+
 	let galleryWidth = 0
 	let columnCount = 0
+	let columns: ProjectExport[][] = []
 
 	$: columnCount = Math.floor(galleryWidth / maxColumnWidth) || 1
 	$: columnCount && draw()
 	$: galleryStyle = `grid-template-columns: repeat(${columnCount}, 1fr); --gap: ${gap}px`
 
 	onMount(draw)
-	let columns: ProjectExport[][] = []
 	function draw() {
 		// const imagesx = Array.from(slotHolder.childNodes).filter((child) => child.tagName === 'IMG')
 		columns = []
@@ -28,7 +29,6 @@
 
 			columns[column].push(project)
 		}
-		console.log('draw', columns.length)
 	}
 
 	function openPhotoSwhipe(id: string) {
@@ -45,7 +45,6 @@
 			pinchToClose: false,
 		})
 		gallery.init()
-		console.log('openPopup', id)
 	}
 </script>
 
@@ -86,11 +85,15 @@
 		margin-top: 0;
 	}
 	.img-hover {
+		border-radius: 3px;
 		transition: all 0.1s;
 	}
 	.img-hover:hover {
 		opacity: 1;
 		transform: scale(1.04);
 		cursor: pointer;
+	}
+	.pswp-gallery {
+		display: none;
 	}
 </style>
