@@ -1,6 +1,6 @@
 <!-- From: https://github.com/berkinakkaya/svelte-image-gallery#readme -->
 <script lang="ts">
-	import { onMount } from 'svelte'
+	import { tick } from 'svelte'
 	import 'photoswipe/style.css'
 	import type { ProjectExport } from '@shared/types'
 	import PhotoSwipe from 'photoswipe'
@@ -17,8 +17,8 @@
 	$: columnCount && draw()
 	$: galleryStyle = `grid-template-columns: repeat(${columnCount}, 1fr); --gap: ${gap}px`
 
-	onMount(draw)
-	function draw() {
+	async function draw() {
+		await tick()
 		// const imagesx = Array.from(slotHolder.childNodes).filter((child) => child.tagName === 'IMG')
 		columns = []
 
