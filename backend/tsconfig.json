@@ -25,7 +25,7 @@
 		"esModuleInterop": true,
 		"preserveSymlinks": true,
 		"skipLibCheck": true,
-		"sourceMap": true, //debugger
+		"sourceMap": false, //debugger
 		"forceConsistentCasingInFileNames": true
 	},
 	"exclude": [
