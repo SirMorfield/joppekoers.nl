@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-	<title>DEV</title>
+	<title>Joppe Koers.nl</title>
 	<meta name="description" content="This is a webside build, hosted and maintained by Joppe Koers" />
 	<meta name="keywords" content="Joppe, Koers, J.E. Koers, Portfolio, joppe@joppekoers.nl, 73820857" />
 	<meta name="author" content="Joppe Koers" />
