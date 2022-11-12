@@ -12,15 +12,21 @@
 
 <div id="root">
 	<Header />
-	<slot />
+	<div>
+		<slot />
+	</div>
+	<div>Built, hosted and maintained by Joppe Koers</div>
 </div>
 
 <style>
 	:root {
+		all: revert;
+
 		font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
 		font-size: 16px;
 		line-height: 24px;
 		font-weight: 400;
+		margin: 0;
 
 		color-scheme: dark;
 		color: rgba(255, 255, 255, 0.87);
@@ -34,8 +40,12 @@
 	}
 
 	#root {
+		min-height: 93vh;
+		max-height: 93vh;
 		width: 99%;
-		/* width: 1000px; */
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
 		max-width: 1600px;
 		margin: 0 auto;
 	}
