@@ -65,8 +65,6 @@
 	{/each}
 </div>
 
-<div class="pswp-gallery" id="pswp-gallery-id" />
-
 <style>
 	#gallery {
 		width: 100%;
