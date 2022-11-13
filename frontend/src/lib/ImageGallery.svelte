@@ -6,7 +6,6 @@
 	export let maxColumnWidth = 300
 
 	let slotHolder: HTMLDivElement | null = null
-	let delivery: HTMLDivElement | null = null
 
 	let galleryWidth = 0
 	let columnCount = 0
@@ -23,10 +22,11 @@
 		columns = Array(columnCount).fill(null)
 		await tick() // waiting for colums to be created
 
-		console.log(window.innerWidth, galleryWidth, columnCount)
 		// Fill the columns with image URLs
-		for (const [i, node] of slotHolder.childNodes.entries()) {
-			const column = i % columnCount
+		let i = 0
+		for (const node of slotHolder.childNodes) {
+			if (!(node instanceof HTMLElement)) continue
+			const column = i++ % columnCount
 			columns[column].appendChild(node)
 		}
 	}
@@ -40,7 +40,7 @@
 	<slot />
 </div>
 
-<div id="gallery" bind:clientWidth={galleryWidth} style={galleryStyle} bind:this={delivery}>
+<div id="gallery" bind:clientWidth={galleryWidth} style={galleryStyle}>
 	{#each columns as _, i}
 		<div class="column" bind:this={columns[i]} />
 	{/each}
