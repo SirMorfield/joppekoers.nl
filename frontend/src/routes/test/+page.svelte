@@ -1,14 +1,14 @@
 <script lang="ts">
 	import Child from './Child.svelte'
 
-	let wrapper
+	let wrapper: HTMLDivElement | null = null
 
 	const containers = ['red', 'green']
 	const containerBinds = containers.map(() => null)
 
 	const goGreen = () => {
 		while (containerBinds[0].childNodes.length) {
-			containerBinds[0].childNodes.forEach((child) => {
+			containerBinds[0].childNodes.forEach((child: HTMLElement) => {
 				console.log('goGreen', child)
 				containerBinds[1].appendChild(child)
 			})
@@ -17,7 +17,7 @@
 
 	const goRed = () => {
 		while (containerBinds[1].childNodes.length) {
-			containerBinds[1].childNodes.forEach((child) => {
+			containerBinds[1].childNodes.forEach((child: HTMLElement) => {
 				console.log('goRed', child)
 				containerBinds[0].appendChild(child)
 			})

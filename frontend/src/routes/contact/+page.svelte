@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Root from '$lib/Root.svelte'
-	import copySymbol from '../../assets/copySymbol.svg'
 
 	interface Info {
 		label: string

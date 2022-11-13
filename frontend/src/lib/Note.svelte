@@ -9,8 +9,4 @@
 		border-radius: 0.5rem;
 		color: black;
 	}
-	.note a {
-		text-decoration: underline;
-		color: black;
-	}
 </style>
