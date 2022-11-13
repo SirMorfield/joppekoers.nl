@@ -1,17 +1,16 @@
 <!-- From: https://github.com/berkinakkaya/svelte-image-gallery#readme -->
 <script lang="ts">
-	import { tick } from 'svelte'
-	import 'photoswipe/style.css'
-	import type { ProjectExport } from '@shared/types'
-	import PhotoSwipe from 'photoswipe'
+	import { onMount, tick } from 'svelte'
 
 	export let gap = 10
-	export let maxColumnWidth = 250
-	export let projects: ProjectExport[]
+	export let maxColumnWidth = 300
+
+	let slotHolder: HTMLDivElement | null = null
+	let delivery: HTMLDivElement | null = null
 
 	let galleryWidth = 0
 	let columnCount = 0
-	let columns: ProjectExport[][] = []
+	let columns: (HTMLDivElement | null)[] = []
 
 	$: columnCount = Math.floor(galleryWidth / maxColumnWidth) || 1
 	$: columnCount && draw()
@@ -19,52 +18,39 @@
 
 	async function draw() {
 		await tick()
-		columns = []
+		if (!slotHolder) return
 
+		columns = Array(columnCount).fill(null)
+		await tick() // waiting for colums to be created
+
+		console.log(window.innerWidth, galleryWidth, columnCount)
 		// Fill the columns with image URLs
-		for (const [i, project] of projects.entries()) {
+		for (const [i, node] of slotHolder.childNodes.entries()) {
 			const column = i % columnCount
-			if (!columns[column]) columns[column] = []
-
-			columns[column].push(project)
+			columns[column].appendChild(node)
 		}
 	}
 
-	function openPhotoSwhipe(id: string) {
-		const { imgs } = projects.find((p) => p.id === id)
-
-		const gallery = new PhotoSwipe({
-			gallery: '#pswp-gallery-id',
-			dataSource: imgs,
-			pswpModule: () => import('photoswipe'),
-			loop: false,
-			bgOpacity: 0.9,
-			showAnimationDuration: 100,
-			hideAnimationDuration: 100,
-			pinchToClose: false,
-		})
-		gallery.init()
-	}
+	onMount(async () => {
+		await draw()
+	})
 </script>
 
-<div id="gallery" bind:clientWidth={galleryWidth} style={galleryStyle}>
-	{#each columns as column}
-		<div class="column">
-			{#each column as project}
-				<img
-					src={project.thumbnail.src}
-					alt={project.thumbnail.alt}
-					on:click={() => openPhotoSwhipe(project.id)}
-					on:keydown={() => {}}
-					class="img-hover"
-					loading="lazy"
-				/>
-			{/each}
-		</div>
+<div id="imported" bind:this={slotHolder}>
+	<slot />
+</div>
+
+<div id="gallery" bind:clientWidth={galleryWidth} style={galleryStyle} bind:this={delivery}>
+	{#each columns as _, i}
+		<div class="column" bind:this={columns[i]} />
 	{/each}
 </div>
 
 <style>
+	#imported {
+		display: none;
+	}
+
 	#gallery {
 		width: 100%;
 		display: grid;
@@ -80,14 +66,5 @@
 	}
 	#gallery .column *:nth-child(1) {
 		margin-top: 0;
-	}
-	.img-hover {
-		border-radius: 3px;
-		transition: all 0.1s;
-	}
-	.img-hover:hover {
-		opacity: 1;
-		transform: scale(1.04);
-		cursor: pointer;
 	}
 </style>
