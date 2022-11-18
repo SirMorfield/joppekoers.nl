@@ -77,7 +77,7 @@ export async function imageInfo(path: string): Promise<ImageInfo> {
 }
 
 export function imageInfoString(info: ImageInfo): string {
-	const wh = `${info.width}x${info.height}`.padEnd(10)
+	const wh = `${info.width}x${info.height}`.padEnd(9)
 	const p = path.relative(process.cwd(), info.path)
-	return `${wh} ${prettyBytes(info.size).padEnd(5)} ${p}`
+	return `${wh} ${prettyBytes(info.size, { minimumFractionDigits: 2 }).padStart(11)} ${p}`
 }

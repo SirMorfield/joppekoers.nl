@@ -1,7 +1,7 @@
 import fs from 'fs-extra'
 import * as path from 'path'
 import { default as sanitizeFilename } from 'sanitize-filename'
-import { Path, exec, imageInfo, Job, Image, Project, projectToProjectExport, imageInfoString } from './util'
+import { Path, exec, imageInfo, Job, Image, Project, projectToProjectExport, imageInfoString, ImageInfo } from './util'
 
 function sanatize(path: string): string {
 	return path
@@ -25,6 +25,14 @@ function getTmpPath(pathIn: Path): Path {
 	return path.join(parse.dir, parse.name + '.tmp' + parse.ext)
 }
 
+
+function printImageDiff(before: ImageInfo, after: ImageInfo) {
+	console.log(`Old image: ${imageInfoString(before)}`)
+	console.log(`New image: ${imageInfoString(after)}`)
+	const optimized = (after.size / before.size) * 100
+	console.log(`Optimized ${optimized.toFixed(2)}x ${''.padStart(optimized, '#')}\n`)
+}
+
 /**
  * @param fileName the name of the file without extension to be generated
  */
@@ -35,7 +43,7 @@ async function processImage(input: Path, output: Path, fileName: string, width?:
 
 	const inputImageInfo = await imageInfo(input)
 
-	const newPath = sanatize(path.join(output, fileName))
+	const newPath = path.join(output, fileName)
 
 	if (width !== undefined) {
 		const tmpPath = getTmpPath(newPath)
@@ -52,9 +60,7 @@ async function processImage(input: Path, output: Path, fileName: string, width?:
 	if (stderr) throw new Error(stderr)
 
 	const outputImageInfo = await imageInfo(newPath)
-	console.log(`Old image: ${imageInfoString(inputImageInfo)}`)
-	console.log(`New image: ${imageInfoString(outputImageInfo)}`)
-	console.log(`Optimized ${Math.round((outputImageInfo.size / inputImageInfo.size) * 100)}X\n`)
+	printImageDiff(inputImageInfo, outputImageInfo)
 
 	return {
 		name: fileName,
