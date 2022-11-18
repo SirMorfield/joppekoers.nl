@@ -15,7 +15,7 @@ const QUALITY = 70
 const inputPath: Path = path.join(__dirname, '../../projects/projects') // directory inside the ~/git repo
 fs.mkdirSync(inputPath, { recursive: true })
 
-const outputPath: Path = path.join(__dirname, '../frontend/public/img/projectImg')
+const outputPath: Path = path.join(__dirname, '../frontend/static/img/projectImg')
 fs.mkdirSync(outputPath, { recursive: true })
 
 // const inputPath: Path = path.join(__dirname, '../public/img/projectImg/')
@@ -59,6 +59,11 @@ async function processImage(input: Path, output: Path, fileName: string, width?:
 	if (stderr) throw new Error(stderr)
 
 	const outputImageInfo = await imageInfo(newPath)
+	if (inputImageInfo.incorrectEXIF) {
+		console.log(`Fixing incorrect EXIF data in ${input}`)
+		const { stderr } = await exec(`convert -rotate 90 ${outputImageInfo.path} ${outputImageInfo.path}`)
+		if (stderr) throw new Error(stderr)
+	}
 	printImageDiff(inputImageInfo, outputImageInfo)
 
 	return {
@@ -122,6 +127,10 @@ async function getJobs(inputsPath: Path): Promise<Job[]> {
 		console.log(`Project ${job.id}`)
 		projects.push(await runJob(job))
 	}
+	// const projects: Project[] = []
+	const exportPath = path.join(__dirname, '../frontend/src/lib/ProjectCard.svelte')
+	const file = fs.readFileSync(exportPath, 'utf8').toString()
+	const newFile = file.replace(/let projects1: ProjectExport\[\] = .*/, 'let projects1: ProjectExport[] = ' + JSON.stringify(projects.map(projectToProjectExport)))
+	fs.writeFileSync(exportPath, newFile)
 
-	console.log(JSON.stringify(projects.map(projectToProjectExport)))
 })()
