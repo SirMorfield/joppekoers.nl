@@ -10,7 +10,7 @@ function sanatize(path: string): string {
 		.join('/')
 }
 
-const JPEG_QUALITY = 50
+const QUALITY = 70
 
 const inputPath: Path = path.join(__dirname, '../../projects/projects') // directory inside the ~/git repo
 fs.mkdirSync(inputPath, { recursive: true })
@@ -25,12 +25,11 @@ function getTmpPath(pathIn: Path): Path {
 	return path.join(parse.dir, parse.name + '.tmp' + parse.ext)
 }
 
-
 function printImageDiff(before: ImageInfo, after: ImageInfo) {
 	console.log(`Old image: ${imageInfoString(before)}`)
 	console.log(`New image: ${imageInfoString(after)}`)
-	const optimized = (after.size / before.size) * 100
-	console.log(`Optimized ${optimized.toFixed(2)}x ${''.padStart(optimized, '#')}\n`)
+	const optimized = (before.size / after.size)
+	console.log(`Times smaller: ${optimized.toFixed(2)}x ${''.padStart(Math.min(80, optimized), '#')}\n`)
 }
 
 /**
@@ -52,7 +51,7 @@ async function processImage(input: Path, output: Path, fileName: string, width?:
 	}
 
 	// TODO display sizes
-	const { stderr } = await exec(`magick -quality ${JPEG_QUALITY} '${input}' '${newPath}'`)
+	const { stderr } = await exec(`magick -quality ${QUALITY} '${input}' '${newPath}'`)
 
 	if (width !== undefined) {
 		fs.unlink(input)
@@ -77,7 +76,6 @@ async function runJob(job: Job): Promise<Project> {
 	if (job.imgs.length === 0) throw new Error('No images found')
 
 	const thumbnail = await processImage(job.imgs[0]!, job.output, 'thumbnail', 300)
-	console.log(`Created thumbnail ${thumbnail.path}`)
 
 	const images: Promise<Image>[] = job.imgs.map(async (image, i) => {
 		const name = i.toString().padStart(2, '0')
