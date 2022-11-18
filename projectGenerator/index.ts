@@ -75,7 +75,7 @@ async function runJob(job: Job): Promise<Project> {
 	await fs.emptyDir(job.output)
 	if (job.imgs.length === 0) throw new Error('No images found')
 
-	const thumbnail = await processImage(job.imgs[0]!, job.output, 'thumbnail', 300)
+	const thumbnail = await processImage(job.imgs[0]!, job.output, 'thumbnail', 500)
 
 	const images: Promise<Image>[] = job.imgs.map(async (image, i) => {
 		const name = i.toString().padStart(2, '0')
