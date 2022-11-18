@@ -2,12 +2,14 @@ export type Path = string
 export type FileName = string
 import { ImageExport, ProjectExport } from '@shared/types'
 import * as path from 'path'
+import fs from 'fs-extra'
 
 export interface Image {
 	name: FileName // eg. 01.jpg
 	path: Path // eg. /path/to/01.jpg
 	width: number
 	height: number
+	size: number
 }
 
 export interface Job {
@@ -44,23 +46,32 @@ export const exec = require('util').promisify(require('child_process').exec)
 
 export async function createThumbnail(imagePath: string, thumbnailPath: string): Promise<Image> {
 	const { stderr } = await exec(`convert -resize 'X300' '${imagePath}' '${thumbnailPath}'`)
-	if (stderr) console.error(stderr)
+	if (stderr) throw new Error(stderr)
 	const image = {
-		...(await imageSize(thumbnailPath)),
+		...(await imageInfo(thumbnailPath)),
 		path: thumbnailPath,
 		name: path.basename(thumbnailPath),
 	}
 	return image
 }
 
-export async function imageSize(path: string): Promise<{ width: number; height: number }> {
+export interface ImageInfo {
+	width: number
+	height: number
+	size: number
+}
+
+export async function imageInfo(path: string): Promise<ImageInfo> {
 	const identity = await exec(`identify -format "%wx%h" '${path}'`)
 	if (identity.stderr) console.error(identity.stderr)
 	identity.stdout = identity.stdout.trim()
 	identity.stdout = identity.stdout.split('x')
+	const { size } = await fs.stat(path)
+
 	const result = {
 		width: parseInt(identity.stdout[0]),
 		height: parseInt(identity.stdout[1]),
+		size
 	}
 	// account for some android phones in which
 	// the data is stored in portrait mode, but the photo was taken in vertical
@@ -69,6 +80,6 @@ export async function imageSize(path: string): Promise<{ width: number; height: 
 		if (stdout.match(/Right\-top/m) || stdout.match(/Left\-bottom/m)) {
 			;[result.width, result.height] = [result.height, result.width]
 		}
-	} catch (err) {}
+	} catch (err) { }
 	return result
 }

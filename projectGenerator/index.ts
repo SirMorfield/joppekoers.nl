@@ -1,7 +1,7 @@
 import fs from 'fs-extra'
 import * as path from 'path'
 import { default as sanitizeFilename } from 'sanitize-filename'
-import { Path, exec, createThumbnail, imageSize, Job, FileName, Image, Project, projectToProjectExport } from './util'
+import { Path, exec, createThumbnail, imageInfo, Job, Image, Project, projectToProjectExport } from './util'
 
 function sanatize(path: string): string {
 	return path
@@ -20,28 +20,25 @@ fs.mkdirSync(outputPath, { recursive: true })
 
 // const inputPath: Path = path.join(__dirname, '../public/img/projectImg/')
 
-function normalizeName(name: FileName, index: number) {
+function getName(index: number, extname: string) {
 	if (index > 99) throw new Error('Index too large')
-	return `${index.toString().padStart(2, '0')}${path.extname(name)}`
+	return `${index.toString().padStart(2, '0')}${extname}`
 }
 
 async function processImage(image: Path, output: Path, index: number): Promise<Image> {
-	const dimensions = await imageSize(image)
-	const newName = normalizeName(path.basename(image), index)
-	const newPath = sanatize(path.join(output, newName))
-	await fs.copy(image, newPath)
+	const dimensions = await imageInfo(image)
 
-	// TODO instead of copy and overwrite optimized version write optimized version straigth to new location
+	const newName = getName(index, '.webp')
+	const newPath = sanatize(path.join(output, newName))
+
 	// TODO display sizes
-	const { stderr } = await exec(`jpegoptim --max=${JPEG_QUALITY} ${newPath}`)
-	// console.log(stdout.replace(/\n+$/, ''))
+	const { stderr } = await exec(`magick -quality ${JPEG_QUALITY} '${image}' '${newPath}'`)
 	if (stderr) throw new Error(stderr)
 
 	return {
 		name: newName,
 		path: newPath,
-		width: dimensions.width,
-		height: dimensions.height,
+		...dimensions,
 	}
 }
 
@@ -95,7 +92,7 @@ async function getJobs(inputsPath: Path): Promise<Job[]> {
 	return Promise.all(inputs)
 }
 
-;(async () => {
+; (async () => {
 	const jobs = await getJobs(inputPath)
 	const projects: Project[] = []
 
