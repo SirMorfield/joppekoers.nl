@@ -30,8 +30,9 @@ RUN cd frontend && npm run build
 
 # ============= BACKEND =============
 FROM gcr.io/distroless/nodejs18-debian11 as backend
-ENV NODE_ENV=production
 COPY --from=builder-backend /app/backend ./
+ENV NODE_ENV=production
+ENV PORT=8080
 EXPOSE 8080
 CMD ["build/app.js"]
 # ===================================
@@ -40,8 +41,9 @@ CMD ["build/app.js"]
 
 # ============= FRONTEND =============
 FROM node:18-alpine as frontend
-ENV NODE_ENV=production
 COPY --from=builder-frontend /app/frontend/ ./
-EXPOSE 3000
+ENV NODE_ENV=production
+ENV PORT=8080
+EXPOSE 8080
 ENTRYPOINT [ "node", "build/index.js" ]
 # ===================================
