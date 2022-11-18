@@ -103,7 +103,7 @@ async function getJobs(inputsPath: Path): Promise<Job[]> {
 		return {
 			id: sanatize(dir),
 			imgs,
-			output: sanatize(path.join(outputPath, dir)),
+			output: path.join(outputPath, sanatize(dir)),
 		}
 	})
 	return Promise.all(inputs)
