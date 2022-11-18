@@ -1,7 +1,7 @@
 import fs from 'fs-extra'
 import * as path from 'path'
 import { default as sanitizeFilename } from 'sanitize-filename'
-import { Path, exec, createThumbnail, imageInfo, Job, Image, Project, projectToProjectExport } from './util'
+import { Path, exec, imageInfo, Job, Image, Project, projectToProjectExport, imageInfoString } from './util'
 
 function sanatize(path: string): string {
 	return path
@@ -20,51 +20,68 @@ fs.mkdirSync(outputPath, { recursive: true })
 
 // const inputPath: Path = path.join(__dirname, '../public/img/projectImg/')
 
-function getName(index: number, extname: string) {
-	if (index > 99) throw new Error('Index too large')
-	return `${index.toString().padStart(2, '0')}${extname}`
+function getTmpPath(pathIn: Path): Path {
+	const parse = path.parse(pathIn)
+	return path.join(parse.dir, parse.name + '.tmp' + parse.ext)
 }
 
-async function processImage(image: Path, output: Path, index: number): Promise<Image> {
-	const dimensions = await imageInfo(image)
+/**
+ * @param fileName the name of the file without extension to be generated
+ */
+async function processImage(input: Path, output: Path, fileName: string, width?: number): Promise<Image> {
+	if (fileName.indexOf('.') != -1)
+		throw new Error('fileName must not contain extension')
+	fileName += '.webp'
 
-	const newName = getName(index, '.webp')
-	const newPath = sanatize(path.join(output, newName))
+	const inputImageInfo = await imageInfo(input)
+
+	const newPath = sanatize(path.join(output, fileName))
+
+	if (width !== undefined) {
+		const tmpPath = getTmpPath(newPath)
+		await exec(`convert -resize '${width}X' '${input}' '${tmpPath}'`)
+		input = tmpPath
+	}
 
 	// TODO display sizes
-	const { stderr } = await exec(`magick -quality ${JPEG_QUALITY} '${image}' '${newPath}'`)
+	const { stderr } = await exec(`magick -quality ${JPEG_QUALITY} '${input}' '${newPath}'`)
+
+	if (width !== undefined) {
+		fs.unlink(input)
+	}
 	if (stderr) throw new Error(stderr)
 
+	const outputImageInfo = await imageInfo(newPath)
+	console.log(`Old image: ${imageInfoString(inputImageInfo)}`)
+	console.log(`New image: ${imageInfoString(outputImageInfo)}`)
+	console.log(`Optimized ${Math.round((outputImageInfo.size / inputImageInfo.size) * 100)}X\n`)
+
 	return {
-		name: newName,
+		name: fileName,
 		path: newPath,
-		...dimensions,
+		width: outputImageInfo.width,
+		height: outputImageInfo.height,
+		size: outputImageInfo.size,
 	}
 }
 
 async function runJob(job: Job): Promise<Project> {
 	// remove all previously generated files
 	await fs.emptyDir(job.output)
+	if (job.imgs.length === 0) throw new Error('No images found')
 
-	const images: Image[] = []
-	let i = 0
-	for (const image of job.imgs) {
-		if (image.match(/\/thumbnail/)) continue
+	const thumbnail = await processImage(job.imgs[0]!, job.output, 'thumbnail', 300)
+	console.log(`Created thumbnail ${thumbnail.path}`)
 
-		images.push(await processImage(image, job.output, i++))
-	}
-
-	let thumbnail: Image | undefined = images.find((img) => /^thumbnail.*/.test(img.name))
-	if (!thumbnail) {
-		const thumbnailPath = path.join(job.output, `thumbnail${job.imgs[0]!.match(/\.[0-9a-z]+$/)![0]}`)
-		thumbnail = await createThumbnail(job.imgs[0]!, thumbnailPath)
-		console.log(`Created thumbnail ${thumbnailPath}`)
-	}
+	const images: Promise<Image>[] = job.imgs.map(async (image, i) => {
+		const name = i.toString().padStart(2, '0')
+		return await processImage(image, job.output, name)
+	})
 
 	const project: Project = {
 		id: job.id,
 		thumbnail,
-		images,
+		images: await Promise.all(images)
 	}
 	return project
 }

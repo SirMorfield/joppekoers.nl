@@ -3,6 +3,7 @@ export type FileName = string
 import { ImageExport, ProjectExport } from '@shared/types'
 import * as path from 'path'
 import fs from 'fs-extra'
+import prettyBytes from 'pretty-bytes';
 
 export interface Image {
 	name: FileName // eg. 01.jpg
@@ -44,21 +45,11 @@ export function projectToProjectExport(project: Project): ProjectExport {
 
 export const exec = require('util').promisify(require('child_process').exec)
 
-export async function createThumbnail(imagePath: string, thumbnailPath: string): Promise<Image> {
-	const { stderr } = await exec(`convert -resize 'X300' '${imagePath}' '${thumbnailPath}'`)
-	if (stderr) throw new Error(stderr)
-	const image = {
-		...(await imageInfo(thumbnailPath)),
-		path: thumbnailPath,
-		name: path.basename(thumbnailPath),
-	}
-	return image
-}
-
 export interface ImageInfo {
 	width: number
 	height: number
 	size: number
+	path: string
 }
 
 export async function imageInfo(path: string): Promise<ImageInfo> {
@@ -71,7 +62,8 @@ export async function imageInfo(path: string): Promise<ImageInfo> {
 	const result = {
 		width: parseInt(identity.stdout[0]),
 		height: parseInt(identity.stdout[1]),
-		size
+		size,
+		path,
 	}
 	// account for some android phones in which
 	// the data is stored in portrait mode, but the photo was taken in vertical
@@ -82,4 +74,9 @@ export async function imageInfo(path: string): Promise<ImageInfo> {
 		}
 	} catch (err) { }
 	return result
+}
+
+export function imageInfoString(info: ImageInfo): string {
+	const wh = `${info.width}x${info.height}`.padEnd(10)
+	return `${wh} ${prettyBytes(info.size).padEnd(5)} ${info.path}`
 }
