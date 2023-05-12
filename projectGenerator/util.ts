@@ -69,11 +69,11 @@ export async function imageInfo(path: string): Promise<ImageInfo> {
 	}
 	// account for some android phones in which
 	// the data is stored in portrait mode, but the photo was taken in vertical
-	const { stdout } = await exec(`exif -t Orientation -m '${path}'`)
-	if (stdout.match(/Right\-top/m) || stdout.match(/Left\-bottom/m)) {
-		;[result.width, result.height] = [result.height, result.width]
-		result.incorrectEXIF = true
-	}
+	// const { stdout } = await exec(`exiftool -t Orientation -m '${path}'`)
+	// if (stdout.match(/Right\-top/m) || stdout.match(/Left\-bottom/m)) {
+	// 	;[result.width, result.height] = [result.height, result.width]
+	// 	result.incorrectEXIF = true
+	// }
 	return result
 }
 
