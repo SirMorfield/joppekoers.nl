@@ -51,7 +51,7 @@ async function processImage(input: Path, output: Path, fileName: string, width?:
 	}
 
 	// TODO display sizes
-	const { stderr } = await exec(`magick -quality ${QUALITY} '${input}' '${newPath}'`)
+	const { stderr } = await exec(`convert -quality ${QUALITY} '${input}' '${newPath}'`)
 
 	if (width !== undefined) {
 		fs.unlink(input)
