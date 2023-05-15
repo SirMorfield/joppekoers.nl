@@ -1,95 +1,98 @@
 import fs from 'fs-extra'
-import path from 'path'
-import { Image, Path, Project, exec, createThumbnail, imageSize, hasThumbnail, exit, Job, FileName } from "./util"
+import * as path from 'path'
 import { default as sanitizeFilename } from 'sanitize-filename'
+import { Path, exec, imageInfo, Job, Image, Project, projectToProjectExport, imageInfoString, ImageInfo } from './util'
 
 function sanatize(path: string): string {
-	return path.split('/').map(name => sanitizeFilename(name.replace(/\s/g, '-').toLowerCase())).join('/')
+	return path
+		.split('/')
+		.map((name) => sanitizeFilename(name.replace(/\s/g, '-').toLowerCase()))
+		.join('/')
 }
 
-const JPEG_QUALITY = 50
+const QUALITY = 70
 
-// const inputPath: Path = path.join(__dirname, 'input')
-const inputPath: Path = path.join(__dirname, '../../projects/projects')
+const inputPath: Path = path.join(__dirname, '../../projects/projects') // directory inside the ~/git repo
 fs.mkdirSync(inputPath, { recursive: true })
-// const outputPath: Path = path.join(__dirname, 'output')
-const outputPath: Path = path.join(__dirname, '../public/img/projectImg')
+
+const outputPath: Path = path.join(__dirname, '../frontend/static/img/projectImg')
 fs.mkdirSync(outputPath, { recursive: true })
 
 // const inputPath: Path = path.join(__dirname, '../public/img/projectImg/')
 
-function normalizeName(name: FileName, index: number) {
-	if (index > 99)
-		throw new Error('Index too large')
-	return `${index.toString().padStart(2, '0')}${path.extname(name)}`
+function getTmpPath(pathIn: Path): Path {
+	const parse = path.parse(pathIn)
+	return path.join(parse.dir, parse.name + '.tmp' + parse.ext)
 }
 
-async function processImage(image: Path, output: Path, index: number): Promise<Image> {
-	const dimensions = await imageSize(image)
-	const newName = normalizeName(path.basename(image), index)
-	const newPath = sanatize(path.join(output, newName))
-	await fs.copy(image, newPath)
+function printImageDiff(before: ImageInfo, after: ImageInfo) {
+	console.log(`Old image: ${imageInfoString(before)}`)
+	console.log(`New image: ${imageInfoString(after)}`)
+	const optimized = (before.size / after.size)
+	console.log(`Times smaller: ${optimized.toFixed(2)}x ${''.padStart(Math.min(80, optimized), '#')}\n`)
+}
 
-	// TODO instead of copy and overwrite optimized version write optimized version straigth to new location
+/**
+ * @param fileName the name of the file without extension to be generated
+ */
+async function processImage(input: Path, output: Path, fileName: string, width?: number): Promise<Image> {
+	if (fileName.indexOf('.') != -1)
+		throw new Error('fileName must not contain extension')
+	fileName += '.webp'
+
+	const inputImageInfo = await imageInfo(input)
+
+	const newPath = path.join(output, fileName)
+
+	if (width !== undefined) {
+		const tmpPath = getTmpPath(newPath)
+		await exec(`convert -resize '${width}X' '${input}' '${tmpPath}'`)
+		input = tmpPath
+	}
+
 	// TODO display sizes
-	const { stderr } = await exec(`jpegoptim --max=${JPEG_QUALITY} ${newPath}`)
-	// console.log(stdout.replace(/\n+$/, ''))
-	if (stderr)
-		throw new Error(stderr)
+	const { stderr } = await exec(`convert -quality ${QUALITY} '${input}' '${newPath}'`)
+
+	if (width !== undefined) {
+		fs.unlink(input)
+	}
+	if (stderr) throw new Error(stderr)
+
+	const outputImageInfo = await imageInfo(newPath)
+	if (inputImageInfo.incorrectEXIF) {
+		console.log(`Fixing incorrect EXIF data in ${input}`)
+		const { stderr } = await exec(`convert -rotate 90 ${outputImageInfo.path} ${outputImageInfo.path}`)
+		if (stderr) throw new Error(stderr)
+	}
+	printImageDiff(inputImageInfo, outputImageInfo)
 
 	return {
-		name: newName,
+		name: fileName,
 		path: newPath,
-		width: dimensions.width,
-		height: dimensions.height
+		width: outputImageInfo.width,
+		height: outputImageInfo.height,
+		size: outputImageInfo.size,
 	}
 }
 
-async function runJob(job: Job): Promise<Image[]> {
+async function runJob(job: Job): Promise<Project> {
 	// remove all previously generated files
 	await fs.emptyDir(job.output)
+	if (job.imgs.length === 0) throw new Error('No images found')
 
-	const imageDb: Image[] = []
-	let i = 0;
-	for (const image of job.imgs) {
-		if (image.match(/\/thumbnail/))
-			continue
+	const thumbnail = await processImage(job.imgs[0]!, job.output, 'thumbnail', 500)
 
-		imageDb.push(await processImage(image, job.output, i++))
+	const images: Promise<Image>[] = job.imgs.map(async (image, i) => {
+		const name = i.toString().padStart(2, '0')
+		return await processImage(image, job.output, name)
+	})
+
+	const project: Project = {
+		id: job.id,
+		thumbnail,
+		images: await Promise.all(images)
 	}
-
-	if (!hasThumbnail(job.imgs)) {
-		const thumbnailPath = path.join(job.output, `thumbnail${job.imgs[0]!.match(/\.[0-9a-z]+$/)![0]}`)
-		createThumbnail(job.imgs[0]!, thumbnailPath)
-		console.log(`Created thumbnail ${thumbnailPath}`)
-	}
-
-	return imageDb
-}
-
-async function generateProjectFromJob(job: Job): Promise<Project> {
-	const images = await runJob(job)
-	const res = {
-		imgs: images.map(image => ({ src: image.name, w: image.width, h: image.height })),
-		root: path.join('/img/projectImg/', job.id) + '/'
-	}
-	// console.log(`Done: ${projectID}\n`)
-	return res
-}
-
-async function installProjects(projectsDb: { [key: string]: Project }): Promise<void> {
-	const projects = JSON.stringify(projectsDb)
-		.replace(/\"src\"\:/g, 'src:')
-		.replace(/\"imgs\"\:/g, 'imgs:')
-		.replace(/\"root\"\:/g, 'root:')
-		.replace(/\"w\"\:/g, 'w:')
-		.replace(/\"h\"\:/g, 'h:')
-
-	const publicOpenPopup = (await fs.promises.readFile(path.join(__dirname, 'openPopup.txt')))
-		.toString()
-		.replace('// projectsPlaceholder', `const projects = ${projects}`)
-
-	await fs.promises.writeFile(path.join(__dirname, '../public/js/openPopup.js'), publicOpenPopup)
+	return project
 }
 
 // Generate TODOs
@@ -103,39 +106,31 @@ async function getJobs(inputsPath: Path): Promise<Job[]> {
 			.map((img) => path.join(inputPath, img))
 			.filter((name) => {
 				const isImage = !!name.match(/\.jpg$/)
-				if (!isImage)
-					console.log(`WARNING: ignoring non-image file ${name}`)
+				if (!isImage) console.log(`WARNING: ignoring non-image file ${name}`)
 				return isImage
 			})
 		return {
 			id: sanatize(dir),
 			imgs,
-			output: sanatize(path.join(outputPath, dir)),
+			output: path.join(outputPath, sanatize(dir)),
 		}
 	})
 	return Promise.all(inputs)
 }
 
-(async () => {
+; (async () => {
 	const jobs = await getJobs(inputPath)
-	const projectsDb: { [key: string]: Project } = {}
+	const projects: Project[] = []
 
+	// TODO: parallelize
 	for (const job of jobs) {
 		console.log(`Project ${job.id}`)
-		if (projectsDb[job.id])
-			exit(`Project ${job.id} already exists`)
-
-		projectsDb[job.id] = await generateProjectFromJob(job)
+		projects.push(await runJob(job))
 	}
+	// const projects: Project[] = []
+	const exportPath = path.join(__dirname, '../frontend/src/lib/ProjectCard.svelte')
+	const file = fs.readFileSync(exportPath, 'utf8').toString()
+	const newFile = file.replace(/let projects1: ProjectExport\[\] = .*/, 'let projects1: ProjectExport[] = ' + JSON.stringify(projects.map(projectToProjectExport)))
+	fs.writeFileSync(exportPath, newFile)
 
-	await installProjects(projectsDb)
-
-	for (const project of Object.keys(projectsDb)) {
-		console.log(`<div class="project block scale-up"><img src="/img/projectImg/${project}/thumbnail.jpg" onclick="openPopup('${project}')" class="lazyload projectImg"></div>`)
-	}
 })()
-
-// create small preview image with
-// convert -resize 'X300' 0.jpg 0h300px.jpg
-// copy to prod:
-// scp -r ~/git/joppekoers.nl/public/img/projectImg/ joppe@joppekoers.nl:~/server1/nodejs/public/img/

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -o errexit # Exit on error
+
+echo "Checking linting..."
+cd frontend
+npm run lint > /dev/null
+cd -
+
+cd backend
+npm run lint > /dev/null
+cd -
+
+exit 0
