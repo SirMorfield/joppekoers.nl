@@ -12,10 +12,10 @@ function sanatize(path: string): string {
 
 const QUALITY = 70
 
-const inputPath: Path = path.join(__dirname, '../../projects/projects') // directory inside the ~/git repo
+const inputPath: Path = path.join(__dirname, '/input')
 fs.mkdirSync(inputPath, { recursive: true })
 
-const outputPath: Path = path.join(__dirname, '../frontend/static/img/projectImg')
+const outputPath: Path = path.join(__dirname, '/output')
 fs.mkdirSync(outputPath, { recursive: true })
 
 // const inputPath: Path = path.join(__dirname, '../public/img/projectImg/')
