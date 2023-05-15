@@ -1,9 +1,13 @@
+// export type Brand<K, T> = K & { __brand: T }
 export type Path = string
 export type FileName = string
 import { ImageExport, ProjectExport } from '@shared/types'
 import * as path from 'path'
 import fs from 'fs-extra'
-import prettyBytes from 'pretty-bytes';
+import prettyBytes from 'pretty-bytes'
+import { exec as e } from 'child_process'
+import { promisify } from 'util'
+export const exec = promisify(e)
 
 export interface Image {
 	name: FileName // eg. 01.jpg
@@ -39,11 +43,9 @@ export function projectToProjectExport(project: Project): ProjectExport {
 		id: project.id,
 		thumbnail: imageToImg(project.thumbnail),
 		imgs: project.images.map(imageToImg),
-		root: path.join('/img/projectImg/', project.id) + '/',
+		root: `${path.join('/img/projectImg/', project.id)}/`,
 	}
 }
-
-export const exec = require('util').promisify(require('child_process').exec)
 
 export interface ImageInfo {
 	width: number
@@ -55,17 +57,22 @@ export interface ImageInfo {
 
 export async function imageInfo(path: string): Promise<ImageInfo> {
 	const identity = await exec(`identify -format "%wx%h" '${path}'`)
-	if (identity.stderr) console.error(identity.stderr)
+	if (identity.stderr) {
+		console.error(identity.stderr)
+	}
 	identity.stdout = identity.stdout.trim()
-	identity.stdout = identity.stdout.split('x')
+	const [width, height] = identity.stdout.split('x')
 	const { size } = await fs.stat(path)
 
 	const result = {
-		width: parseInt(identity.stdout[0]),
-		height: parseInt(identity.stdout[1]),
+		width: Number(width),
+		height: Number(height),
 		size,
 		path,
 		incorrectEXIF: false,
+	}
+	if (Number.isNaN(result.width) || Number.isNaN(result.height)) {
+		throw new Error(`Could not get image info for ${path}`)
 	}
 	// account for some android phones in which
 	// the data is stored in portrait mode, but the photo was taken in vertical

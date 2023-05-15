@@ -1,0 +1,12 @@
+# Ignore everything by default
+*
+
+# Check files with these extensions
+!*.ts
+!*.tsx
+!*.js
+!*.json
+!*.cjs
+
+# Recurse into directories
+!*/
