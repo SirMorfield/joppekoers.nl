@@ -118,7 +118,7 @@ async function getJobs(inputsPath: Path): Promise<Job[]> {
 	return Promise.all(inputs)
 }
 
-; (async () => {
+(async () => {
 	const jobs = await getJobs(inputPath)
 	const projects: Project[] = []
 
