@@ -52,7 +52,7 @@ export interface ImageInfo {
 	height: number
 	size: number
 	path: string
-	incorrectEXIF: boolean
+	rotation: 0 | 90 | 'error'
 }
 
 export async function imageInfo(path: string): Promise<ImageInfo> {
@@ -64,23 +64,27 @@ export async function imageInfo(path: string): Promise<ImageInfo> {
 	const [width, height] = identity.stdout.split('x')
 	const { size } = await fs.stat(path)
 
-	const result = {
+	const result: ImageInfo = {
 		width: Number(width),
 		height: Number(height),
 		size,
 		path,
-		incorrectEXIF: false,
+		rotation: 0,
 	}
 	if (Number.isNaN(result.width) || Number.isNaN(result.height)) {
 		throw new Error(`Could not get image info for ${path}`)
 	}
 	// account for some android phones in which
 	// the data is stored in portrait mode, but the photo was taken in vertical
-	// const { stdout } = await exec(`exiftool -t Orientation -m '${path}'`)
-	// if (stdout.match(/Right\-top/m) || stdout.match(/Left\-bottom/m)) {
-	// 	;[result.width, result.height] = [result.height, result.width]
-	// 	result.incorrectEXIF = true
-	// }
+	const { stdout } = await exec(`exiftool -Orientation '${path}'`)
+	if (stdout.includes('Horizontal')) {
+		result.rotation = 0
+	} else if (stdout.includes('90 CW')) {
+		result.rotation = 90
+	} else {
+		result.rotation = 'error'
+	}
+
 	return result
 }
 

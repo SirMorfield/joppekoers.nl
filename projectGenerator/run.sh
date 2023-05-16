@@ -7,7 +7,7 @@ NAME="project-generator"
 docker build --target $NAME -t $NAME  ..
 
 INPUT=$PWD/../../projects/projects
-OUTPUT=$PWD/output
+OUTPUT=$PWD/../frontend/static/img/projectImg
 EXPORT=$PWD/../frontend/src/lib/ProjectCard.svelte
 
 echo "Input: $INPUT"

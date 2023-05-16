@@ -34,6 +34,39 @@ function printImageDiff(before: ImageInfo, after: ImageInfo) {
 	console.log(`Times smaller: ${optimized.toFixed(2)}x ${''.padStart(Math.min(80, optimized), '#')}\n`)
 }
 
+async function preTransform(input: Path, output: Path, width?: number): Promise<{ info: ImageInfo; shouldDelete: boolean }> {
+	let info = await imageInfo(input)
+
+	const transformations: string[] = []
+	if (width) {
+		transformations.push(`-resize ${width}X`)
+	}
+
+	switch (info.rotation) {
+		case 90:
+			console.log(`Fixing incorrect EXIF data in ${input}`)
+			transformations.push('-rotate 90')
+			break
+		case 0:
+			break
+		case 'error':
+			// TODO: handle error
+			break
+	}
+
+	let tmpPath: Path | undefined
+	if (transformations.length > 0) {
+		const inputFileName = path.basename(input)
+		const newPath = path.join(output, inputFileName)
+
+		tmpPath = getTmpPath(newPath)
+		await exec(`convert ${transformations.join(' ')} '${input}' '${tmpPath}'`)
+		info = await imageInfo(tmpPath)
+	}
+
+	return { info: info, shouldDelete: !!tmpPath }
+}
+
 /**
  * @param fileName the name of the file without extension to be generated
  */
@@ -43,34 +76,19 @@ async function processImage(input: Path, output: Path, fileName: string, width?:
 	}
 	fileName += '.webp'
 
-	const inputImageInfo = await imageInfo(input)
-
+	const { info: inputImageInfo, shouldDelete } = await preTransform(input, output, width)
 	const newPath = path.join(output, fileName)
 
-	if (width !== undefined) {
-		const tmpPath = getTmpPath(newPath)
-		await exec(`convert -resize '${width}X' '${input}' '${tmpPath}'`)
-		input = tmpPath
-	}
+	const { stderr } = await exec(`convert -quality ${QUALITY} '${inputImageInfo.path}' '${newPath}'`)
 
-	// TODO display sizes
-	const { stderr } = await exec(`convert -quality ${QUALITY} '${input}' '${newPath}'`)
-
-	if (width !== undefined) {
-		fs.unlink(input)
+	if (shouldDelete) {
+		fs.unlink(inputImageInfo.path)
 	}
 	if (stderr) {
 		throw new Error(stderr)
 	}
 
 	const outputImageInfo = await imageInfo(newPath)
-	if (inputImageInfo.incorrectEXIF) {
-		console.log(`Fixing incorrect EXIF data in ${input}`)
-		const { stderr } = await exec(`convert -rotate 90 ${outputImageInfo.path} ${outputImageInfo.path}`)
-		if (stderr) {
-			throw new Error(stderr)
-		}
-	}
 	printImageDiff(inputImageInfo, outputImageInfo)
 
 	return {
