@@ -148,6 +148,8 @@ async function getJobs(inputsPath: Path): Promise<Job[]> {
 }
 
 void (async () => {
+	console.time('Completed in')
+
 	const jobs = await getJobs(inputPath)
 	const projects: Project[] = []
 
@@ -159,4 +161,6 @@ void (async () => {
 	// const projects: Project[] = []
 	const newFile = file.replace(/let projects1: ProjectExport\[\] = .*/, `let projects1: ProjectExport[] = ${JSON.stringify(projects.map(projectToProjectExport))}`)
 	fs.writeFileSync(exportPath, newFile)
+
+	console.timeEnd('Completed in')
 })()
