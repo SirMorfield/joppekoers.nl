@@ -12,12 +12,14 @@ function sanatize(path: string): string {
 
 const QUALITY = 70
 
-const inputPath: Path = path.join(__dirname, '/input')
+const inputPath: Path = '/input'
 fs.mkdirSync(inputPath, { recursive: true })
 
-const outputPath: Path = path.join(__dirname, '/output')
+const outputPath: Path = '/output'
 fs.mkdirSync(outputPath, { recursive: true })
 
+const exportPath = '/export'
+const file = fs.readFileSync(exportPath, 'utf8').toString()
 // const inputPath: Path = path.join(__dirname, '../public/img/projectImg/')
 
 function getTmpPath(pathIn: Path): Path {
@@ -137,8 +139,6 @@ void (async () => {
 		projects.push(await runJob(job))
 	}
 	// const projects: Project[] = []
-	const exportPath = path.join(__dirname, '../frontend/src/lib/ProjectCard.svelte')
-	const file = fs.readFileSync(exportPath, 'utf8').toString()
 	const newFile = file.replace(/let projects1: ProjectExport\[\] = .*/, `let projects1: ProjectExport[] = ${JSON.stringify(projects.map(projectToProjectExport))}`)
 	fs.writeFileSync(exportPath, newFile)
 })()

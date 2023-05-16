@@ -1,18 +1,22 @@
 # =============== DEPS ==============
 FROM node:18-alpine as dependencies
-ENV NODE_ENV=production
 WORKDIR /app
 COPY shared ./shared
 # ===================================
 
 
-# ========= BUILDER BACKEND =========
-FROM dependencies as builder-backend
+# ==== BUILDER PROJECT GENERATOR ====
+FROM dependencies as builder-project-generator
 ENV NODE_ENV=production
-COPY backend/package*.json ./backend/
-RUN cd backend && npm ci --omit=dev
-COPY backend ./backend
-RUN cd backend && npm run build
+
+RUN apk --update --no-cache add imagemagick exiftool
+
+COPY projectGenerator/package*.json ./projectGenerator/
+RUN cd projectGenerator && npm ci
+COPY projectGenerator ./projectGenerator
+RUN cd projectGenerator && npm run lint:check
+RUN cd projectGenerator && npm run build
+RUN ls -al projectGenerator/build/projectGenerator/src
 # ===================================
 
 
@@ -27,14 +31,11 @@ RUN cd frontend && npm run build
 # ===================================
 
 
-
-# ============= BACKEND =============
-FROM gcr.io/distroless/nodejs18-debian11 as backend
-COPY --from=builder-backend /app/backend ./
+# ======== PROJECT GENERATOR ========
+FROM builder-project-generator as project-generator
 ENV NODE_ENV=production
-ENV PORT=8080
-EXPOSE 8080
-CMD ["build/app.js"]
+RUN ls -al projectGenerator/build/projectGenerator
+CMD cd projectGenerator && npm run start
 # ===================================
 
 

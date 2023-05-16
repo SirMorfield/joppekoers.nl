@@ -6,7 +6,8 @@
 	"module": "commonjs",
 	"scripts": {
 		"build": "tsc",
-		"lint": "eslint --cache --cache-location node_modules/.eslintcache .",
+		"start": "node build/projectGenerator/src/index.js",
+		"lint:check": "eslint --cache --cache-location node_modules/.eslintcache .",
 		"lint:fix": "eslint --cache --cache-location node_modules/.eslintcache --fix ."
 	},
 	"author": "",
