@@ -6,64 +6,89 @@ import { Path, exec, imageInfo, Job, Image, Project, projectToProjectExport, ima
 function sanatize(path: string): string {
 	return path
 		.split('/')
-		.map((name) => sanitizeFilename(name.replace(/\s/g, '-').toLowerCase()))
+		.map(name => sanitizeFilename(name.replace(/\s/g, '-').toLowerCase()))
 		.join('/')
 }
 
 const QUALITY = 70
 
-const inputPath: Path = path.join(__dirname, '../../projects/projects') // directory inside the ~/git repo
+const inputPath: Path = '/input'
 fs.mkdirSync(inputPath, { recursive: true })
 
-const outputPath: Path = path.join(__dirname, '../frontend/static/img/projectImg')
+const outputPath: Path = '/output'
 fs.mkdirSync(outputPath, { recursive: true })
 
+const exportPath = '/export'
+const file = fs.readFileSync(exportPath, 'utf8').toString()
 // const inputPath: Path = path.join(__dirname, '../public/img/projectImg/')
 
 function getTmpPath(pathIn: Path): Path {
 	const parse = path.parse(pathIn)
-	return path.join(parse.dir, parse.name + '.tmp' + parse.ext)
+	return path.join(parse.dir, `${parse.name}.tmp${parse.ext}`)
 }
 
 function printImageDiff(before: ImageInfo, after: ImageInfo) {
 	console.log(`Old image: ${imageInfoString(before)}`)
 	console.log(`New image: ${imageInfoString(after)}`)
-	const optimized = (before.size / after.size)
+	const optimized = before.size / after.size
 	console.log(`Times smaller: ${optimized.toFixed(2)}x ${''.padStart(Math.min(80, optimized), '#')}\n`)
+}
+
+async function preTransform(input: Path, output: Path, width?: number): Promise<{ info: ImageInfo; shouldDelete: boolean }> {
+	let info = await imageInfo(input)
+
+	const transformations: string[] = []
+	if (width) {
+		transformations.push(`-resize ${width}X`)
+	}
+
+	switch (info.rotation) {
+		case 90:
+			console.log(`Fixing incorrect EXIF data in ${input}`)
+			transformations.push('-rotate 90')
+			break
+		case 0:
+			break
+		case 'error':
+			// TODO: handle error
+			break
+	}
+
+	let tmpPath: Path | undefined
+	if (transformations.length > 0) {
+		const inputFileName = path.basename(input)
+		const newPath = path.join(output, inputFileName)
+
+		tmpPath = getTmpPath(newPath)
+		await exec(`convert ${transformations.join(' ')} '${input}' '${tmpPath}'`)
+		info = await imageInfo(tmpPath)
+	}
+
+	return { info: info, shouldDelete: !!tmpPath }
 }
 
 /**
  * @param fileName the name of the file without extension to be generated
  */
 async function processImage(input: Path, output: Path, fileName: string, width?: number): Promise<Image> {
-	if (fileName.indexOf('.') != -1)
+	if (fileName.indexOf('.') !== -1) {
 		throw new Error('fileName must not contain extension')
+	}
 	fileName += '.webp'
 
-	const inputImageInfo = await imageInfo(input)
-
+	const { info: inputImageInfo, shouldDelete } = await preTransform(input, output, width)
 	const newPath = path.join(output, fileName)
 
-	if (width !== undefined) {
-		const tmpPath = getTmpPath(newPath)
-		await exec(`convert -resize '${width}X' '${input}' '${tmpPath}'`)
-		input = tmpPath
-	}
+	const { stderr } = await exec(`convert -quality ${QUALITY} '${inputImageInfo.path}' '${newPath}'`)
 
-	// TODO display sizes
-	const { stderr } = await exec(`convert -quality ${QUALITY} '${input}' '${newPath}'`)
-
-	if (width !== undefined) {
-		fs.unlink(input)
+	if (shouldDelete) {
+		fs.unlink(inputImageInfo.path)
 	}
-	if (stderr) throw new Error(stderr)
+	if (stderr) {
+		throw new Error(stderr)
+	}
 
 	const outputImageInfo = await imageInfo(newPath)
-	if (inputImageInfo.incorrectEXIF) {
-		console.log(`Fixing incorrect EXIF data in ${input}`)
-		const { stderr } = await exec(`convert -rotate 90 ${outputImageInfo.path} ${outputImageInfo.path}`)
-		if (stderr) throw new Error(stderr)
-	}
 	printImageDiff(inputImageInfo, outputImageInfo)
 
 	return {
@@ -78,19 +103,21 @@ async function processImage(input: Path, output: Path, fileName: string, width?:
 async function runJob(job: Job): Promise<Project> {
 	// remove all previously generated files
 	await fs.emptyDir(job.output)
-	if (job.imgs.length === 0) throw new Error('No images found')
+	if (job.imgs.length <= 0) {
+		throw new Error('No images found')
+	}
 
-	const thumbnail = await processImage(job.imgs[0]!, job.output, 'thumbnail', 500)
+	const thumbnail = await processImage(job.imgs[0] as string, job.output, 'thumbnail', 500)
 
-	const images: Promise<Image>[] = job.imgs.map(async (image, i) => {
+	const images: Promise<Image>[] = job.imgs.map((image, i) => {
 		const name = i.toString().padStart(2, '0')
-		return await processImage(image, job.output, name)
+		return processImage(image, job.output, name)
 	})
 
 	const project: Project = {
 		id: job.id,
 		thumbnail,
-		images: await Promise.all(images)
+		images: await Promise.all(images),
 	}
 	return project
 }
@@ -98,15 +125,17 @@ async function runJob(job: Job): Promise<Project> {
 // Generate TODOs
 async function getJobs(inputsPath: Path): Promise<Job[]> {
 	const files = await fs.promises.readdir(inputsPath)
-	const dirs = files.filter((file) => fs.statSync(path.join(inputPath, file)).isDirectory())
+	const dirs = files.filter(file => fs.statSync(path.join(inputPath, file)).isDirectory())
 
-	const inputs = dirs.map(async (dir) => {
+	const inputs = dirs.map(async dir => {
 		const inputPath = path.join(inputsPath, dir)
 		const imgs = (await fs.promises.readdir(inputPath))
-			.map((img) => path.join(inputPath, img))
-			.filter((name) => {
+			.map(img => path.join(inputPath, img))
+			.filter(name => {
 				const isImage = !!name.match(/\.jpg$/)
-				if (!isImage) console.log(`WARNING: ignoring non-image file ${name}`)
+				if (!isImage) {
+					console.log(`WARNING: ignoring non-image file ${name}`)
+				}
 				return isImage
 			})
 		return {
@@ -118,7 +147,9 @@ async function getJobs(inputsPath: Path): Promise<Job[]> {
 	return Promise.all(inputs)
 }
 
-; (async () => {
+void (async () => {
+	console.time('Completed in')
+
 	const jobs = await getJobs(inputPath)
 	const projects: Project[] = []
 
@@ -128,9 +159,8 @@ async function getJobs(inputsPath: Path): Promise<Job[]> {
 		projects.push(await runJob(job))
 	}
 	// const projects: Project[] = []
-	const exportPath = path.join(__dirname, '../frontend/src/lib/ProjectCard.svelte')
-	const file = fs.readFileSync(exportPath, 'utf8').toString()
-	const newFile = file.replace(/let projects1: ProjectExport\[\] = .*/, 'let projects1: ProjectExport[] = ' + JSON.stringify(projects.map(projectToProjectExport)))
+	const newFile = file.replace(/let projects1: ProjectExport\[\] = .*/, `let projects1: ProjectExport[] = ${JSON.stringify(projects.map(projectToProjectExport))}`)
 	fs.writeFileSync(exportPath, newFile)
 
+	console.timeEnd('Completed in')
 })()
