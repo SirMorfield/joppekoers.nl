@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "frontend"
+		},
+		{
+			"path": "projectGenerator"
+		},
+		{
+			"name": "root",
+			"path": "."
+		},
+	]
+}
