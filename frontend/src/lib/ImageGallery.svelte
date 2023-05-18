@@ -20,8 +20,6 @@
 		<ProjectCard id="big-hammer" />
 		<ProjectCard id="cork-screw" />
 		<ProjectCard id="lab-power-supply" />
-		<ProjectCard id="screwdriver-holder" />
-		<ProjectCard id="wheel-respoke-2" />
 	</div>
 	<div class="grid gap-4 content-start">
 		<ProjectCard id="wolmolen" />
@@ -30,8 +28,8 @@
 		<ProjectCard id="sword2" />
 		<ProjectCard id="knife" />
 		<ProjectCard id="electric-car" />
-		<ProjectCard id="raid-server" />
 		<ProjectCard id="small-car" />
+		<ProjectCard id="screwdriver-holder" />
 	</div>
 	<div class="grid gap-4 content-start">
 		<ProjectCard id="hammer" />
@@ -39,9 +37,7 @@
 		<ProjectCard id="table-legs" />
 		<ProjectCard id="rainbarrel-stand" />
 		<ProjectCard id="jacob-s-ladder" />
-		<ProjectCard id="electric-kettle" />
 		<ProjectCard id="rattan-doors" />
-		<ProjectCard id="suskast" />
 	</div>
 	<div class="grid gap-4 content-start">
 		<ProjectCard id="arcade-machine" />
@@ -51,7 +47,6 @@
 		<ProjectCard id="boom-mic-stand" />
 		<ProjectCard id="greenhouse" />
 		<ProjectCard id="rpi-remote-backup" />
-		<ProjectCard id="wheel-respoke" />
 	</div>
 </div>
 
