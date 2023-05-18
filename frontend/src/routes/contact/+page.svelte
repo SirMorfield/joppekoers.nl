@@ -4,13 +4,13 @@
 	interface Info {
 		label: string
 		value: string
-		toCopy?: string
+		link?: string
 	}
 	const infos: readonly Info[] = [
 		{ label: 'Name', value: 'Joppe Koers' },
 		{ label: 'Email', value: 'joppe@joppekoers.nl' },
-		{ label: 'LinkedIn', value: 'linkedin.com/in/joppekoers', toCopy: 'https://www.linkedin.com/in/joppekoers/' },
-		{ label: 'GitHub', value: 'SirMorfield', toCopy: 'https://github.com/SirMorfield' },
+		{ label: 'LinkedIn', value: 'linkedin.com/in/joppekoers', link: 'https://www.linkedin.com/in/joppekoers/' },
+		{ label: 'GitHub', value: 'SirMorfield', link: 'https://github.com/SirMorfield' },
 	]
 </script>
 
@@ -20,7 +20,13 @@
 			{#each infos as info}
 				<tr>
 					<td class="item"><b>{info.label}</b></td>
-					<td class="item" id="name"> {info.value}</td>
+					{#if info.link}
+						<a href={info.link} class="link">
+							<td class="item" id="name"> {info.value}</td>
+						</a>
+					{:else}
+						<td class="item" id="name"> {info.value}</td>
+					{/if}
 					<!-- <td class="item">
 						<button class="copy-button" on:click={() => navigator.clipboard.writeText('asda')}>
 							<img src={copySymbol} alt="copySymbol" />
@@ -58,5 +64,9 @@
 
 	#contact-table:hover {
 		box-shadow: 15px 15px 22px rgba(0, 0, 0, 0.25);
+	}
+	.link {
+		text-decoration: underline;
+		color: black;
 	}
 </style>
