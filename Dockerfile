@@ -1,6 +1,7 @@
 # =============== DEPS ==============
 FROM node:18-alpine as dependencies
 WORKDIR /app
+
 COPY shared ./shared
 # ===================================
 
@@ -8,6 +9,7 @@ COPY shared ./shared
 # ==== BUILDER PROJECT GENERATOR ====
 FROM dependencies as builder-project-generator
 ENV NODE_ENV=production
+WORKDIR /app
 
 RUN apk --update --no-cache add imagemagick exiftool
 
@@ -22,6 +24,8 @@ RUN cd projectGenerator && npm run build
 # ======== BUILDER FRONTEND =========
 FROM dependencies as builder-frontend
 ENV NODE_ENV=production
+WORKDIR /app
+
 COPY frontend/package*.json ./frontend/
 RUN cd frontend && npm install
 COPY frontend ./frontend
@@ -34,6 +38,8 @@ RUN cd frontend && npm run build
 # ======== PROJECT GENERATOR ========
 FROM builder-project-generator as project-generator
 ENV NODE_ENV=production
+WORKDIR /app
+
 CMD cd projectGenerator && npm run start
 # ===================================
 
@@ -41,8 +47,10 @@ CMD cd projectGenerator && npm run start
 
 # ============= FRONTEND =============
 FROM node:18-alpine as frontend
-COPY --from=builder-frontend /app/frontend/ ./
 ENV NODE_ENV=production
+WORKDIR /app
+
+COPY --from=builder-frontend /app/frontend/ ./
 ENV PORT=8080
 EXPOSE 8080
 ENTRYPOINT [ "node", "build/index.js" ]
