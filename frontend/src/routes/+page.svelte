@@ -23,10 +23,11 @@
 			<ProjectCard id="matrix" />
 			<ProjectCard id="audio-cart-storage" />
 			<ProjectCard id="audio-cart-storage-2" />
-			<ProjectCard id="door-frame" />
+			<ProjectCard id="rattan-doors" />
 			<ProjectCard id="wooden-storage-sofa" />
 			<ProjectCard id="table-legs" />
 			<ProjectCard id="speakers" />
+			<ProjectCard id="door-frame" />
 			<ProjectCard id="sword" />
 			<ProjectCard id="sword2" />
 			<ProjectCard id="rainbarrel-stand" />
@@ -39,7 +40,6 @@
 			<ProjectCard id="electric-car" />
 			<ProjectCard id="greenhouse" />
 			<ProjectCard id="lab-power-supply" />
-			<ProjectCard id="rattan-doors" />
 			<ProjectCard id="rpi-remote-backup" />
 		</ImageGallery>
 	</Root>
