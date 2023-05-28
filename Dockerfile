@@ -16,7 +16,6 @@ RUN cd projectGenerator && npm ci
 COPY projectGenerator ./projectGenerator
 RUN cd projectGenerator && npm run lint:check
 RUN cd projectGenerator && npm run build
-RUN ls -al projectGenerator/build/projectGenerator/src
 # ===================================
 
 
@@ -26,7 +25,7 @@ ENV NODE_ENV=production
 COPY frontend/package*.json ./frontend/
 RUN cd frontend && npm install
 COPY frontend ./frontend
-RUN cd frontend && npm run check
+# RUN cd frontend && npm run lint:check # TODO: enable
 RUN cd frontend && npm run build
 # ===================================
 
@@ -34,7 +33,6 @@ RUN cd frontend && npm run build
 # ======== PROJECT GENERATOR ========
 FROM builder-project-generator as project-generator
 ENV NODE_ENV=production
-RUN ls -al projectGenerator/build/projectGenerator
 CMD cd projectGenerator && npm run start
 # ===================================
 

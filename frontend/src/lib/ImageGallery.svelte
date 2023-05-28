@@ -19,8 +19,12 @@
 
 	async function draw() {
 		await tick()
-		if (!slotHolder) return
-		if (previousGalleryWidth === galleryWidth) return
+		if (!slotHolder) {
+			return
+		}
+		if (previousGalleryWidth === galleryWidth) {
+			return
+		}
 
 		let found = false
 		do {

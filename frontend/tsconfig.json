@@ -13,8 +13,8 @@
 		// from the referenced tsconfig.json - TypeScript does not merge them in
 		"paths": {
 			"$lib": ["./src/lib"],
-			"$lib/*": [ "./src/lib/*" ],
+			"$lib/*": ["./src/lib/*"],
 			"@shared/*": ["../shared/*"]
-		},
+		}
 	}
 }
