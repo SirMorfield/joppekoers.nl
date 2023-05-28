@@ -57,6 +57,8 @@
 	}
 
 	#contact-table {
+		padding: 100px;
+		border-radius: 10px;
 		color: rgb(14, 10, 10);
 		padding: 40px;
 		background-color: rgb(255, 255, 252);
