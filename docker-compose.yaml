@@ -2,7 +2,7 @@ version: '3.7'
 services:
   frontend:
     container_name: frontend
-    image: ghcr.io/SirMorfield/SirMorfield/joppekoers.nl:latest
+    image: ghcr.io/sirmorfield/joppekoers.nl/frontend:latest
     restart: unless-stopped
     ports:
       - 80:5173

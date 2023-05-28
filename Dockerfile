@@ -26,6 +26,7 @@ COPY frontend/package*.json ./frontend/
 RUN cd frontend && npm install
 COPY frontend ./frontend
 # RUN cd frontend && npm run lint:check # TODO: enable
+RUN cd frontend && npm run svelte-sync
 RUN cd frontend && npm run build
 # ===================================
 
