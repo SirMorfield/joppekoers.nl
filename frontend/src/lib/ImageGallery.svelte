@@ -6,12 +6,8 @@
 	export const maxColumnCount = 4
 	export const maxColumnWidth = 300
 
-	const shownColumStyle = `display: flex; flex-direction: column; gap: ${gap}px`
-	const hiddenColumStyle = 'width: 0px; display: none'
-
 	let slotHolder: HTMLDivElement | undefined = undefined
 	const columns: (HTMLDivElement | undefined)[] = Array(maxColumnCount)
-	const columnStyles: string[] = Array(maxColumnCount).fill(shownColumStyle)
 
 	let galleryWidth = 0
 	let previousGalleryWidth = galleryWidth + 1 // force draw on mount
@@ -55,8 +51,8 @@
 </div>
 
 <div id="gallery" bind:clientWidth={galleryWidth} style={galleryStyle}>
-	{#each columns as column, i}
-		<div class="column" bind:this={column} style={columnStyles[i]} />
+	{#each columns as column}
+		<div class="column" bind:this={column} />
 	{/each}
 </div>
 
@@ -68,6 +64,12 @@
 	#gallery {
 		width: 100%;
 		display: grid;
+		gap: var(--gap);
+	}
+
+	#gallery .column {
+		display: flex;
+		flex-direction: column;
 		gap: var(--gap);
 	}
 
