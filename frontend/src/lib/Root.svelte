@@ -64,8 +64,8 @@
 		width: 99%;
 		display: flex;
 		flex-direction: column;
-		justify-content: space-between;
-		max-width: 1600px;
+		justify-content: flex-start;
+		max-width: 1200px;
 		margin: 0 auto;
 	}
 </style>

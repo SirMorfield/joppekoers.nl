@@ -1,4 +1,5 @@
 <script lang="ts">
+	import '../app.postcss'
 	import ImageGallery from '$lib/ImageGallery.svelte'
 	import Root from '$lib/Root.svelte'
 	import ProjectCard from '$lib/ProjectCard.svelte'
@@ -22,10 +23,11 @@
 			<ProjectCard id="matrix" />
 			<ProjectCard id="audio-cart-storage" />
 			<ProjectCard id="audio-cart-storage-2" />
-			<ProjectCard id="door-frame" />
+			<ProjectCard id="rattan-doors" />
 			<ProjectCard id="wooden-storage-sofa" />
 			<ProjectCard id="table-legs" />
 			<ProjectCard id="speakers" />
+			<ProjectCard id="door-frame" />
 			<ProjectCard id="sword" />
 			<ProjectCard id="sword2" />
 			<ProjectCard id="rainbarrel-stand" />
@@ -36,24 +38,9 @@
 			<ProjectCard id="boom-mic-stand" />
 			<ProjectCard id="cork-screw" />
 			<ProjectCard id="electric-car" />
-			<ProjectCard id="electric-kettle" />
 			<ProjectCard id="greenhouse" />
 			<ProjectCard id="lab-power-supply" />
-			<ProjectCard id="raid-server" />
-			<ProjectCard id="rattan-doors" />
 			<ProjectCard id="rpi-remote-backup" />
-			<ProjectCard id="screwdriver-holder" />
-			<ProjectCard id="small-car" />
-			<ProjectCard id="suskast" />
-			<ProjectCard id="wheel-respoke" />
-			<ProjectCard id="wheel-respoke-2" />
 		</ImageGallery>
 	</Root>
 </main>
-
-<style>
-	.internalLink {
-		text-decoration: underline;
-		color: black;
-	}
-</style>
