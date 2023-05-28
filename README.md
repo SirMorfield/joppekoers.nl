@@ -1,12 +1,28 @@
 # [joppekoers.nl](Joppekoers.nl)
 
-My very first deployed project with the goal of learning:
+My very first deployed project with the goal of learning webdev
+
+Tech learned in chronological order 
+- git
 - Javascript
-- TypeScript
-- Linux servers
 - NodeJS
 - Express
-- git
+- EJS
+- Linux servers
+- Docker (compose)
+- TypeScript
+- ESLint & Prettier
+- SvelteKit
+- GitHub actions
+- Watchtower
 
-## Installation
-Copy `./env.example.json` to `env.json` and change the custom data
+## Usage
+```shell
+cd frontend
+npm i
+npm run dev
+```
+Or via docker compose
+```
+docker compose up --build
+```
