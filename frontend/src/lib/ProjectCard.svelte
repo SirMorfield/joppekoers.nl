@@ -36,6 +36,8 @@
 <img
 	class="h-auto w-full rounded-lg project"
 	src={projects1.find(p => p.id === id).thumbnail.src}
+	width={projects1.find(p => p.id === id).thumbnail.width}
+	height={projects1.find(p => p.id === id).thumbnail.height}
 	alt={id}
 	on:keydown={() => {
 		/**/
