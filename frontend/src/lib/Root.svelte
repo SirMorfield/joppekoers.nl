@@ -15,7 +15,7 @@
 	<div>
 		<slot />
 	</div>
-	<div>Built, hosted and maintained by Joppe Koers</div>
+	<!-- <div>Built, hosted and maintained by Joppe Koers</div> -->
 </div>
 
 <style>
