@@ -1,6 +1,6 @@
 <!-- From: https://github.com/berkinakkaya/svelte-image-gallery#readme -->
 <script lang="ts">
-	import { onMount, tick } from 'svelte'
+	import { onMount } from 'svelte'
 
 	export let gap = 10
 	export const maxColumnCount = 4
@@ -17,8 +17,7 @@
 	$: columnCount && draw()
 	$: galleryStyle = `grid-template-columns: repeat(${columnCount}, 1fr); --gap: ${gap}px`
 
-	async function draw() {
-		await tick()
+	function draw() {
 		if (!slotHolder) {
 			return
 		}
@@ -45,8 +44,8 @@
 		previousGalleryWidth = galleryWidth
 	}
 
-	onMount(async () => {
-		await draw()
+	onMount(() => {
+		draw()
 	})
 </script>
 
