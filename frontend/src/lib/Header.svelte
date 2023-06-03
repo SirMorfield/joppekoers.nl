@@ -4,7 +4,7 @@
 
 <div id="menu">
 	<!-- <a href="/" style="heigth: 100%"> -->
-	<img src={logo} id="top-logo" alt="logo" />
+	<img src={logo} id="top-logo" alt="logo" width="1217" height="250" />
 	<!-- </a> -->
 
 	<a href="/">
@@ -24,7 +24,7 @@
 	#top-logo {
 		/* max-width: 100%; */
 		max-height: 100%;
-
+		width: auto;
 		object-fit: contain;
 	}
 	#menu {
