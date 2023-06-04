@@ -40,10 +40,13 @@ WORKDIR /app
 CMD cd projectGenerator && npm run start
 
 # ============= FRONTEND =============
-FROM node:18-alpine as frontend
+FROM gcr.io/distroless/nodejs:18 as frontend
 ENV NODE_ENV=production
 WORKDIR /app
-
-COPY --from=builder-frontend /app/frontend/ ./
 ENV PORT=8080
-ENTRYPOINT [ "npm", "start" ]
+
+COPY --from=builder-frontend /app/frontend/build ./build
+COPY --from=builder-frontend /app/frontend/node_modules ./node_modules
+COPY --from=builder-frontend /app/frontend/package.json ./package.json
+
+CMD [ "./build/index.js" ]
