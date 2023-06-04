@@ -2,7 +2,7 @@ version: '3.7'
 services:
   frontend:
     container_name: frontend
-    image: ghcr.io/sirmorfield/joppekoers.nl/frontend:latest
+    build: .
     restart: unless-stopped
     volumes:
       - ./frontend/static/img/projectImg:/app/build/client/img/projectImg
