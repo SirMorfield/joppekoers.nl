@@ -31,8 +31,7 @@ RUN cd frontend && npm run lint:check
 RUN cd frontend && npm run build
 
 RUN cd frontend && npm prune --production
-RUN rm -rf frontend/static \
-	rm -rf frontend/src/assets
+RUN rm -rf frontend/static
 
 # ======== PROJECT GENERATOR ========
 FROM builder-project-generator as project-generator
