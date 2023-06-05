@@ -26,7 +26,7 @@ RUN cd frontend && npm install
 COPY frontend ./frontend
 
 ENV NODE_ENV=production
-RUN cd frontend && npm run svelte-sync
+RUN cd frontend && npm run check
 RUN cd frontend && npm run lint:check
 RUN cd frontend && npm run build
 

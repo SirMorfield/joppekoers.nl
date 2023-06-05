@@ -7,7 +7,7 @@
 		"build": "vite build",
 		"start": "node ./build/index.js",
 		"preview": "vite preview",
-		"svelte-sync": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"lint:check": "prettier --plugin-search-dir . --check . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache .",
 		"lint:fix": "prettier --plugin-search-dir . --write . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache --fix ."
 	},
