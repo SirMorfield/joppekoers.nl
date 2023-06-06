@@ -11,7 +11,7 @@
 		<div class="menuItem">Home</div>
 	</a>
 
-	<a href="contact">
+	<a href="/contact">
 		<div class="menuItem">Contact</div>
 	</a>
 </div>
