@@ -48,6 +48,7 @@
 		line-height: 24px;
 		font-weight: 400;
 		margin: 0;
+		min-height: 100vh;
 
 		color-scheme: dark;
 		color: rgba(255, 255, 255, 0.87);
