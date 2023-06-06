@@ -1,21 +1,7 @@
-import path from 'path'
 import fs from 'fs/promises'
 import { fail } from '@sveltejs/kit'
 import type { RequestHandler } from './$types'
-import { storePath } from '../_server'
-
-const fileExists = async path => !!(await fs.stat(path).catch(_ => false))
-
-async function getStorePath(file: string, idLength = 4): Promise<string> {
-	for (let i = 0; i < 100; i++) {
-		const filename = `${Math.random().toString().substring(2, 6)}${file}`
-		const filePath = path.join(storePath, filename)
-		if (!(await fileExists(filePath))) {
-			return filePath
-		}
-	}
-	return getStorePath(file, idLength + 1)
-}
+import { getStorePath } from '../_server'
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
