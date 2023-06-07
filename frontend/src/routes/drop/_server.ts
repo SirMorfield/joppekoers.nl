@@ -1,6 +1,6 @@
 import path from 'path'
 import { default as fs } from 'fs/promises'
-import type { PathLike } from 'fs'
+import type { PathLike, ReadStream } from 'fs'
 
 export const storePath = path.join(process.cwd(), 'static/uploads')
 
@@ -20,6 +20,19 @@ export async function getFileById(id: string): Promise<File | undefined> {
 		path: path.join(storePath, file),
 		name: file.substring(id.length),
 	}
+}
+
+export async function canUploadFile(size: number): Promise<boolean> {
+	const maxSize = 10 * 1000 * 1000 * 1000
+	// Early return if file is too big
+	if (size > maxSize) {
+		return false
+	}
+
+	const files = await fs.readdir(storePath)
+	const stats = await Promise.all(files.map(file => fs.stat(path.join(storePath, file))))
+	const totalSize = stats.reduce((acc, current) => acc + current.size, 0)
+	return totalSize + size < maxSize
 }
 
 export async function getStorePath(file: string, idLength = 4): Promise<string> {
