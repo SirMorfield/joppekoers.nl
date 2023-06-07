@@ -14,7 +14,9 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		const storedFile = await getStorePath(file.name)
 		await fs.writeFile(storedFile.path, Buffer.from(await file.arrayBuffer()))
-		return new Response(`https://joppekoers.nl/drop/${storedFile.id}`)
+
+		const origin = request.headers.get('origin') || 'https://joppekoers.nl'
+		return new Response(`${origin.replace(/\/*$/, '')}/${storedFile.id}`)
 	} catch (err) {
 		return new Response(`Internal server error: ${err}`, { status: 500 })
 	}
