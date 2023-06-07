@@ -1,8 +1,13 @@
+import { default as fsSync, type PathLike, type ReadStream } from 'fs'
+import fs from 'fs/promises'
 import path from 'path'
-import { default as fs } from 'fs/promises'
-import type { PathLike, ReadStream } from 'fs'
 
-export const storePath = path.join(process.cwd(), 'static/uploads')
+export const storePath = path.join(FILEPATH, '../../../../static/uploads')
+
+if (!fsSync.existsSync(storePath)) {
+	fsSync.mkdirSync(storePath, { recursive: true })
+	console.log('Created upload directory', storePath)
+}
 
 const fileExists = async path => !!(await fs.stat(path).catch(_ => false))
 
