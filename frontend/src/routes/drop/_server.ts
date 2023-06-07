@@ -19,7 +19,7 @@ export async function getFileById(id: string): Promise<File | undefined> {
 	}
 	return {
 		path: path.join(storePath, file),
-		name: file.substring(id.length),
+		name: file.substring(id.length + 1),
 		id,
 	}
 }
