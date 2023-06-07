@@ -1,55 +1,62 @@
-<script lang="ts">
-	import Root from '$lib/Root.svelte'
+<script>
+	import { onMount } from 'svelte'
 
-	let files: FileList
+	let file = null
 
-	$: if (files) {
-		console.log(files)
+	function handleFileDrop(event) {
+		event.preventDefault()
+		file = event.dataTransfer.files[0]
+		submitForm()
+	}
 
-		for (const file of files) {
-			console.log(`${file.name}: ${file.size} bytes`)
+	function handleFileInputChange(event) {
+		file = event.target.files[0]
+		submitForm()
+	}
+
+	function submitForm() {
+		if (file) {
+			const form = document.getElementById('my-form')
+			form.submit()
 		}
 	}
+
+	onMount(function () {
+		const dropArea = document.getElementById('drop-area')
+
+		dropArea.addEventListener('dragover', function (event) {
+			event.preventDefault()
+			dropArea.classList.add('drag-over')
+		})
+
+		dropArea.addEventListener('dragleave', function () {
+			dropArea.classList.remove('drag-over')
+		})
+
+		dropArea.addEventListener('drop', handleFileDrop)
+	})
 </script>
 
-<Root>
-	<div id="main">
-		<form action="/drop/up" method="post" enctype="multipart/form-data">
-			<label for="many">Select multiple files</label>
-			<input bind:files id="many" name="file" multiple type="file" />
-			<button type="submit">Submit</button>
-		</form>
+<div id="drop-area" style="border: 2px dashed gray; padding: 20px; text-align: center;">
+	<h3>Drag and Drop a File</h3>
+	{#if file}
+		<p>Selected file: {file.name}</p>
+	{/if}
+</div>
 
-		{#if files}
-			<h2>Selected files:</h2>
-			{#each Array.from(files) as file}
-				<p>{file.name} ({file.size} bytes)</p>
-			{/each}
-		{/if}
-	</div>
-</Root>
+<form id="my-form" action="/upload" method="post">
+	<input type="file" id="file-input" on:change={handleFileInputChange} style="display: none;" />
+	<button
+		type="button"
+		on:click={function () {
+			document.getElementById('file-input').click()
+		}}>
+		Select File
+	</button>
+</form>
 
 <style>
-	#main {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		height: 100%;
-	}
-	label {
-		display: block;
-		padding: 20px;
-		background-color: #dddddd;
-		color: black;
-		display: inline-block;
-		border-radius: 3px;
-	}
-	label:hover {
-		cursor: pointer;
-		box-shadow: 15px 15px 22px rgba(0, 0, 0, 0.25);
-	}
-	#many {
-		display: none;
+	.drag-over {
+		border: 2px dashed blue;
 	}
 </style>
