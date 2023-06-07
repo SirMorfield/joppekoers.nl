@@ -1,6 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit'
 import fs from 'fs/promises'
-import { getFileById, readableToReadStream } from '../../_server'
+import { getFileById, readableToReadStream } from '../_server'
 import { z } from 'zod'
 
 export const GET: RequestHandler = async ({ setHeaders, params }) => {
