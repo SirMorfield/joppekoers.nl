@@ -9,6 +9,7 @@ const fileExists = async path => !!(await fs.stat(path).catch(_ => false))
 export type File = {
 	path: PathLike
 	name: string
+	id: string
 }
 export async function getFileById(id: string): Promise<File | undefined> {
 	const files = await fs.readdir(storePath)
@@ -19,6 +20,7 @@ export async function getFileById(id: string): Promise<File | undefined> {
 	return {
 		path: path.join(storePath, file),
 		name: file.substring(id.length),
+		id,
 	}
 }
 
@@ -35,12 +37,19 @@ export async function canUploadFile(size: number): Promise<boolean> {
 	return totalSize + size < maxSize
 }
 
-export async function getStorePath(file: string, idLength = 4): Promise<string> {
+export async function getStorePath(file: string, idLength = 4): Promise<File> {
 	for (let i = 0; i < 100; i++) {
-		const filename = `${Math.random().toString().substring(2, 6)}${file}`
+		const id = Math.random()
+			.toString()
+			.substring(2, 2 + idLength)
+		const filename = `${id}-${file}`
 		const filePath = path.join(storePath, filename)
 		if (!(await fileExists(filePath))) {
-			return filePath
+			return {
+				path: filePath,
+				name: filename,
+				id,
+			}
 		}
 	}
 	return getStorePath(file, idLength + 1)

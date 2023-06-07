@@ -12,9 +12,9 @@ export const POST: RequestHandler = async ({ request }) => {
 			return new Response('No room on disk or file too big', { status: 400 })
 		}
 
-		const filePath = await getStorePath(file.name)
-		await fs.writeFile(filePath, Buffer.from(await file.arrayBuffer()))
-		return new Response(JSON.stringify({ path: filePath }))
+		const storedFile = await getStorePath(file.name)
+		await fs.writeFile(storedFile.path, Buffer.from(await file.arrayBuffer()))
+		return new Response(`https://joppekoers.nl/drop/${storedFile.id}`)
 	} catch (err) {
 		return new Response(`Internal server error: ${err}`, { status: 500 })
 	}
