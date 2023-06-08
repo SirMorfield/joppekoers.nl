@@ -44,14 +44,8 @@
 		<h3>Drop a File</h3>
 	</div>
 
-	<form id="my-form" action="/drop/up" method="post" enctype="multipart/form-data" bind:this={form}>
-		<input
-			name="file"
-			type="file"
-			id="file-input"
-			on:change={handleFileInputChange}
-			bind:this={fileInput}
-			style="display: none;" />
+	<form action="/drop/up" method="post" enctype="multipart/form-data" bind:this={form}>
+		<input name="file" type="file" on:change={handleFileInputChange} bind:this={fileInput} style="display: none;" />
 		<button type="button" on:click={() => fileInput.click()}> Select File </button>
 	</form>
 </Root>
