@@ -10,7 +10,7 @@
 	function handleFileDrop(event) {
 		event.preventDefault()
 		file = event.dataTransfer.files[0]
-		document.getElementById('file-input').files = event.dataTransfer.files
+		fileInput.files = event.dataTransfer.files
 		submitForm()
 	}
 
@@ -25,22 +25,23 @@
 		}
 	}
 
-	onMount(() => {
-		dropArea.addEventListener('dragover', event => {
-			event.preventDefault()
-			dropArea.classList.add('drag-over')
-		})
+	function onDragover(event) {
+		event.preventDefault()
+		dropArea.classList.add('drag-over')
+	}
 
-		dropArea.addEventListener('dragleave', () => {
-			dropArea.classList.remove('drag-over')
-		})
-
-		dropArea.addEventListener('drop', handleFileDrop)
-	})
+	function onDragleave() {
+		dropArea.classList.remove('drag-over')
+	}
 </script>
 
 <Root>
-	<div bind:this={dropArea} style="border: 2px dashed gray; padding: 20px; text-align: center;">
+	<div
+		bind:this={dropArea}
+		on:drop={handleFileDrop}
+		on:dragover={onDragover}
+		on:dragleave={onDragleave}
+		style="border: 2px dashed gray; padding: 20px; text-align: center;">
 		<h3>Drop a File</h3>
 	</div>
 
