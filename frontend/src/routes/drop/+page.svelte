@@ -10,6 +10,7 @@
 	function handleFileDrop(event) {
 		event.preventDefault()
 		file = event.dataTransfer.files[0]
+		document.getElementById('file-input').files = event.dataTransfer.files
 		submitForm()
 	}
 
