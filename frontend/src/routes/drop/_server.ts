@@ -9,7 +9,7 @@ if (!fsSync.existsSync(storePath)) {
 	console.log('Created upload directory', storePath)
 }
 
-const fileExists = async path => !!(await fs.stat(path).catch(_ => false))
+const fileExists = async path => !!(await fs.stat(path).catch(() => false))
 
 export type File = {
 	path: PathLike
