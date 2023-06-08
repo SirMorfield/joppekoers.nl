@@ -3,8 +3,9 @@
 	import { onMount } from 'svelte'
 
 	let file = null
-	let form: HTMLFormElement | undefined = undefined
-	let fileInput: HTMLInputElement | undefined = undefined
+	let form: HTMLFormElement | undefined
+	let fileInput: HTMLInputElement | undefined
+	let dropArea: HTMLDivElement | undefined
 
 	function handleFileDrop(event) {
 		event.preventDefault()
@@ -24,14 +25,12 @@
 	}
 
 	onMount(() => {
-		const dropArea = document.getElementById('drop-area')
-
-		dropArea.addEventListener('dragover', function (event) {
+		dropArea.addEventListener('dragover', event => {
 			event.preventDefault()
 			dropArea.classList.add('drag-over')
 		})
 
-		dropArea.addEventListener('dragleave', function () {
+		dropArea.addEventListener('dragleave', () => {
 			dropArea.classList.remove('drag-over')
 		})
 
@@ -40,11 +39,8 @@
 </script>
 
 <Root>
-	<div id="drop-area" style="border: 2px dashed gray; padding: 20px; text-align: center;">
+	<div bind:this={dropArea} style="border: 2px dashed gray; padding: 20px; text-align: center;">
 		<h3>Drop a File</h3>
-		{#if file}
-			<p>Selected file: {file.name}</p>
-		{/if}
 	</div>
 
 	<form id="my-form" action="/drop/up" method="post" enctype="multipart/form-data" bind:this={form}>
