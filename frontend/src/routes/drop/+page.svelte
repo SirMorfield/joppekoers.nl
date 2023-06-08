@@ -1,13 +1,12 @@
 <script lang="ts">
 	import Root from '$lib/Root.svelte'
-	import { onMount } from 'svelte'
 
-	let file = null
+	let file: File | undefined
 	let form: HTMLFormElement | undefined
 	let fileInput: HTMLInputElement | undefined
 	let dropArea: HTMLDivElement | undefined
 
-	function handleFileDrop(event) {
+	function handleFileDrop(event: DragEvent) {
 		event.preventDefault()
 		file = event.dataTransfer.files[0]
 		fileInput.files = event.dataTransfer.files
@@ -27,11 +26,11 @@
 
 	function onDragover(event) {
 		event.preventDefault()
-		dropArea.classList.add('drag-over')
+		dropArea.style.border = '2px dashed blue'
 	}
 
 	function onDragleave() {
-		dropArea.classList.remove('drag-over')
+		dropArea.style.border = '2px dashed gray'
 	}
 </script>
 
@@ -56,9 +55,3 @@
 		<button type="button" on:click={() => fileInput.click()}> Select File </button>
 	</form>
 </Root>
-
-<style>
-	.drag-over {
-		border: 2px dashed blue;
-	}
-</style>
