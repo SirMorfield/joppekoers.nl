@@ -44,8 +44,8 @@
 	{/if}
 </div>
 
-<form id="my-form" action="/upload" method="post">
-	<input type="file" id="file-input" on:change={handleFileInputChange} style="display: none;" />
+<form id="my-form" action="/drop/up" method="post" enctype="multipart/form-data">
+	<input name="file" type="file" id="file-input" on:change={handleFileInputChange} style="display: none;" />
 	<button
 		type="button"
 		on:click={function () {
