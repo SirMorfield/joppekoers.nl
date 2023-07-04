@@ -14,12 +14,19 @@
 	<a href="/contact">
 		<div class="menuItem">Contact</div>
 	</a>
+
+	<a href="/cv">
+		<div class="menuItem">cv</div>
+	</a>
 </div>
 
 <style>
 	a {
 		text-decoration: none;
 		color: #dddddd;
+	}
+	a:hover {
+		text-decoration: underline;
 	}
 	#top-logo {
 		/* max-width: 100%; */
