@@ -4,7 +4,9 @@
 	let navContent: HTMLDivElement | undefined = undefined
 </script>
 
-<nav class="flex items-center justify-between flex-wrap py-6 px-5 w-full z-10 top-0 fixed">
+<nav
+	class="flex items-center justify-between flex-wrap py-6 px-5 w-full z-10 top-0 fixed"
+	on:mouseleave={() => navContent.classList.add('hidden')}>
 	<div class="flex items-center flex-shrink-0 text-white mr-6">
 		<a class="text-white no-underline hover:text-white hover:no-underline" href="/">
 			<img src={logo} class="h-10 w-auto" alt="logo" width="1217" height="250" />
