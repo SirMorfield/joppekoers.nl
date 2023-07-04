@@ -12,7 +12,7 @@
 
 <div id="root">
 	<Header />
-	<div>
+	<div id="imported">
 		<slot />
 	</div>
 	<!-- <div>Built, hosted and maintained by Joppe Koers</div> -->
@@ -43,16 +43,17 @@
 	:root {
 		all: revert;
 
+		--main-dark: #242424;
+		--main-light: #dddddd;
+
 		font-family: Kadwa, Arial, sans-serif;
 		font-size: 16px;
 		line-height: 24px;
 		font-weight: 400;
-		margin: 0;
-		min-height: 100vh;
 
 		color-scheme: dark;
-		color: rgba(255, 255, 255, 0.87);
-		background-color: #242424;
+		color: var(--main-light);
+		background-color: var(--main-dark);
 
 		font-synthesis: none;
 		text-rendering: optimizeLegibility;
@@ -62,13 +63,22 @@
 	}
 
 	#root {
-		min-height: 93vh;
-		max-height: 93vh;
-		width: 99%;
+		width: 100%;
+		max-width: 1300px;
+		padding: 10px;
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
-		max-width: 1200px;
 		margin: 0 auto;
+	}
+	#imported {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: center;
+	}
+
+	#root * {
+		max-width: 100%;
 	}
 </style>
