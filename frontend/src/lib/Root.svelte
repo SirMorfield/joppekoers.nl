@@ -43,14 +43,17 @@
 	:root {
 		all: revert;
 
+		--main-dark: #242424;
+		--main-light: #dddddd;
+
 		font-family: Kadwa, Arial, sans-serif;
 		font-size: 16px;
 		line-height: 24px;
 		font-weight: 400;
 
 		color-scheme: dark;
-		color: rgba(255, 255, 255, 0.87);
-		background-color: #242424;
+		color: var(--main-light);
+		background-color: var(--main-dark);
 
 		font-synthesis: none;
 		text-rendering: optimizeLegibility;

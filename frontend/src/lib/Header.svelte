@@ -15,17 +15,16 @@
 	<div class="block lg:hidden">
 		<button
 			id="nav-toggle"
-			class="flex items-center px-3 py-2 border rounded text-gray-500 border-gray-600 hover:text-white hover:border-white"
+			class="flex items-center px-3 py-2 border rounded border-main-light hover:text-white hover:border-white"
 			on:click={() => navContent.classList.toggle('hidden')}>
-			<svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+			<svg class="fill-main-light h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
 				<path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
 			</svg>
 		</button>
 	</div>
 
 	<div
-		class="w-full flex-grow lg:items-start lg:w-auto hidden lg:block lg:pt-0 bg-red-600"
-		id="nav-content"
+		class="w-full flex-grow lg:items-start lg:w-auto hidden lg:block lg:pt-0 bg-main-dark rounded-xl"
 		bind:this={navContent}>
 		<ul class="list-reset lg:flex justify-start flex-1 items-start">
 			<li class="mr-3">
@@ -50,7 +49,7 @@
 		padding-bottom: 0.5rem;
 		padding-left: 1rem;
 		padding-right: 1rem;
-		color: #4b5563;
+		/* color: #4b5563; */
 		text-decoration: none;
 	}
 
