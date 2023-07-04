@@ -33,6 +33,7 @@
 	}
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <img
 	class="h-auto w-full rounded-lg project"
 	src={projects1.find(p => p.id === id).thumbnail.src}
