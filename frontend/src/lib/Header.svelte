@@ -7,17 +7,17 @@
 <nav
 	class="flex items-center justify-between flex-wrap py-6 px-5 w-full z-10 top-0 fixed"
 	on:mouseleave={() => navContent.classList.add('hidden')}>
-	<div class="flex items-center flex-shrink-0 text-white mr-6">
-		<a class="text-white no-underline hover:text-white hover:no-underline" href="/">
-			<img src={logo} class="h-10 w-auto" alt="logo" width="1217" height="250" />
+	<div class="flex items-center flex-shrink-0 text-white mr-6 bg-main-dark rounded-xl p-2">
+		<a class="text-white no-underline" href="/">
+			<img src={logo} class="h-6 w-auto" alt="logo" width="1217" height="250" />
 			<!-- <span class="text-2xl pl-2"><i class="em em-grinning" /> Brand McBrandface</span> -->
 		</a>
 	</div>
 
-	<div class="block lg:hidden">
+	<div class="block lg:hidden bg-main-dark border rounded-lg border-main-light">
 		<button
 			id="nav-toggle"
-			class="flex items-center px-3 py-2 border rounded border-main-light hover:text-white hover:border-white"
+			class="flex items-center px-3 py-2 hover:text-white hover:border-white"
 			on:click={() => navContent.classList.toggle('hidden')}>
 			<svg class="fill-main-light h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
 				<path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
@@ -51,11 +51,11 @@
 		padding-bottom: 0.5rem;
 		padding-left: 1rem;
 		padding-right: 1rem;
-		/* color: #4b5563; */
 		text-decoration: none;
 	}
 
 	.link:hover {
 		color: #e5e7eb;
+		text-decoration: underline;
 	}
 </style>
