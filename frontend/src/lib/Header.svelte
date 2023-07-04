@@ -36,7 +36,7 @@
 				<a class="link" href="/contact">Contact</a>
 			</li>
 			<li class="mr-3">
-				<a class="link" href="/">cv </a>
+				<a class="link" href="/cv">cv </a>
 			</li>
 		</ul>
 	</div>
