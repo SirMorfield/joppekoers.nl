@@ -1,40 +1,40 @@
 {
-  "name": "cms",
-  "private": true,
-  "version": "0.1.0",
-  "description": "A Strapi application",
-  "scripts": {
-    "develop": "strapi develop",
-    "start": "strapi start",
-    "build": "strapi build",
-    "strapi": "strapi",
-    "lint:check": "DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache .",
-    "lint:fix": "DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache --fix ."
-  },
-  "devDependencies": {
-    "@types/node": "^18.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.59.7",
-    "@typescript-eslint/parser": "^5.59.7",
-    "eslint": "^8.41.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "typescript": "^5.0.4"
-  },
-  "dependencies": {
-    "@strapi/strapi": "4.11.3",
-    "@strapi/plugin-users-permissions": "4.11.3",
-    "@strapi/plugin-i18n": "4.11.3",
-    "better-sqlite3": "8.0.1"
-  },
-  "author": {
-    "name": "A Strapi developer"
-  },
-  "strapi": {
-    "uuid": "c98cfcbe-7bc2-4eea-b848-35f99a9cb6ee"
-  },
-  "engines": {
-    "node": ">=14.19.1 <=18.x.x",
-    "npm": ">=6.0.0"
-  },
-  "license": "MIT"
+	"name": "cms",
+	"private": true,
+	"version": "0.1.0",
+	"description": "A Strapi application",
+	"scripts": {
+		"develop": "strapi develop",
+		"start": "strapi start",
+		"build": "strapi build",
+		"strapi": "strapi",
+		"lint:check": "DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache .",
+		"lint:fix": "DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache --fix ."
+	},
+	"devDependencies": {
+		"@types/node": "^18.0.1",
+		"@typescript-eslint/eslint-plugin": "^5.59.7",
+		"@typescript-eslint/parser": "^5.59.7",
+		"eslint": "^8.41.0",
+		"eslint-config-prettier": "^8.8.0",
+		"eslint-plugin-prettier": "^4.2.1",
+		"typescript": "^5.0.4"
+	},
+	"dependencies": {
+		"@strapi/strapi": "4.11.3",
+		"@strapi/plugin-users-permissions": "4.11.3",
+		"@strapi/plugin-i18n": "4.11.3",
+		"better-sqlite3": "8.0.1"
+	},
+	"author": {
+		"name": "A Strapi developer"
+	},
+	"strapi": {
+		"uuid": "c98cfcbe-7bc2-4eea-b848-35f99a9cb6ee"
+	},
+	"engines": {
+		"node": ">=14.19.1 <=18.x.x",
+		"npm": ">=6.0.0"
+	},
+	"license": "MIT"
 }
