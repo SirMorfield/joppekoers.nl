@@ -32,6 +32,37 @@ RUN cd frontend && npm run build
 
 RUN cd frontend && npm prune --production
 
+# ========== BUILDER CMS ============
+FROM node:16-alpine as builder-cms
+WORKDIR /app
+RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev vips-dev > /dev/null 2>&1
+COPY cms/package.json cms/package-lock.json ./
+RUN npm ci
+
+ENV NODE_ENV=production
+ENV PATH /app/node_modules/.bin:$PATH
+COPY cms .
+RUN npm run build
+
+# =============== CMS ===============
+FROM node:16-alpine as cms
+RUN apk add --no-cache vips-dev
+ENV NODE_ENV=production
+WORKDIR /app
+COPY --from=builder-cms /app .
+RUN mkdir -p .tmp
+# RUN ls -al && exit 1
+# COPY --from=builder-cms /app/package.json /app/package-lock.json ./
+# COPY --from=builder-cms /app/node_modules ./node_modules
+# COPY --from=builder-cms /app/public ./public
+# COPY --from=builder-cms /app/build ./build
+
+# ENV PATH /app/node_modules/.bin:$PATH
+RUN chown -R node:node .
+USER node
+CMD ["npm", "run", "start"]
+
+
 # ======== PROJECT GENERATOR ========
 FROM builder-project-generator as project-generator
 ENV NODE_ENV=production

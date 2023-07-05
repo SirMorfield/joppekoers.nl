@@ -4,3 +4,9 @@
 **/build
 **/dist
 **/tmp
+
+cms/.tmp
+cms/data
+cms/.cache
+cms/backup
+# cms/.env
