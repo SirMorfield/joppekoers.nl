@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - hotfix/*
 
 env:
   REGISTRY: ghcr.io
@@ -46,6 +47,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          target: frontend
+          target: cms
           push: true
           tags: ${{ env.IMAGE_NAME_CMS }}
