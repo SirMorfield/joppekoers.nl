@@ -50,8 +50,6 @@ RUN apk add --no-cache vips-dev
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=builder-cms /app .
-RUN mkdir -p .tmp
-# RUN ls -al && exit 1
 # COPY --from=builder-cms /app/package.json /app/package-lock.json ./
 # COPY --from=builder-cms /app/node_modules ./node_modules
 # COPY --from=builder-cms /app/public ./public

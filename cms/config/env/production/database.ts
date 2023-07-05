@@ -1,10 +1,10 @@
 import path from 'path'
 
-export default ({ env }) => ({
+export default () => ({
 	connection: {
 		client: 'sqlite',
 		connection: {
-			filename: path.join(__dirname, '..', '..', env('DATABASE_FILENAME', '.tmp/data.db')),
+			filename: path.join(__dirname, '../../db.db'),
 		},
 		useNullAsDefault: true,
 	},

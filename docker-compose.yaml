@@ -19,6 +19,9 @@ services:
     build:
       context: .
       target: cms
+    volumes:
+      - ./cms/public/uploads:/app/public/uploads
+      - ./cms/db.db:/app/db.db
     environment:
       - PORT=1337
     ports:
