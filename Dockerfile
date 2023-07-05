@@ -30,7 +30,7 @@ RUN cd frontend && npm run check
 RUN cd frontend && npm run lint:check
 RUN cd frontend && npm run build
 
-RUN cd frontend && npm prune --production
+RUN cd frontend && npm prune --omit=dev
 
 # ========== BUILDER CMS ============
 FROM node:16-alpine as builder-cms
@@ -43,6 +43,7 @@ ENV NODE_ENV=production
 ENV PATH /app/node_modules/.bin:$PATH
 COPY cms .
 RUN npm run build
+RUN npm prune --omit=dev
 
 # =============== CMS ===============
 FROM node:16-alpine as cms
@@ -50,16 +51,7 @@ RUN apk add --no-cache vips-dev
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=builder-cms /app .
-# COPY --from=builder-cms /app/package.json /app/package-lock.json ./
-# COPY --from=builder-cms /app/node_modules ./node_modules
-# COPY --from=builder-cms /app/public ./public
-# COPY --from=builder-cms /app/build ./build
-
-# ENV PATH /app/node_modules/.bin:$PATH
-RUN chown -R node:node .
-USER node
-CMD ["npm", "run", "start"]
-
+CMD npm run start
 
 # ======== PROJECT GENERATOR ========
 FROM builder-project-generator as project-generator
