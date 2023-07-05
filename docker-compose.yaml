@@ -22,6 +22,8 @@ services:
     volumes:
       - ./cms/public/uploads:/app/public/uploads
       - ./cms/db.db:/app/db.db
+    env_file:
+      - cms/.env
     environment:
       - PORT=1337
     ports:

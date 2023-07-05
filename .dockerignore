@@ -8,4 +8,6 @@
 cms/data
 cms/.cache
 cms/backup
-# cms/.env
+cms/.strapi-updater.json
+cms/db.db
+cms/.env
