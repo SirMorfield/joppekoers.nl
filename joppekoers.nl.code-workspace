@@ -7,6 +7,9 @@
 			"path": "projectGenerator"
 		},
 		{
+			"path": "cms"
+		},
+		{
 			"name": "root",
 			"path": "."
 		}
