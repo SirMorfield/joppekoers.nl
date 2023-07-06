@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./cms/public/uploads:/app/public/uploads
-      - ./cms/db.db:/app/db.db
+      - ./cms/db:/app/db
     env_file:
       - cms/.env
     environment:
