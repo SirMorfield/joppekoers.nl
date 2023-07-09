@@ -7,6 +7,7 @@
 		"dev": "strapi develop",
 		"start": "strapi start",
 		"build": "strapi build",
+		"generate-types": "strapi ts:generate-types --debug",
 		"strapi": "strapi",
 		"lint:check": "DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache .",
 		"lint:fix": "DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache --fix ."
