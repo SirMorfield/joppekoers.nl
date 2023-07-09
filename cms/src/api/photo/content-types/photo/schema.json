@@ -12,7 +12,7 @@
 	},
 	"pluginOptions": {},
 	"attributes": {
-		"first": {
+		"all": {
 			"type": "media",
 			"multiple": true,
 			"required": true,
@@ -22,12 +22,12 @@
 			]
 		},
 		"header": {
-			"allowedTypes": [
-				"images"
-			],
 			"type": "media",
 			"multiple": false,
-			"required": true
+			"required": true,
+			"allowedTypes": [
+				"images"
+			]
 		}
 	}
 }

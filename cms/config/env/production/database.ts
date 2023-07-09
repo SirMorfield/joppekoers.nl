@@ -4,7 +4,7 @@ export default () => ({
 	connection: {
 		client: 'sqlite',
 		connection: {
-			filename: path.join(__dirname, '../../db.db'),
+			filename: path.join(__dirname, '../../db/db.db'),
 		},
 		useNullAsDefault: true,
 	},
