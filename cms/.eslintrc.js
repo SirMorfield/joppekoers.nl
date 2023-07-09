@@ -11,7 +11,7 @@ module.exports = {
 		sourceType: 'module',
 	},
 	plugins: ['@typescript-eslint', 'prettier'],
-	ignorePatterns: ['/build'],
+	ignorePatterns: ['/build', '/types/generated/*.d.ts'],
 	rules: {
 		'array-callback-return': 'error',
 		curly: ['error', 'all'],
