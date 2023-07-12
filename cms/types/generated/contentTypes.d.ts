@@ -534,7 +534,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
 }
 
 declare module '@strapi/strapi' {
-	export namespace Shared {
+	export module Shared {
 		export interface ContentTypes {
 			'admin::permission': AdminPermission
 			'admin::user': AdminUser
