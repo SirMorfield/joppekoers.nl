@@ -6,16 +6,25 @@ export type Image = {
 	height: number
 	width: number
 	src: string
-	alt: string // TODO: move this
+}
+export type ImageSource = {
+	alt: string
+	srcset: string
+	formats: Image[]
 }
 export type Project = {
 	id: number
-	header: Image[]
-	content: Image[][]
+	header: ImageSource
+	content: ImageSource[]
 }
 
-function generateFormatQueries(url: string, w: number, h: number, alt: string): Image[] {
-	const types: Image['format'][] = ['heif', 'avif', 'webp']
+// TODO: this is incorrect for multiple image formats
+function imageSetToSrcSet(images: Image[]): string {
+	return images.map(({ src, width }) => `${src} ${width}w`).join(', ')
+}
+
+function generateFormatQueries(url: string, w: number, h: number): Image[] {
+	const types: Image['format'][] = [/*'heif', 'avif',*/ 'webp'] // TODO: enable other types
 	const sizes = [1920, 1024, 480] // TODO: other sizes, and keep original?
 	const images: Image[] = []
 	for (const type of types) {
@@ -27,7 +36,6 @@ function generateFormatQueries(url: string, w: number, h: number, alt: string): 
 				height,
 				width,
 				src: `${url}?format=${type}&resize=${size}x${height}`,
-				alt,
 			}
 			images.push(image)
 		}
@@ -43,22 +51,23 @@ export async function getImages(): Promise<Project[]> {
 	return data.data.map(data => {
 		const header = data.attributes.header.data.attributes
 		const content = data.attributes.all.data
+		const headerQueries = generateFormatQueries(new URL(header.url, domain).toString(), header.width, header.height)
+		const contentQueries = content.map(({ attributes: img }) =>
+			generateFormatQueries(new URL(img.url, domain).toString(), img.width, img.height),
+		)
+
 		return {
 			id: data.id,
-			header: generateFormatQueries(
-				new URL(header.url, domain).toString(),
-				header.width,
-				header.height,
-				header.alternativeText ?? '',
-			),
-			content: content.map(({ attributes: img }) =>
-				generateFormatQueries(
-					new URL(img.url, domain).toString(),
-					img.width,
-					img.height,
-					img.alternativeText ?? '',
-				),
-			),
+			header: {
+				alt: header.alternativeText ?? '',
+				srcset: imageSetToSrcSet(headerQueries),
+				formats: headerQueries,
+			},
+			content: contentQueries.map((queries, i) => ({
+				alt: content[i].attributes.alternativeText ?? '',
+				srcset: imageSetToSrcSet(queries),
+				formats: queries,
+			})),
 		}
 	})
 }
