@@ -25,16 +25,15 @@ function imageSetToSrcSet(images: Image[]): string {
 
 function generateFormatQueries(url: string, w: number, h: number): Image[] {
 	const types: Image['format'][] = ['webp', 'heif', 'avif']
-	const sizes = [1920, 1024, 480] // TODO: other sizes, and keep original?
+	const sizes = [w, 1920, 1024, 480].filter(size => size <= w)
 	const images: Image[] = []
 	for (const type of types) {
 		for (const size of sizes) {
-			const width = Math.min(w, size)
-			const height = Math.min(h, Math.round((size / w) * h))
+			const height = Math.round((size / w) * h)
 			const image: Image = {
 				format: type,
 				height,
-				width,
+				width: size,
 				src: `${url}?format=${type}&resize=${size}x${height}`,
 			}
 			images.push(image)
