@@ -14,6 +14,11 @@ const config = {
 
 	kit: {
 		adapter: adapter({ out: 'build' }),
+		alias: {
+			$root: './src',
+			$lib: './src/lib',
+			'@shared': '../shared',
+		},
 		csrf: {
 			checkOrigin: false,
 		},
