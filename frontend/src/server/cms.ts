@@ -18,13 +18,13 @@ export type Project = {
 	content: ImageSource[]
 }
 
-// TODO: this is incorrect for multiple image formats
+// TODO: this is incorrect for multiple image formats, but since webp is first in the list, it will work on any browser
 function imageSetToSrcSet(images: Image[]): string {
 	return images.map(({ src, width }) => `${src} ${width}w`).join(', ')
 }
 
 function generateFormatQueries(url: string, w: number, h: number): Image[] {
-	const types: Image['format'][] = [/*'heif', 'avif',*/ 'webp'] // TODO: enable other types
+	const types: Image['format'][] = ['webp', 'heif', 'avif']
 	const sizes = [1920, 1024, 480] // TODO: other sizes, and keep original?
 	const images: Image[] = []
 	for (const type of types) {
