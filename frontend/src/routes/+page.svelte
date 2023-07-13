@@ -4,6 +4,9 @@
 	import Root from '$lib/Root.svelte'
 	import ProjectCard from '$lib/ProjectCard.svelte'
 	import Note from '$lib/Note.svelte'
+	import type { PageData } from './$types'
+
+	export let data: PageData
 </script>
 
 <Root>
@@ -15,30 +18,9 @@
 			See the projects below to see what I'm capable of. You can contact me form the
 			<a href="/contact" class="internalLink">/contact</a> page.
 		</Note>
-		<ProjectCard id="wolmolen" />
-		<ProjectCard id="hammer" />
-		<ProjectCard id="arcade-machine" />
-		<ProjectCard id="small-box" />
-		<ProjectCard id="matrix" />
-		<ProjectCard id="audio-cart-storage" />
-		<ProjectCard id="audio-cart-storage-2" />
-		<ProjectCard id="rattan-doors" />
-		<ProjectCard id="wooden-storage-sofa" />
-		<ProjectCard id="table-legs" />
-		<ProjectCard id="speakers" />
-		<ProjectCard id="door-frame" />
-		<ProjectCard id="sword" />
-		<ProjectCard id="sword2" />
-		<ProjectCard id="rainbarrel-stand" />
-		<ProjectCard id="table" />
-		<ProjectCard id="big-hammer" />
-		<ProjectCard id="knife" />
-		<ProjectCard id="jacob-s-ladder" />
-		<ProjectCard id="boom-mic-stand" />
-		<ProjectCard id="cork-screw" />
-		<ProjectCard id="electric-car" />
-		<ProjectCard id="greenhouse" />
-		<ProjectCard id="lab-power-supply" />
-		<ProjectCard id="rpi-remote-backup" />
+
+		{#each data.projects as project}
+			<ProjectCard {project} />
+		{/each}
 	</ImageGallery>
 </Root>
