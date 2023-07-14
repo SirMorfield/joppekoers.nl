@@ -20,7 +20,7 @@ services:
       context: .
       target: cms
     volumes:
-      - ./cms/public/uploads:/app/public/uploads
+      - ./cms/public:/app/public
       - ./cms/db:/app/db
     env_file:
       - cms/.env

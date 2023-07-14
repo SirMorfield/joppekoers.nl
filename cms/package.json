@@ -8,7 +8,7 @@
 		"start": "strapi start",
 		"build": "strapi build",
 		"generate-types": "strapi ts:generate-types --debug",
-		"strapi": "strapi",
+		"transfer-to-prod": "strapi transfer --to https://cms.joppekoers.nl/admin --to-token",
 		"lint:check": "DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache .",
 		"lint:fix": "DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache --fix ."
 	},
