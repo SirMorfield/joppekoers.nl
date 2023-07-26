@@ -33,7 +33,7 @@ RUN cd frontend && npm run build
 RUN cd frontend && npm prune --omit=dev
 
 # ========== BUILDER CMS ============
-FROM node:16-alpine as builder-cms
+FROM node:18-alpine as builder-cms
 WORKDIR /app
 RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev vips-dev
 COPY cms/package.json cms/package-lock.json ./
@@ -46,7 +46,7 @@ RUN npm run build
 RUN npm prune --omit=dev
 
 # =============== CMS ===============
-FROM node:16-alpine as cms
+FROM node:18-alpine as cms
 RUN apk add --no-cache vips-dev
 ENV NODE_ENV=production
 WORKDIR /app
