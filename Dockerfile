@@ -35,7 +35,7 @@ RUN cd frontend && npm prune --omit=dev
 # ========== BUILDER CMS ============
 FROM node:16-alpine as builder-cms
 WORKDIR /app
-RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev vips-dev > /dev/null 2>&1
+RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev vips-dev
 COPY cms/package.json cms/package-lock.json ./
 RUN npm ci
 
