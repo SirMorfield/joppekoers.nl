@@ -44,10 +44,28 @@ function generateFormatQueries(url: string, w: number, h: number): Image[] {
 	return images
 }
 
-export async function getImages(): Promise<Project[]> {
-	const resp = await fetch(new URL(`/api/photos?populate=*`, env.cmsUrl))
-	const data = (await resp.json()) as typeof example
+async function fetch2<T>(input: URL | RequestInfo, init?: RequestInit): Promise<Error | T> {
+	const resp = await fetch(input, init).catch(() => undefined)
+	if (!resp) {
+		return new Error('Failed to fetch')
+	}
+	if (!resp.ok) {
+		return new Error(`Failed to fetch ${resp.url}: ${resp.statusText}`)
+	}
 
+	try {
+		return resp.json()
+	} catch (e) {
+		return new Error('Failed to JSON parse response')
+	}
+}
+
+export async function getImages(): Promise<Project[]> {
+	const data = await fetch2<typeof example>(new URL(`/api/photos?populate=*`, env.cmsUrl))
+	if (data instanceof Error) {
+		console.error(data)
+		return []
+	}
 	return data.data.map(data => {
 		const header = data.attributes.header.data.attributes
 		const content = data.attributes.all.data
