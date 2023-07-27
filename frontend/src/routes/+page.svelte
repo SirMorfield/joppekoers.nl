@@ -15,7 +15,7 @@
 			mix of programming related stuff. Since I can remember I've always wanted to make stuff. To accomplish this
 			I acquired a number of skills of which you can see the result below. Do you want me to make you something?
 			See the projects below to see what I'm capable of. You can contact me form the
-			<a href="/contact" class="internalLink">/contact</a> page.
+			<a href="/contact" class="hover:underline">/contact</a> page.
 		</Note>
 
 		{#each data.projects as project}
