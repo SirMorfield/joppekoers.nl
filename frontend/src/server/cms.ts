@@ -88,12 +88,12 @@ export async function getImages(): Promise<Project[]> {
 		return {
 			id: data.id,
 			header: {
-				alt: header.alternativeText ?? '',
+				alt: header.alternativeText ?? header.name,
 				srcset: imageSetToSrcSet(headerQueries),
 				formats: headerQueries,
 			},
 			content: contentQueries.map((queries, i) => ({
-				alt: content[i].attributes.alternativeText ?? '',
+				alt: content[i].attributes.alternativeText ?? header.name,
 				srcset: imageSetToSrcSet(queries),
 				formats: queries,
 			})),
