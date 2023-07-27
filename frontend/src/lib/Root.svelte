@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { dev } from '$app/environment'
 	import Header from '$lib/Header.svelte'
-	// const title = process?.env['NODE_ENV'] === 'development' ? 'DEV' : 'Joppe Koers.nl'
+	const title = dev ? 'DEV Joppe Koers.nl' : 'Joppe Koers.nl'
 </script>
 
 <svelte:head>
-	<title>Joppe Koers.nl</title>
+	<title>{title}</title>
 	<meta name="description" content="This is a webside build, hosted and maintained by Joppe Koers" />
 	<meta name="keywords" content="Joppe, Koers, J.E. Koers, Portfolio, joppe@joppekoers.nl, 73820857" />
 	<meta name="author" content="Joppe Koers" />
