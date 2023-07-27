@@ -69,6 +69,9 @@ export async function getImages(): Promise<Project[]> {
 		console.error(data)
 		return []
 	}
+	data.data.sort((a, b) =>
+		a.attributes.header.data.attributes.name < b.attributes.header.data.attributes.name ? -1 : 1,
+	)
 	return data.data.map(data => {
 		const header = data.attributes.header.data.attributes
 		const content = data.attributes.all.data
