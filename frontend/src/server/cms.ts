@@ -46,9 +46,11 @@ function generateFormatQueries(url: string, w: number, h: number): Image[] {
 }
 
 async function fetch2<T>(input: URL | RequestInfo, init?: RequestInit): Promise<Error | T> {
-	const resp = await fetch(input, init).catch(() => undefined)
-	if (!resp) {
-		return new Error('Failed to fetch')
+	let resp
+	try {
+		resp = await fetch(input, init)
+	} catch (e) {
+		return new Error(e)
 	}
 	if (!resp.ok) {
 		return new Error(`Failed to fetch ${resp.url}: ${resp.statusText}`)
