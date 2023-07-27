@@ -32,8 +32,8 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="h-auto w-full rounded-lg" on:keydown={() => null} on:click={() => openPhotoSwhipe()}>
-	<Img src={project.header.formats} alt={project.header.alt} />
+<div on:keydown={() => null} on:click={() => openPhotoSwhipe()}>
+	<Img class="h-auto w-full rounded-lg project" src={project.header.formats} alt={project.header.alt} />
 </div>
 
 <style>
