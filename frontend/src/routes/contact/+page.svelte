@@ -15,8 +15,8 @@
 </script>
 
 <Root>
-	<div id="root">
-		<table id="contact-table" class="shadow">
+	<div id="root" class="shadow">
+		<table id="contact-table">
 			{#each infos as info}
 				<tr>
 					<td class="item"><b>{info.label}</b></td>
@@ -43,11 +43,15 @@
 	.shadow:hover {
 		box-shadow: 15px 15px 22px rgba(0, 0, 0, 0.4);
 	}
+
 	#root {
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		height: 100%;
+		padding: 30px;
+		background-color: rgb(255, 255, 252);
+		border-radius: 10px;
 		/* min-height: inherit; */
 		/* background-color: red; */
 	}
@@ -57,16 +61,10 @@
 	}
 
 	#contact-table {
-		padding: 100px;
-		border-radius: 10px;
 		color: rgb(14, 10, 10);
 		padding: 40px;
-		background-color: rgb(255, 255, 252);
 	}
 
-	#contact-table:hover {
-		box-shadow: 15px 15px 22px rgba(0, 0, 0, 0.25);
-	}
 	.link {
 		text-decoration: underline;
 		color: black;
