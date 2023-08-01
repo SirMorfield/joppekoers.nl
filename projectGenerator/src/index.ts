@@ -2,6 +2,7 @@ import fs from 'fs-extra'
 import * as path from 'path'
 import { default as sanitizeFilename } from 'sanitize-filename'
 import { Path, exec, imageInfo, Job, Image, Project, projectToProjectExport, imageInfoString, ImageInfo } from './util'
+import chalk from 'chalk'
 
 function sanatize(path: string): string {
 	return path
@@ -32,26 +33,42 @@ function printImageDiff(before: ImageInfo, after: ImageInfo) {
 	console.log(`Times smaller: ${optimized.toFixed(2)}x ${''.padStart(Math.min(80, optimized), '#')}\n`)
 }
 
+function console2(level: 'warn' | 'err', error: string) {
+	switch (level) {
+		case 'warn':
+			console.log(chalk.yellow(error))
+			break
+		case 'err':
+			console.log(chalk.red(error))
+			break
+	}
+}
+
 async function preTransform(input: Path, output: Path, width?: number): Promise<{ info: ImageInfo; shouldDelete: boolean }> {
 	let info = await imageInfo(input)
 
 	const transformations: string[] = []
-	if (width) {
-		transformations.push(`-resize ${width}X`)
-	}
 
 	switch (info.rotation) {
+		case 180:
+			transformations.push('-rotate 180')
+			break
 		case 90:
-			console.log(`Fixing incorrect EXIF data in ${input}`)
 			transformations.push('-rotate 90')
 			break
 		case 0:
 			break
 		case 'error':
-			// TODO: handle error
+			console2('err', `Error while reading EXIF data in ${input}`)
+
 			break
 	}
-
+	if (transformations.length > 0) {
+		console.log(`Fixing incorrect EXIF with transformations "${transformations.join(' ')}" data in ${input}`)
+	}
+	if (width) {
+		transformations.push(`-resize ${width}X`)
+	}
 	let tmpPath: Path | undefined
 	if (transformations.length > 0) {
 		const inputFileName = path.basename(input)
@@ -59,9 +76,7 @@ async function preTransform(input: Path, output: Path, width?: number): Promise<
 
 		tmpPath = getTmpPath(newPath)
 		await exec(`convert ${transformations.join(' ')} '${input}' '${tmpPath}'`).catch(err => {
-			console.error('=============================')
-			console.error(`Error while transforming ${input}`, err)
-			console.error('=============================')
+			console2('err', `Error while transforming ${input} ${err}`)
 		})
 		info = await imageInfo(tmpPath)
 	}
@@ -136,7 +151,7 @@ async function getJobs(inputsPath: Path): Promise<Job[]> {
 			.filter(name => {
 				const isImage = !!name.match(/\.jpg$/)
 				if (!isImage) {
-					console.log(`WARNING: ignoring non-image file ${name}`)
+					console2('warn', `ignoring non-image file ${name}`)
 				}
 				return isImage
 			})
