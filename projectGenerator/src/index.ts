@@ -19,8 +19,6 @@ const outputPath: Path = '/output'
 fs.mkdirSync(outputPath, { recursive: true })
 
 const exportPath = '/export'
-const file = fs.readFileSync(exportPath, 'utf8').toString()
-// const inputPath: Path = path.join(__dirname, '../public/img/projectImg/')
 
 function getTmpPath(pathIn: Path): Path {
 	const parse = path.parse(pathIn)
@@ -60,7 +58,11 @@ async function preTransform(input: Path, output: Path, width?: number): Promise<
 		const newPath = path.join(output, inputFileName)
 
 		tmpPath = getTmpPath(newPath)
-		await exec(`convert ${transformations.join(' ')} '${input}' '${tmpPath}'`)
+		await exec(`convert ${transformations.join(' ')} '${input}' '${tmpPath}'`).catch(err => {
+			console.error('=============================')
+			console.error(`Error while transforming ${input}`, err)
+			console.error('=============================')
+		})
 		info = await imageInfo(tmpPath)
 	}
 
@@ -107,7 +109,7 @@ async function runJob(job: Job): Promise<Project> {
 		throw new Error('No images found')
 	}
 
-	const thumbnail = await processImage(job.imgs[0] as string, job.output, 'thumbnail', 500)
+	// const thumbnail = await processImage(job.imgs[0] as string, job.output, 'thumbnail', 500)
 
 	const images: Promise<Image>[] = job.imgs.map((image, i) => {
 		const name = i.toString().padStart(2, '0')
@@ -116,7 +118,7 @@ async function runJob(job: Job): Promise<Project> {
 
 	const project: Project = {
 		id: job.id,
-		thumbnail,
+		thumbnail: (await images[0]) as Image,
 		images: await Promise.all(images),
 	}
 	return project
@@ -158,9 +160,11 @@ void (async () => {
 		console.log(`Project ${job.id}`)
 		projects.push(await runJob(job))
 	}
-	// const projects: Project[] = []
-	const newFile = file.replace(/let projects1: ProjectExport\[\] = .*/, `let projects1: ProjectExport[] = ${JSON.stringify(projects.map(projectToProjectExport))}`)
-	fs.writeFileSync(exportPath, newFile)
 
+	if (fs.existsSync(exportPath)) {
+		const file = fs.readFileSync(exportPath, 'utf8').toString()
+		const newFile = file.replace(/let projects1: ProjectExport\[\] = .*/, `let projects1: ProjectExport[] = ${JSON.stringify(projects.map(projectToProjectExport))}`)
+		fs.writeFileSync(exportPath, newFile)
+	}
 	console.timeEnd('Completed in')
 })()
