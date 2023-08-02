@@ -132,8 +132,8 @@ async function createMiddleware(req: Request, res: Response) {
 			}
 
 			const stream = fs.createReadStream(tmpFilePath)
-			logReq(true, req.path, req.query)
 			stream.pipe(res)
+			logReq(true, req.path, req.query)
 			return
 		} catch (error) {
 			console.error(new Error(error as string))
@@ -156,14 +156,19 @@ async function createMiddleware(req: Request, res: Response) {
 		}
 
 		const maxAge = src.maxAge ?? env.maxAge
-
-		if (maxAge) {
-			res.set('Cache-Control', `max-age=${maxAge}, public, s-maxage=${maxAge}`)
-		}
+		res.set('Cache-Control', `max-age=${maxAge}, public, s-maxage=${maxAge}`)
 
 		// Get converted image
 		const { data, format } = await img.data()
 		const etagV = etag(data)
+		if (etagV && req.headers['if-none-match'] === etagV) {
+			res.sendStatus(304)
+			return
+		}
+		res.set('Content-Type', `image/${format}`)
+		res.set('ETag', etagV)
+		res.send(data)
+		logReq(false, req.path, req.query)
 
 		void Promise.all([
 			fs.promises.writeFile(tmpTypePath, `image/${format}`, 'utf-8'),
@@ -172,18 +177,6 @@ async function createMiddleware(req: Request, res: Response) {
 		]).catch(error => {
 			console.error(new Error(error))
 		})
-
-		res.set('ETag', etagV)
-		if (etagV && req.headers['if-none-match'] === etagV) {
-			res.sendStatus(304)
-			return
-		}
-
-		if (format) {
-			res.set('Content-Type', `image/${format}`)
-		}
-		logReq(false, req.path, req.query)
-		res.send(data)
 	} catch (error) {
 		console.log('err', new Error(error as string))
 		res.sendStatus(500)
