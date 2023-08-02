@@ -35,6 +35,7 @@ RUN cd frontend && npm prune --omit=dev
 # ========== BUILDER CMS ============
 FROM node:18-alpine as builder-cms
 WORKDIR /app/cmsj
+RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev vips-dev
 COPY cmsj/package.json cmsj/package-lock.json ./
 RUN npm ci
 
@@ -44,12 +45,15 @@ RUN npm run build
 RUN npm prune --omit=dev
 
 # =============== CMS ===============
-FROM gcr.io/distroless/nodejs:18 as cms
+FROM node:18-alpine as cms
+RUN apk --no-cache add libpng librsvg libgsf giflib libjpeg-turbo musl vips-dev fftw-dev build-base gcc autoconf automake zlib-dev libpng-dev
+ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=builder-cms /app/cmsj/build ./build
 COPY --from=builder-cms /app/cmsj/node_modules ./node_modules
 COPY --from=builder-cms /app/cmsj/package.json ./package.json
-CMD [ "./build/app.js" ]
+CMD node ./build/app.js
+
 
 # ======== PROJECT GENERATOR ========
 FROM builder-project-generator as project-generator
