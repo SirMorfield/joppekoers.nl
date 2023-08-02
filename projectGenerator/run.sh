@@ -15,3 +15,6 @@ echo 'Input : ' $(realpath "$INPUT")
 echo 'Output: ' $(realpath "$OUTPUT")
 
 docker run -it --rm --volume "$INPUT:/input:ro" --volume "$OUTPUT:/output" $NAME
+
+echo 'Input : ' $(realpath "$INPUT")
+echo 'Output: ' $(realpath "$OUTPUT")
