@@ -6,9 +6,18 @@ import { hash } from 'ohash'
 import path from 'path'
 import { env } from './env'
 import exifr from 'exifr'
+import { z } from 'zod'
 
 async function fsExists(path: string): Promise<boolean> {
 	return !!(await fs.promises.stat(path).catch(() => false))
+}
+
+function safeParseJSON<T>(data: string): T | Error {
+	try {
+		return JSON.parse(data)
+	} catch (error) {
+		return error as Error
+	}
 }
 
 type Project = {
@@ -34,6 +43,24 @@ function logReq(cache: boolean, path: string, modifiers: unknown) {
 	console.log(new Date().toISOString(), 'cache', cache ? 'HIT ' : 'MISS', path, modifiers)
 }
 
+const Metadata = z.strictObject({
+	name: z.string().nonempty(),
+})
+type Metadata = z.infer<typeof Metadata>
+
+async function readMetadata(path: string): Promise<Metadata | Error> {
+	const data = await fs.promises.readFile(path, 'utf-8').catch(error => error)
+	if (data instanceof Error) {
+		return data
+	}
+	const json = safeParseJSON<Metadata>(data)
+	if (json instanceof Error) {
+		return json
+	}
+	const parse = await Metadata.safeParseAsync(json)
+	return parse.success ? parse.data : parse.error
+}
+
 async function generateIndex(): Promise<Project[]> {
 	const folders = await fs.promises.readdir(opt.dir)
 	return Promise.all(
@@ -47,15 +74,23 @@ async function generateIndex(): Promise<Project[]> {
 			.sort((a: string, b: string) => (a > b ? 1 : -1))
 			.map(async (file: string) => {
 				const paths = await fs.promises.readdir(path.join(opt.dir, file))
+				const imagePaths = paths.filter(file => file === 'metadata.json')
+
 				const images = await Promise.all(
-					paths.map(async (image: string) => ({
+					imagePaths.map(async (image: string) => ({
 						url: new URL(`/projects/${file}/${image}`, env.cmsUrl).toString(),
 						...(await exif(path.join(opt.dir, file, image))),
 					})),
 				)
+				const metadataPath = paths.find(file => file === 'metadata.json')
+				const metadata = metadataPath ? await readMetadata(path.join(opt.dir, file, metadataPath)) : {}
+				if (metadata instanceof Error) {
+					console.error('project', file, 'has incorrect metadata:', metadata.message)
+				}
 				return {
 					name: file,
 					images,
+					...(metadata instanceof Error ? {} : metadata),
 				}
 			}),
 	)
