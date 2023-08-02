@@ -1,8 +1,10 @@
-import type { PageServerLoad } from './$types'
-import { getImages as getProjects } from '$root/server/cms'
+import { getProjects } from '$root/server/cms'
 
-export const load: PageServerLoad = async () => {
+export const load = async () => {
+	console.time('Got projects in')
+	const projects = await getProjects()
+	console.timeEnd('Got projects in') // TODO: remove
 	return {
-		projects: await getProjects(),
+		projects,
 	}
 }

@@ -63,7 +63,7 @@ async function fetch2<T>(input: URL | RequestInfo, init?: RequestInit): Promise<
 	}
 }
 
-export async function getImages(): Promise<Project[]> {
+export async function getProjects(): Promise<Project[]> {
 	const data = await fetch2<typeof example>(new URL(`/projects-list`, env.cmsUrl))
 	if (data instanceof Error) {
 		console.error(data)
