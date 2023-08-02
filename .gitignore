@@ -1,5 +1,6 @@
 *.log
 .DS_Store*
+._*
 node_modules/
 *.pem
 .vscode/

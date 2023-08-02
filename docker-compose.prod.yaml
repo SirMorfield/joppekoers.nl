@@ -9,13 +9,27 @@ services:
     ports:
       - 8080:8080
 
+  cms:
+    container_name: cms
+    image: ghcr.io/sirmorfield/joppekoers.nl/cms:latest
+    restart: unless-stopped
+    volumes:
+      - ./cms/public/uploads:/app/public/uploads
+      - ./cms/db:/app/db
+    env_file:
+      - cms/.env
+    environment:
+      - PORT=133
+    ports:
+      - 1377:1377
+
   watchtower:
     container_name: watchtower
     image: containrrr/watchtower
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: frontend
+    command: frontend cms
     environment:
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_INCLUDE_RESTARTING=true

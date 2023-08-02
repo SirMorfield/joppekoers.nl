@@ -7,6 +7,12 @@
 			"path": "projectGenerator"
 		},
 		{
+			"path": "cms"
+		},
+		{
+			"path": "cmsj"
+		},
+		{
 			"name": "root",
 			"path": "."
 		}

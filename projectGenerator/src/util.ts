@@ -52,7 +52,7 @@ export interface ImageInfo {
 	height: number
 	size: number
 	path: string
-	rotation: 0 | 90 | 'error'
+	rotation: 0 | 90 | 180 | 'error'
 }
 
 export async function imageInfo(path: string): Promise<ImageInfo> {
@@ -81,6 +81,8 @@ export async function imageInfo(path: string): Promise<ImageInfo> {
 		result.rotation = 0
 	} else if (stdout.includes('90 CW')) {
 		result.rotation = 90
+	} else if (stdout.includes('Rotate 180')) {
+		result.rotation = 180
 	} else {
 		result.rotation = 'error'
 	}

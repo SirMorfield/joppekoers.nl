@@ -10,7 +10,6 @@
 	<div class="flex items-center flex-shrink-0 text-white mr-6 bg-main-dark rounded-xl p-2">
 		<a class="text-white no-underline" href="/">
 			<img src={logo} class="h-6 w-auto" alt="logo" width="1217" height="250" />
-			<!-- <span class="text-2xl pl-2"><i class="em em-grinning" /> Brand McBrandface</span> -->
 		</a>
 	</div>
 

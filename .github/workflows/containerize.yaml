@@ -4,18 +4,16 @@ on:
   push:
     branches:
       - main
+      - hotfix/*
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ghcr.io/${{ github.repository }}/frontend
+  IMAGE_NAME_FRONTEND: ghcr.io/${{ github.repository }}/frontend
+  IMAGE_NAME_CMS: ghcr.io/${{ github.repository }}/cms
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: ./frontend
 
     steps:
       - name: Checkout code
@@ -30,13 +28,25 @@ jobs:
 
       # can be removed if the user is the owner of the repository and the repository name are lowercase
       - name: Set lower case owner name
-        run: echo "IMAGE_NAME=${IMAGE_NAME,,}" >>${GITHUB_ENV}
+        run: |
+          echo "IMAGE_NAME_FRONTEND=${IMAGE_NAME_FRONTEND,,}" >>${GITHUB_ENV}
+          echo "IMAGE_NAME_CMS=${IMAGE_NAME_CMS,,}" >>${GITHUB_ENV}
         env:
-          IMAGE_NAME: '${{ env.IMAGE_NAME }}'
+          IMAGE_NAME_FRONTEND: "${{ env.IMAGE_NAME_FRONTEND }}"
+          IMAGE_NAME_CMS: "${{ env.IMAGE_NAME_CMS }}"
 
-      - name: Build and push
+      - name: Build and push frontend
         uses: docker/build-push-action@v4
         with:
           context: .
+          target: frontend
           push: true
-          tags: ${{ env.IMAGE_NAME }}
+          tags: ${{ env.IMAGE_NAME_FRONTEND }}
+
+      - name: Build and push cms
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          target: cms
+          push: true
+          tags: ${{ env.IMAGE_NAME_CMS }}

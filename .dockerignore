@@ -4,3 +4,10 @@
 **/build
 **/dist
 **/tmp
+
+cms/data
+cms/.cache
+cms/backup
+cms/.strapi-updater.json
+cms/db.db
+cms/.env

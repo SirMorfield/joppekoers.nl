@@ -7,11 +7,11 @@ NAME="project-generator"
 docker build --target $NAME -t $NAME  ..
 
 INPUT=$PWD/../../projects/projects
-OUTPUT=$PWD/../frontend/static/img/projectImg
-EXPORT=$PWD/../frontend/src/lib/ProjectCard.svelte
+OUTPUT=$PWD/../../projects/generated
+mkdir -p "$OUTPUT"
+mkdir -p "$INPUT"
 
-echo "Input: $INPUT"
-echo "Output: $OUTPUT"
-echo "Export: $EXPORT"
+echo 'Input : ' $(realpath "$INPUT")
+echo 'Output: ' $(realpath "$OUTPUT")
 
-docker run -it --rm --volume "$INPUT:/input:ro" --volume "$OUTPUT:/output" --volume "$EXPORT:/export" $NAME
+docker run -it --rm --volume "$INPUT:/input:ro" --volume "$OUTPUT:/output" $NAME
