@@ -6,10 +6,12 @@ cd "${0%/*}"
 NAME="project-generator"
 docker build --target $NAME -t $NAME  ..
 
-INPUT=$(realpath "$PWD/../../projects/projects")
-OUTPUT=$(realpath "$PWD/../projects/generated")
+INPUT=$PWD/../../projects/projects
+OUTPUT=$PWD/../projects/generated
+mkdir -p "$OUTPUT"
+mkdir -p "$INPUT"
 
-echo "Input: $INPUT"
-echo "Output: $OUTPUT"
+echo 'Input : ' $(realpath "$INPUT")
+echo 'Output: ' $(realpath "$OUTPUT")
 
 docker run -it --rm --volume "$INPUT:/input:ro" --volume "$OUTPUT:/output" $NAME
