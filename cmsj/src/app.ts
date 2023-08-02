@@ -29,11 +29,6 @@ type Project = {
 	}[]
 }
 
-const opt = {
-	dir: `${__dirname}/../projects`,
-	maxAge: 60 * 60 * 24 * 100,
-} as const
-
 async function exif(path: string): Promise<{ width: number; height: number }> {
 	const d = await exifr.parse(path).catch(() => undefined)
 	return { width: d?.ImageWidth ?? 0, height: d?.ImageHeight ?? 0 }
@@ -62,28 +57,28 @@ async function readMetadata(path: string): Promise<Metadata | Error> {
 }
 
 async function generateIndex(): Promise<Project[]> {
-	const folders = await fs.promises.readdir(opt.dir)
-	return Promise.all(
+	const folders = await fs.promises.readdir(env.projects)
+	const projects = await Promise.all(
 		folders
 			.filter((file: string) => {
 				if (file.startsWith('.')) {
 					return false
 				}
-				return fs.statSync(path.join(opt.dir, file)).isDirectory()
+				return fs.statSync(path.join(env.projects, file)).isDirectory()
 			})
 			.sort((a: string, b: string) => (a > b ? 1 : -1))
 			.map(async (file: string) => {
-				const paths = await fs.promises.readdir(path.join(opt.dir, file))
+				const paths = await fs.promises.readdir(path.join(env.projects, file))
 				const imagePaths = paths.filter(file => file === 'metadata.json')
 
 				const images = await Promise.all(
 					imagePaths.map(async (image: string) => ({
 						url: new URL(`/projects/${file}/${image}`, env.cmsUrl).toString(),
-						...(await exif(path.join(opt.dir, file, image))),
+						...(await exif(path.join(env.projects, file, image))),
 					})),
 				)
 				const metadataPath = paths.find(file => file === 'metadata.json')
-				const metadata = metadataPath ? await readMetadata(path.join(opt.dir, file, metadataPath)) : {}
+				const metadata = metadataPath ? await readMetadata(path.join(env.projects, file, metadataPath)) : {}
 				if (metadata instanceof Error) {
 					console.error('project', file, 'has incorrect metadata:', metadata.message)
 				}
@@ -94,13 +89,17 @@ async function generateIndex(): Promise<Project[]> {
 				}
 			}),
 	)
+	return projects.filter(project => project.images.length > 0)
 }
 
 if (!fs.existsSync(env.cacheDir)) {
 	fs.mkdirSync(env.cacheDir, { recursive: true })
 }
 
-const ipx = createIPX(opt)
+const ipx = createIPX({
+	dir: env.projects,
+	maxAge: env.maxAge,
+})
 
 // inspired by https://github.com/strapi-community/strapi-plugin-local-image-sharp
 async function createMiddleware(req: Request, res: Response) {
@@ -200,9 +199,9 @@ app.get('/projects-list', async (_, res) => {
 	res.json(projects)
 })
 
-app.use('/projects', express.static(opt.dir))
+app.use('/projects', express.static(env.projects))
 
 app.listen(env.port, () => {
 	console.log(`http://localhost:${env.port}`)
-	console.log(opt.dir)
+	console.log(env.projects)
 })
