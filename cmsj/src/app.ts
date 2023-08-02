@@ -6,6 +6,10 @@ import { hash } from 'ohash'
 import path from 'path'
 import { env } from './env'
 
+async function fsExists(path: string): Promise<boolean> {
+	return !!(await fs.promises.stat(path).catch(() => false))
+}
+
 type Project = {
 	name: string
 	images: string[]
@@ -49,7 +53,7 @@ async function createMiddleware(req: Request, res: Response) {
 	const tmpTypePath = path.join(env.cacheDir, `${objectHash}.mime`)
 	const tmpEtagPath = path.join(env.cacheDir, `${objectHash}.etag`)
 
-	if (fs.existsSync(tmpFilePath)) {
+	if (await fsExists(tmpFilePath)) {
 		try {
 			const [type, etag] = await Promise.all([
 				fs.promises.readFile(tmpTypePath, 'utf-8'),
