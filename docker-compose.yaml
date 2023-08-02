@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 services:
   frontend:
     container_name: frontend
@@ -7,7 +7,6 @@ services:
       context: .
       target: frontend
     volumes:
-      - ./frontend/static/img/projectImg:/app/build/client/img/projectImg
       - ./frontend/static/uploads:/app/frontend/static/uploads
     environment:
       - PORT=8080
@@ -20,10 +19,7 @@ services:
       context: .
       target: cms
     volumes:
-      - ./cms/public:/app/public
-      - ./cms/db:/app/db
-    env_file:
-      - cms/.env
+      - ./cmsj/projects:/app/projects
     environment:
       - PORT=1337
     ports:
