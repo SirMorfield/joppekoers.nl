@@ -2,7 +2,7 @@ import { dev } from '$app/environment'
 import { z } from 'zod'
 
 export const env = {
-	cmsUrl: dev ? 'http://127.0.0.1:1337' : 'https://cms.joppekoers.nl',
+	cmsUrl: dev ? 'http://127.0.0.1:8080' : 'https://cms.joppekoers.nl',
 	// cmsUrl: 'https://cms.joppekoers.nl', // temporary override
 } as const satisfies Env
 
