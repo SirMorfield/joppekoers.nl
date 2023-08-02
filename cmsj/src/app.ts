@@ -69,7 +69,7 @@ async function generateIndex(): Promise<Project[]> {
 			.sort((a: string, b: string) => (a > b ? 1 : -1))
 			.map(async (file: string) => {
 				const paths = await fs.promises.readdir(path.join(env.projects, file))
-				const imagePaths = paths.filter(file => file === 'metadata.json')
+				const imagePaths = paths.filter(file => file !== 'metadata.json')
 
 				const images = await Promise.all(
 					imagePaths.map(async (image: string) => ({
