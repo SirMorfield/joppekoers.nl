@@ -208,6 +208,7 @@ async function createMiddleware(req: Request, res: Response) {
 }
 
 const app = express()
+app.get('/', (_, res) => res.send('CMS is running'))
 app.use('/projects', createMiddleware)
 app.get('/projects-list', async (_, res) => {
 	const projects = await generateIndex()
@@ -217,6 +218,6 @@ app.get('/projects-list', async (_, res) => {
 app.use('/projects', express.static(env.projects))
 
 app.listen(env.port, () => {
-	console.log(`http://localhost:${env.port}`)
-	console.log(env.projects)
+	console.log(`listening on: http://localhost:${env.port}`)
+	console.log(`reading projects from: ${path.normalize(env.projects)}`)
 })
