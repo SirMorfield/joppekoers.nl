@@ -5,8 +5,27 @@ import { createIPX } from 'ipx'
 import { hash } from 'ohash'
 import path from 'path'
 import { env } from './env'
-import exifr from 'exifr'
+import getImageSize from 'image-size'
 import { z } from 'zod'
+
+function sizeOf(path: string): Promise<{ height: number; width: number; type: string } | Error> {
+	return new Promise(resolve => {
+		getImageSize(path, (err, dimensions) => {
+			if (err) {
+				return resolve(err)
+			}
+			if (!dimensions || !dimensions.width || !dimensions.height || !dimensions.type) {
+				return resolve(new Error(`No dimensions or type: ${JSON.stringify(dimensions)}`))
+			}
+
+			resolve({
+				width: dimensions.width,
+				height: dimensions.height,
+				type: dimensions.type,
+			})
+		})
+	})
+}
 
 async function fsExists(path: string): Promise<boolean> {
 	return !!(await fs.promises.stat(path).catch(() => false))
@@ -29,9 +48,12 @@ type Project = {
 	}[]
 }
 
-async function exif(path: string): Promise<{ width: number; height: number }> {
-	const d = await exifr.parse(path).catch(() => undefined)
-	return { width: d?.ImageWidth ?? 0, height: d?.ImageHeight ?? 0 }
+async function getImageMetaData(path: string): Promise<{ width: number; height: number }> {
+	const size = await sizeOf(path)
+	if (size instanceof Error) {
+		return { width: 0, height: 0 }
+	}
+	return { width: size.width, height: size.height }
 }
 
 function logReq(cache: boolean, path: string, modifiers: unknown) {
@@ -74,7 +96,7 @@ async function generateIndex(): Promise<Project[]> {
 				const images = await Promise.all(
 					imagePaths.map(async (image: string) => ({
 						url: new URL(`/projects/${file}/${image}`, env.cmsUrl).toString(),
-						...(await exif(path.join(env.projects, file, image))),
+						...(await getImageMetaData(path.join(env.projects, file, image))),
 					})),
 				)
 				const metadataPath = paths.find(file => file === 'metadata.json')
