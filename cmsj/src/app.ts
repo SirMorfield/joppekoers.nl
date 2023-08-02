@@ -5,6 +5,7 @@ import { createIPX } from 'ipx'
 import { hash } from 'ohash'
 import path from 'path'
 import { env } from './env'
+import exifr from 'exifr'
 
 async function fsExists(path: string): Promise<boolean> {
 	return !!(await fs.promises.stat(path).catch(() => false))
@@ -12,7 +13,11 @@ async function fsExists(path: string): Promise<boolean> {
 
 type Project = {
 	name: string
-	images: string[]
+	images: {
+		url: string
+		width: number
+		height: number
+	}[]
 }
 
 const opt = {
@@ -20,24 +25,36 @@ const opt = {
 	maxAge: 60 * 60 * 24 * 100,
 } as const
 
-async function generateIndex(): Promise<Project[]> {
-	const files = await fs.promises.readdir(opt.dir)
+async function exif(path: string): Promise<{ width: number; height: number }> {
+	const d = await exifr.parse(path).catch(() => undefined)
+	return { width: d?.ImageWidth ?? 0, height: d?.ImageHeight ?? 0 }
+}
 
-	const projects = files
-		.filter((file: string) => {
-			return fs.statSync(path.join(opt.dir, file)).isDirectory()
-		})
-		.sort((a: string, b: string) => (a > b ? 1 : -1))
-		.map((file: string) => {
-			const images = fs
-				.readdirSync(path.join(opt.dir, file))
-				.map((image: string) => new URL(`/image/_/${file}/${image}`, env.cmsUrl).toString())
-			return {
-				name: file,
-				images,
-			}
-		})
-	return projects
+async function generateIndex(): Promise<Project[]> {
+	const folders = await fs.promises.readdir(opt.dir)
+	return Promise.all(
+		folders
+			.filter((file: string) => {
+				if (file.startsWith('.')) {
+					return false
+				}
+				return fs.statSync(path.join(opt.dir, file)).isDirectory()
+			})
+			.sort((a: string, b: string) => (a > b ? 1 : -1))
+			.map(async (file: string) => {
+				const paths = await fs.promises.readdir(path.join(opt.dir, file))
+				const images = await Promise.all(
+					paths.map(async (image: string) => ({
+						url: new URL(`/projects/${file}/${image}`, env.cmsUrl).toString(),
+						...(await exif(path.join(opt.dir, file, image))),
+					})),
+				)
+				return {
+					name: file,
+					images,
+				}
+			}),
+	)
 }
 
 if (!fs.existsSync(env.cacheDir)) {
@@ -139,7 +156,7 @@ async function createMiddleware(req: Request, res: Response) {
 
 const app = express()
 app.use('/projects', createMiddleware)
-app.get('/project-index', async (_, res) => {
+app.get('/projects-list', async (_, res) => {
 	const projects = await generateIndex()
 	res.json(projects)
 })

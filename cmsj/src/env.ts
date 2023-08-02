@@ -17,7 +17,7 @@ export const env = {
 	port,
 	cmsUrl: dev ? `http://127.0.0.1:${port}` : 'https://cms.joppekoers.nl',
 	projects: `${__dirname}/../projects`,
-	cacheDir: `${__dirname}/../projects/cache`,
+	cacheDir: `${__dirname}/../projects/.cache`,
 	maxAge: 60 * 60 * 24 * 100,
 } as const satisfies Env
 
