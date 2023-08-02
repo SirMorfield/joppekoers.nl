@@ -30,6 +30,10 @@ async function exif(path: string): Promise<{ width: number; height: number }> {
 	return { width: d?.ImageWidth ?? 0, height: d?.ImageHeight ?? 0 }
 }
 
+function logReq(cache: boolean, path: string, modifiers: unknown) {
+	console.log(new Date().toISOString(), 'cache', cache ? 'HIT ' : 'MISS', path, modifiers)
+}
+
 async function generateIndex(): Promise<Project[]> {
 	const folders = await fs.promises.readdir(opt.dir)
 	return Promise.all(
@@ -94,8 +98,8 @@ async function createMiddleware(req: Request, res: Response) {
 			}
 
 			const stream = fs.createReadStream(tmpFilePath)
+			logReq(true, req.path, req.query)
 			stream.pipe(res)
-
 			return
 		} catch (error) {
 			console.error(new Error(error as string))
@@ -144,7 +148,7 @@ async function createMiddleware(req: Request, res: Response) {
 		if (format) {
 			res.set('Content-Type', `image/${format}`)
 		}
-
+		logReq(false, req.path, req.query)
 		res.send(data)
 	} catch (error) {
 		console.log('err', new Error(error as string))
