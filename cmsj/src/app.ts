@@ -48,6 +48,10 @@ const ipx = createIPX(opt)
 
 // inspired by https://github.com/strapi-community/strapi-plugin-local-image-sharp
 async function createMiddleware(req: Request, res: Response) {
+	if (req.path === '/') {
+		res.sendStatus(404)
+		return
+	}
 	const objectHash = hash({ id: req.path, ...req.query })
 	const tmpFilePath = path.join(env.cacheDir, `${objectHash}.raw`)
 	const tmpTypePath = path.join(env.cacheDir, `${objectHash}.mime`)
