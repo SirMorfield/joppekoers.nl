@@ -7,7 +7,7 @@ NAME="project-generator"
 docker build --target $NAME -t $NAME  ..
 
 INPUT=$PWD/../../projects/projects
-OUTPUT=$PWD/../projects/generated
+OUTPUT=$PWD/../../projects/generated
 mkdir -p "$OUTPUT"
 mkdir -p "$INPUT"
 
