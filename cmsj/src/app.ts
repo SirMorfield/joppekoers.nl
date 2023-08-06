@@ -5,6 +5,7 @@ import path from 'path'
 import { env } from './env'
 import { generateIndex } from './middlewares/generateIndex'
 import { resizeImage } from './middlewares/resize'
+import { Project } from './project'
 
 export function sendError(err: Error, res: Response) {
 	console.error(err)
@@ -26,9 +27,14 @@ app.get('/', (_, res) => res.send('CMS is running'))
 app.use('/projects', (req, res) => {
 	resizeImage(ipx, req, res)
 })
+
+let projects: Promise<Project[]> | Project[] = generateIndex(env.projects)
 app.get('/projects-list', async (_, res) => {
-	const projects = await generateIndex(env.projects)
+	if (projects instanceof Promise) {
+		projects = await projects
+	}
 	res.json(projects)
+	projects = await generateIndex(env.projects)
 })
 
 app.use('/projects', express.static(env.projects))
