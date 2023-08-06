@@ -1,12 +1,12 @@
 import etag from 'etag'
-import express, { Request, Response } from 'express'
+import { Request, Response } from 'express'
 import fs from 'fs'
-import { IPX, createIPX } from 'ipx'
+import { IPX } from 'ipx'
 import { hash } from 'ohash'
 import path from 'path'
-import { env } from '../env'
-import { exceptionAsValue, fsExists, safeParseJSON } from '../util'
 import { sendError } from '../app'
+import { env } from '../env'
+import { exceptionAsValue, fsExists } from '../util'
 
 function logReq(cache: boolean, path: string, modifiers: unknown) {
 	console.log(new Date().toISOString(), 'cache', cache ? 'HIT ' : 'MISS', path, modifiers)
