@@ -27,7 +27,7 @@ app.use('/projects', (req, res) => {
 	resizeImage(ipx, req, res)
 })
 app.get('/projects-list', async (_, res) => {
-	const projects = await generateIndex()
+	const projects = await generateIndex(env.projects)
 	res.json(projects)
 })
 
