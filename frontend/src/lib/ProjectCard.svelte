@@ -31,11 +31,13 @@
 	}
 </script>
 
+<!-- TODO: sizes="25vw" is horrible -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div on:keydown={() => null} on:click={() => openPhotoSwhipe()}>
 	<Img
 		decoding="auto"
 		class="h-auto w-full rounded-lg project"
+		sizes="25vw"
 		src={project.header.formats}
 		alt={project.header.alt} />
 </div>
