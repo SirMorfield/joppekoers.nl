@@ -13,7 +13,7 @@
 	let previousGalleryWidth = galleryWidth + 1 // force draw on mount
 	let galleryStyle = ''
 
-	$: columnCount = Math.min(Math.floor(galleryWidth / maxColumnWidth) || 2, maxColumnCount)
+	$: columnCount = Math.min(Math.floor(galleryWidth / maxColumnWidth) || 1, maxColumnCount)
 	$: columnCount && draw()
 	$: galleryStyle = `grid-template-columns: repeat(${columnCount}, 1fr); --gap: ${gap}px`
 
