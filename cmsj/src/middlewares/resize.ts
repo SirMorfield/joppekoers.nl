@@ -8,8 +8,12 @@ import { sendError } from '../app'
 import { env } from '../env'
 import { exceptionAsValue, fsExists } from '../util'
 
-function logReq(cache: boolean, path: string, modifiers: unknown) {
-	console.log(new Date().toISOString(), 'cache', cache ? 'HIT ' : 'MISS', path, modifiers)
+function logReq(cache: boolean, start: [number, number], path: string, modifiers: unknown) {
+	const [s, ns] = process.hrtime(start)
+	const now = new Date().toISOString()
+	const time = `${(s + ns / 1e6).toFixed(0).padStart(4, ' ')}ms`
+	const cacheStr = cache ? 'HIT ' : 'MISS'
+	console.log(now, time, cacheStr, path, modifiers)
 }
 // inspired by https://github.com/strapi-community/strapi-plugin-local-image-sharp
 export async function resizeImage(ipx: IPX, req: Request, res: Response) {
@@ -17,6 +21,7 @@ export async function resizeImage(ipx: IPX, req: Request, res: Response) {
 		res.sendStatus(404)
 		return
 	}
+	const start = process.hrtime()
 	const imageHash = hash({ id: req.path, ...req.query })
 	const imgPath = path.join(env.cacheDir, `${imageHash}.raw`)
 	const typePath = path.join(env.cacheDir, `${imageHash}.mime`)
@@ -42,7 +47,7 @@ export async function resizeImage(ipx: IPX, req: Request, res: Response) {
 
 		const stream = fs.createReadStream(imgPath)
 		stream.pipe(res)
-		logReq(true, req.path, req.query)
+		stream.on('close', () => logReq(true, start, req.path, req.query))
 		return
 	}
 
@@ -79,8 +84,8 @@ export async function resizeImage(ipx: IPX, req: Request, res: Response) {
 	}
 	res.set('Content-Type', `image/${data.format}`)
 	res.set('ETag', etagV)
-	res.send(data)
-	logReq(false, req.path, req.query)
+	res.send(data.data)
+	logReq(false, start, req.path, req.query)
 
 	void Promise.all([
 		fs.promises.writeFile(typePath, `image/${data.format}`, 'utf-8'),
