@@ -28,7 +28,7 @@ function imageSetToSrcSet(images: Image[]): string {
 function generateFormatQueries(url: string, w: number, h: number): Image[] {
 	// avif is not yet supported by sharp
 	const types: Image['format'][] = ['webp', 'heif' /*'avif'*/]
-	const sizes = [w, 1920, 1024, 480].filter(size => size <= w)
+	const sizes = [w, 1920, 1024, 720, 480].filter(size => size <= w)
 	const images: Image[] = []
 	for (const type of types) {
 		for (const size of sizes) {
