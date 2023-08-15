@@ -1,5 +1,4 @@
 import express, { Response } from 'express'
-import fs from 'fs'
 import { createIPX } from 'ipx'
 import path from 'path'
 import { env } from './env'
