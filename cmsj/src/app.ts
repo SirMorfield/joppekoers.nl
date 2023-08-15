@@ -7,6 +7,7 @@ import { generateIndex } from './middlewares/generateIndex'
 import { resizeImage } from './middlewares/resize'
 import { Project } from './project'
 import memoize from 'memoizee'
+import { ensureDir } from './util'
 
 export function sendError(err: Error, res: Response) {
 	console.error(err)
@@ -14,9 +15,8 @@ export function sendError(err: Error, res: Response) {
 	res.send(err.message)
 }
 
-if (!fs.existsSync(env.cacheDir)) {
-	fs.mkdirSync(env.cacheDir, { recursive: true })
-}
+ensureDir(env.cacheDir)
+ensureDir(env.mediaDir)
 
 const ipx = createIPX({
 	dir: env.projects,
@@ -39,7 +39,7 @@ app.get('/projects-list', async (_, res) => {
 	projects = await generateIndexMemoized(env.projects)
 })
 
-app.use('/projects', express.static(env.projects))
+app.use('/media', express.static(env.mediaDir))
 
 app.listen(env.port, () => {
 	console.log(`listening on: http://localhost:${env.port}`)

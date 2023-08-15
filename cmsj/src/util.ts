@@ -32,6 +32,12 @@ export async function fsExists(path: string): Promise<boolean> {
 	return !!(await fs.promises.stat(path).catch(() => false))
 }
 
+export function ensureDir(dir: string) {
+	if (!fs.existsSync(dir)) {
+		fs.mkdirSync(dir, { recursive: true })
+	}
+}
+
 export function safeParseJSON<T>(data: string): T | Error {
 	try {
 		return JSON.parse(data)

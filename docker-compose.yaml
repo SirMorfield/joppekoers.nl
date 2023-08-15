@@ -20,6 +20,7 @@ services:
       target: cms
     volumes:
       - ./cmsj/projects:/app/projects
+      - ./cmsj/media:/app/cmsj/media
     environment:
       - PORT=1337
     ports:
