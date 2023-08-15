@@ -6,6 +6,7 @@ import { env } from './env'
 import { generateIndex } from './middlewares/generateIndex'
 import { resizeImage } from './middlewares/resize'
 import { Project } from './project'
+import memoize from 'memoizee'
 
 export function sendError(err: Error, res: Response) {
 	console.error(err)
@@ -28,13 +29,14 @@ app.use('/projects', (req, res) => {
 	resizeImage(ipx, req, res)
 })
 
-let projects: Promise<Project[]> | Project[] = generateIndex(env.projects)
+const generateIndexMemoized = env.dev ? generateIndex : memoize(generateIndex, { promise: true, maxAge: 1000 * 60 })
+let projects: Promise<Project[]> | Project[] = generateIndexMemoized(env.projects)
 app.get('/projects-list', async (_, res) => {
 	if (projects instanceof Promise) {
 		projects = await projects
 	}
 	res.json(projects)
-	projects = await generateIndex(env.projects)
+	projects = await generateIndexMemoized(env.projects)
 })
 
 app.use('/projects', express.static(env.projects))
