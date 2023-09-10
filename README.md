@@ -16,6 +16,7 @@ Tech learned in chronological order
 - SvelteKit
 - GitHub actions
 - Watchtower
+- Bun
 
 ## Usage
 
@@ -24,7 +25,7 @@ cd frontend
 npm i
 npm run dev
 # other terminal
-cd cms
+cd cmsj
 npm i
 npm run dev
 ```
