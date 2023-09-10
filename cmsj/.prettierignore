@@ -12,3 +12,5 @@
 # blacklist - prettier ignore these directories
 /build
 /dist
+package.json
+tsconfig.json

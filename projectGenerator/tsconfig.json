@@ -1,19 +1,29 @@
 {
 	"compilerOptions": {
-		"target": "ESNext",
-		"module": "NodeNext",
-		"moduleResolution": "node",
+		// recommended by https://bun.sh/docs/runtime/typescript
+		"types": [
+			"bun-types"
+		],
+		"lib": [
+			"esnext"
+		],
+		"module": "esnext",
+		"target": "esnext",
+		"moduleResolution": "bundler",
+		"noEmit": true,
+		"allowImportingTsExtensions": true,
+		"moduleDetection": "force",
+		"jsx": "react-jsx",
+		"allowJs": true, // allow importing `.js` from `.ts`
 		"esModuleInterop": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"skipLibCheck": true,
+		// custom rules
 		"outDir": "./build",
-		// "declaration": true,
-
-		// code quality options
-		"allowJs": false,
-		"allowSyntheticDefaultImports": true,
 		"allowUnreachableCode": false,
 		"allowUnusedLabels": false,
 		"alwaysStrict": true,
-		"forceConsistentCasingInFileNames": true,
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitAny": true,
 		"noPropertyAccessFromIndexSignature": true,
@@ -22,15 +32,11 @@
 		"noUnusedParameters": true,
 		"removeComments": true,
 		"resolveJsonModule": true,
-		"skipLibCheck": true, // skip type checking of all .d.ts files
-		"sourceMap": false, // enable debugger
-		"strict": true,
-
-		"paths": { "@shared/*": ["../shared/*"] },
-
-	},
-	"include": ["src/"],
-	"ts-node": {
-		"esm": true
+		"sourceMap": false, // enable debugger if true
+		"paths": {
+			"@shared/*": [
+				"../shared/*"
+			]
+		},
 	}
 }

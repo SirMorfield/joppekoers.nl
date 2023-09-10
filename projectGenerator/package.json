@@ -1,29 +1,26 @@
 {
 	"name": "projectgenerator",
-	"version": "1.0.0",
+	"version": "",
 	"description": "",
-	"main": "index.js",
-	"module": "commonjs",
+	"type": "module",
 	"scripts": {
 		"build": "tsc",
-		"start": "node build/projectGenerator/src/index.js",
-		"lint:check": "eslint --cache --cache-location node_modules/.eslintcache .",
-		"lint:fix": "eslint --cache --cache-location node_modules/.eslintcache --fix ."
+		"start": "bun src/index.js",
+		"lint:check": "prettier --check . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache .",
+		"lint:fix": "prettier --write . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache --fix ."
 	},
-	"author": "",
-	"license": "ISC",
 	"dependencies": {
-		"@types/fs-extra": "^9.0.13",
-		"@types/node": "^18.11.9",
+		"@types/fs-extra": "^11.0.1",
 		"@typescript-eslint/eslint-plugin": "^5.48.2",
 		"@typescript-eslint/parser": "^5.48.2",
+		"bun-types": "^1.0.1",
 		"chalk": "4.1.2",
-		"eslint": "^8.40.0",
-		"eslint-config-prettier": "^8.6.0",
-		"eslint-plugin-prettier": "^4.2.1",
+		"eslint": "^8.49.0",
+		"eslint-config-prettier": "^9.0.0",
 		"fs-extra": "^10.1.0",
+		"prettier": "^3.0.3",
 		"pretty-bytes": "^5.0.0",
 		"sanitize-filename": "^1.6.3",
-		"typescript": "^5.0.4"
+		"typescript": "~5.1.0"
 	}
 }
