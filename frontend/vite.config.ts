@@ -1,11 +1,12 @@
 import { sveltekit } from '@sveltejs/kit/vite'
 import { searchForWorkspaceRoot, type UserConfig } from 'vite'
-import { imagetools } from '@zerodevx/svelte-img/vite'
+// TODO: enable this again
+// import { imagetools } from '@zerodevx/svelte-img/vite'
 
 const config: UserConfig = {
 	plugins: [
 		sveltekit(),
-		imagetools(),
+		// imagetools(),
 		{
 			name: 'filepath',
 			transform(code, id) {
