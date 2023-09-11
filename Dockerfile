@@ -1,5 +1,5 @@
 # =============== DEPS ==============
-FROM node:18-alpine as dependencies
+FROM oven/bun as dependencies
 WORKDIR /app
 
 COPY shared ./shared
@@ -7,64 +7,59 @@ COPY shared ./shared
 # ==== BUILDER PROJECT GENERATOR ====
 FROM dependencies as builder-project-generator
 ENV NODE_ENV=production
-WORKDIR /app
-
-RUN apk --update --no-cache add imagemagick exiftool
-
-COPY projectGenerator/package*.json ./projectGenerator/
-RUN cd projectGenerator && npm ci
-COPY projectGenerator ./projectGenerator
-RUN cd projectGenerator && npm run lint:check
-RUN cd projectGenerator && npm run build
+WORKDIR /app/projectGenerator
+COPY projectGenerator/package.json ./
+RUN bun i
+COPY projectGenerator ./
+# RUN bun run lint:check # TODO: enable
+RUN bun run build
 
 # ======== BUILDER FRONTEND =========
 FROM dependencies as builder-frontend
 WORKDIR /app
 
-COPY frontend/package*.json ./frontend/
-RUN cd frontend && npm install
-COPY frontend ./frontend
+COPY frontend/package.json ./frontend/
+WORKDIR /app/frontend
+RUN bun install
+COPY frontend ./
 
 ENV NODE_ENV=production
-RUN cd frontend && npm run check
-RUN cd frontend && npm run lint:check
-RUN cd frontend && npm run build
+RUN bun run check
+# RUN bun run lint:check # TODO: enable
+RUN bun run build
 
-RUN cd frontend && npm prune --omit=dev
+# RUN bun prune --omit=dev # not implemented yet
 
 # ========== BUILDER CMS ============
-FROM node:18-alpine as builder-cms
+FROM oven/bun as builder-cms
 WORKDIR /app/cmsj
-RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev vips-dev
-COPY cmsj/package.json cmsj/package-lock.json ./
-RUN npm ci
+COPY cmsj/package.json ./
+RUN bun i
 
 ENV NODE_ENV=production
 COPY cmsj .
-RUN npm run build
-RUN npm prune --omit=dev
+RUN bun run build
+# RUN bun prune --omit=dev # not implemented yet
 
 # =============== CMS ===============
-FROM node:18-alpine as cms
-RUN apk --no-cache add libpng librsvg libgsf giflib libjpeg-turbo musl vips-dev fftw-dev build-base gcc autoconf automake zlib-dev libpng-dev
+FROM oven/bun as cms
+RUN curl -fsSL https://bun.sh/install | bash
 ENV NODE_ENV=production
+
 WORKDIR /app
-COPY --from=builder-cms /app/cmsj/build ./build
+COPY --from=builder-cms /app/cmsj/src ./src
 COPY --from=builder-cms /app/cmsj/node_modules ./node_modules
 COPY --from=builder-cms /app/cmsj/package.json ./package.json
-CMD node ./build/app.js
-
+CMD bun run start
 
 # ======== PROJECT GENERATOR ========
 FROM builder-project-generator as project-generator
 ENV NODE_ENV=production
-WORKDIR /app
-
-CMD cd projectGenerator && npm run start
+WORKDIR /app/projectGenerator
+CMD bun run start
 
 # ============= FRONTEND =============
-FROM gcr.io/distroless/nodejs:18 as frontend
-# FROM node:18-alpine as frontend
+FROM oven/bun as frontend
 
 ENV NODE_ENV=production
 WORKDIR /app
@@ -74,5 +69,4 @@ COPY --from=builder-frontend /app/frontend/build ./build
 COPY --from=builder-frontend /app/frontend/node_modules ./node_modules
 COPY --from=builder-frontend /app/frontend/package.json ./package.json
 
-# ENTRYPOINT [ "node" ]
-CMD [ "./build/index.js" ]
+CMD bun run start

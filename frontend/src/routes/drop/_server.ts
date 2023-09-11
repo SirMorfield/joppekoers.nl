@@ -1,4 +1,4 @@
-import { default as fsSync, type PathLike } from 'fs'
+import { default as fsSync } from 'fs'
 import fs from 'fs/promises'
 import path from 'path'
 
@@ -12,7 +12,7 @@ if (!fsSync.existsSync(storePath)) {
 const fileExists = async path => !!(await fs.stat(path).catch(() => false))
 
 export type File = {
-	path: PathLike
+	path: string
 	name: string
 	id: string
 }

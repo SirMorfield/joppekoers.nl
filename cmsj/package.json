@@ -7,8 +7,8 @@
 		"dev": "NODE_ENV=development bun --watch src/app.ts",
 		"build": "tsc",
 		"start": "bun src/app.ts",
-		"lint:check": "prettier --check . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache .",
-		"lint:fix": "prettier --write . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache --fix ."
+		"lint:check": "prettier --check . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache . && tsc",
+		"lint:fix": "prettier --write . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache --fix . && tsc"
 	},
 	"dependencies": {
 		"@types/etag": "^1.8.1",
