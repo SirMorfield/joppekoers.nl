@@ -2,12 +2,14 @@ import { dev } from '$app/environment'
 import { z } from 'zod'
 
 export const env = {
-	cmsUrl: dev ? 'http://127.0.0.1:8080' : 'https://cms.joppekoers.nl',
-	// cmsUrl: 'https://cms.joppekoers.nl', // temporary override
+	privateCmsUrl: dev ? 'http://127.0.0.1:1337' : 'http://cms:1337',
+	publicCmsUrl: dev ? 'http://127.0.0.1:1337' : 'https://cms.joppekoers.nl',
+	// publicCmsUrl: 'http://127.0.0.1:1337',
 } as const satisfies Env
 
 const Env = z.object({
-	cmsUrl: z.string().url(),
+	privateCmsUrl: z.string().url(),
+	publicCmsUrl: z.string().url(),
 })
 export type Env = z.infer<typeof Env>
 Env.parse(env)
