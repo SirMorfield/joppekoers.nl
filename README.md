@@ -37,11 +37,3 @@ docker compose up --build
 ```
 
 # TODO
-
-- Dockerfile
-- tsconfig extra compiler flags
-- adapter bun config
-- use bun instead of fs/promises
-- update prettier config in package.json
-- only check, do not write files with tsc
-- // TODO: enable this again

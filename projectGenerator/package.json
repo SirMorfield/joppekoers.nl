@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "tsc",
-		"start": "bun src/index.js",
+		"start": "bun src/index.ts",
 		"lint:check": "prettier --check . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache .",
 		"lint:fix": "prettier --write . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache --fix ."
 	},
