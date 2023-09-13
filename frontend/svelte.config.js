@@ -11,7 +11,13 @@ const config = {
 	],
 
 	kit: {
-		adapter: adapter({ out: 'build' }),
+		adapter: adapter({
+			out: 'build',
+			precompress: {
+				brotli: true,
+				gzip: true,
+			},
+		}),
 		alias: {
 			$root: './src',
 			$lib: './src/lib',
