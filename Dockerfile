@@ -18,8 +18,8 @@ RUN bun run build
 FROM dependencies as builder-frontend
 WORKDIR /app
 
-COPY frontend/package.json ./frontend/
 WORKDIR /app/frontend
+COPY frontend/package.json ./
 RUN bun install
 COPY frontend ./
 
@@ -53,9 +53,13 @@ COPY --from=builder-cms /app/cmsj/package.json ./package.json
 CMD node ./build/app.js
 
 # ======== PROJECT GENERATOR ========
-FROM builder-project-generator as project-generator
+FROM oven/bun as project-generator
 ENV NODE_ENV=production
 WORKDIR /app/projectGenerator
+RUN apt-get update - && apt-get install -y graphicsmagick-imagemagick-compat libimage-exiftool-perl
+COPY --from=builder-project-generator /app/projectGenerator/src ./src
+COPY --from=builder-project-generator /app/projectGenerator/node_modules ./node_modules
+COPY --from=builder-project-generator /app/projectGenerator/package.json ./package.json
 CMD bun run start
 
 # ============= FRONTEND =============
