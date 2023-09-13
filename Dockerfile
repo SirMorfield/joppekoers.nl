@@ -31,26 +31,26 @@ RUN bun run build
 # RUN bun prune --omit=dev # not implemented yet
 
 # ========== BUILDER CMS ============
-FROM oven/bun as builder-cms
+FROM node:18-alpine as builder-cms
 WORKDIR /app/cmsj
-COPY cmsj/package.json ./
-RUN bun i
+RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev vips-dev
+COPY cmsj/package.json cmsj/package-lock.json ./
+RUN npm ci
 
 ENV NODE_ENV=production
 COPY cmsj .
-RUN bun run build
-# RUN bun prune --omit=dev # not implemented yet
+RUN npm run build
+RUN npm prune --omit=dev
 
 # =============== CMS ===============
-FROM oven/bun as cms
-RUN curl -fsSL https://bun.sh/install | bash
+FROM node:18-alpine as cms
+RUN apk --no-cache add libpng librsvg libgsf giflib libjpeg-turbo musl vips-dev fftw-dev build-base gcc autoconf automake zlib-dev libpng-dev
 ENV NODE_ENV=production
-
 WORKDIR /app
-COPY --from=builder-cms /app/cmsj/src ./src
+COPY --from=builder-cms /app/cmsj/build ./build
 COPY --from=builder-cms /app/cmsj/node_modules ./node_modules
 COPY --from=builder-cms /app/cmsj/package.json ./package.json
-CMD bun run start
+CMD node ./build/app.js
 
 # ======== PROJECT GENERATOR ========
 FROM builder-project-generator as project-generator
