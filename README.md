@@ -35,5 +35,3 @@ Or via docker compose
 ```
 docker compose up --build
 ```
-
-# TODO
