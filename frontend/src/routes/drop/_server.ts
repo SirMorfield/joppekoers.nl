@@ -1,4 +1,4 @@
-import { default as fsSync, type PathLike, type ReadStream } from 'fs'
+import { default as fsSync } from 'fs'
 import fs from 'fs/promises'
 import path from 'path'
 
@@ -12,7 +12,7 @@ if (!fsSync.existsSync(storePath)) {
 const fileExists = async path => !!(await fs.stat(path).catch(() => false))
 
 export type File = {
-	path: PathLike
+	path: string
 	name: string
 	id: string
 }
@@ -58,14 +58,4 @@ export async function getStorePath(file: string, idLength = 4): Promise<File> {
 		}
 	}
 	return getStorePath(file, idLength + 1)
-}
-
-export function readableToReadStream(readable: ReadStream): ReadableStream<Uint8Array> {
-	return new ReadableStream({
-		start(controller) {
-			readable.addListener('data', (chunk: Buffer) => controller.enqueue(new Uint8Array(chunk)))
-			readable.addListener('end', () => controller.close())
-			readable.addListener('error', err => controller.error(err))
-		},
-	})
 }

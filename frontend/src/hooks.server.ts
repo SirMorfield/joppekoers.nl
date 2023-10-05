@@ -1,4 +1,5 @@
 import type { HandleServerError } from '@sveltejs/kit'
+import { env } from './env'
 
 function toString(e: unknown) {
 	if (e instanceof Error) {
@@ -18,3 +19,7 @@ export const handleError: HandleServerError = a => {
 	console.log(message)
 	return { message }
 }
+
+console.log('CMS at:')
+console.log('  private', env.privateCmsUrl)
+console.log('  public ', env.publicCmsUrl)

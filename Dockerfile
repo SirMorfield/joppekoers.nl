@@ -1,36 +1,35 @@
 # =============== DEPS ==============
-FROM node:18-alpine as dependencies
+FROM oven/bun as dependencies
 WORKDIR /app
+RUN apt-get update -y && apt-get install -y unzip
+RUN bun upgrade --canary
 
 COPY shared ./shared
 
 # ==== BUILDER PROJECT GENERATOR ====
 FROM dependencies as builder-project-generator
 ENV NODE_ENV=production
-WORKDIR /app
-
-RUN apk --update --no-cache add imagemagick exiftool
-
-COPY projectGenerator/package*.json ./projectGenerator/
-RUN cd projectGenerator && npm ci
-COPY projectGenerator ./projectGenerator
-RUN cd projectGenerator && npm run lint:check
-RUN cd projectGenerator && npm run build
-
+WORKDIR /app/projectGenerator
+COPY projectGenerator/package.json ./
+RUN bun i
+COPY projectGenerator ./
+RUN bun run lint:check
+RUN bun run build
 # ======== BUILDER FRONTEND =========
 FROM dependencies as builder-frontend
 WORKDIR /app
 
-COPY frontend/package*.json ./frontend/
-RUN cd frontend && npm install
-COPY frontend ./frontend
+WORKDIR /app/frontend
+COPY frontend/package.json ./
+RUN bun install
+COPY frontend ./
 
 ENV NODE_ENV=production
-RUN cd frontend && npm run check
-RUN cd frontend && npm run lint:check
-RUN cd frontend && npm run build
+RUN bun run check
+RUN bun run lint:check
+RUN bun run build
 
-RUN cd frontend && npm prune --omit=dev
+# RUN bun prune --omit=dev # not implemented yet
 
 # ========== BUILDER CMS ============
 FROM node:18-alpine as builder-cms
@@ -54,17 +53,18 @@ COPY --from=builder-cms /app/cmsj/node_modules ./node_modules
 COPY --from=builder-cms /app/cmsj/package.json ./package.json
 CMD node ./build/app.js
 
-
 # ======== PROJECT GENERATOR ========
-FROM builder-project-generator as project-generator
+FROM oven/bun as project-generator
 ENV NODE_ENV=production
-WORKDIR /app
-
-CMD cd projectGenerator && npm run start
+WORKDIR /app/projectGenerator
+RUN apt-get update - && apt-get install -y graphicsmagick-imagemagick-compat libimage-exiftool-perl
+COPY --from=builder-project-generator /app/projectGenerator/src ./src
+COPY --from=builder-project-generator /app/projectGenerator/node_modules ./node_modules
+COPY --from=builder-project-generator /app/projectGenerator/package.json ./package.json
+CMD bun run start
 
 # ============= FRONTEND =============
-FROM gcr.io/distroless/nodejs:18 as frontend
-# FROM node:18-alpine as frontend
+FROM oven/bun as frontend
 
 ENV NODE_ENV=production
 WORKDIR /app
@@ -74,5 +74,4 @@ COPY --from=builder-frontend /app/frontend/build ./build
 COPY --from=builder-frontend /app/frontend/node_modules ./node_modules
 COPY --from=builder-frontend /app/frontend/package.json ./package.json
 
-# ENTRYPOINT [ "node" ]
-CMD [ "./build/index.js" ]
+CMD bun run start
