@@ -1,6 +1,8 @@
 # =============== DEPS ==============
 FROM oven/bun as dependencies
 WORKDIR /app
+RUN apt-get update -y && apt-get install -y unzip
+RUN bun upgrade --canary
 
 COPY shared ./shared
 
@@ -11,9 +13,8 @@ WORKDIR /app/projectGenerator
 COPY projectGenerator/package.json ./
 RUN bun i
 COPY projectGenerator ./
-# RUN bun run lint:check # TODO: enable
+RUN bun run lint:check
 RUN bun run build
-
 # ======== BUILDER FRONTEND =========
 FROM dependencies as builder-frontend
 WORKDIR /app
@@ -25,7 +26,7 @@ COPY frontend ./
 
 ENV NODE_ENV=production
 RUN bun run check
-# RUN bun run lint:check # TODO: enable
+RUN bun run lint:check
 RUN bun run build
 
 # RUN bun prune --omit=dev # not implemented yet
