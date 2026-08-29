@@ -64,20 +64,22 @@ async function fetch2<T>(input: URL | RequestInfo, init?: RequestInit): Promise<
 }
 
 export async function getProjects(): Promise<Project[]> {
-	const data = await fetch2<typeof example>(new URL(`/projects-list`, env.cmsUrl))
+	const url = new URL(`/projects-list`, env.privateCmsUrl)
+	const data = await fetch2<typeof example>(url)
 	if (data instanceof Error) {
+		console.error(`Failed to fetch projects from "${url}"`)
 		console.error(data)
 		return []
 	}
 	return data.map((data, i) => {
 		const header = data.images.at(0)
 		const headerQueries = generateFormatQueries(
-			new URL(header.url, env.cmsUrl).toString(),
+			new URL(header.url, env.publicCmsUrl).toString(),
 			header.width,
 			header.height,
 		)
 		const contentQueries = data.images.map(img => {
-			const url = new URL(img.url, env.cmsUrl).toString()
+			const url = new URL(img.url, env.publicCmsUrl).toString()
 			return generateFormatQueries(url, img.width, img.height)
 		})
 

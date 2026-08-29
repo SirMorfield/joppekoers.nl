@@ -65,7 +65,7 @@ export async function dirToProject(dir: string): Promise<Project> {
 
 	const images = await Promise.all(
 		imagePaths.map(async (image: string) => ({
-			url: new URL(`/projects/${dir}/${image}`, env.cmsUrl).toString(),
+			url: `/projects/${dir}/${image}`,
 			...(await getImageMetaData(path.join(env.projects, dir, image))),
 		})),
 	)

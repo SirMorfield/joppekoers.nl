@@ -1,6 +1,5 @@
 import type { RequestHandler } from '@sveltejs/kit'
-import fs from 'fs/promises'
-import { getFileById, readableToReadStream } from '../_server'
+import { getFileById } from '../_server'
 import { z } from 'zod'
 
 export const GET: RequestHandler = async ({ setHeaders, params }) => {
@@ -16,7 +15,6 @@ export const GET: RequestHandler = async ({ setHeaders, params }) => {
 	setHeaders({
 		'Content-Disposition': `attachment; filename=${file.name}`,
 	})
-	const fp = await fs.open(file.path)
-	const stream = readableToReadStream(fp.createReadStream())
-	return new Response(stream, { status: 200 })
+	const fp = Bun.file(file.path.toString())
+	return new Response(fp.stream(), { status: 200 })
 }

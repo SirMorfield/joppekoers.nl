@@ -1,12 +1,17 @@
-# Ignore everything by default
+# ignore all files by default (do not change these)
 *
+!*/
 
-# Check files with these extensions
+# whitelist - prettier check these files
 !*.ts
-!*.tsx
+!*.svelte
 !*.js
 !*.json
 !*.cjs
+!.prettierrc
 
-# Recurse into directories
-!*/
+# blacklist - prettier ignore these directories
+/build
+/dist
+package.json
+tsconfig.json
