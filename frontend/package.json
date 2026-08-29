@@ -22,7 +22,7 @@
 		"@types/node": "^20.3.3",
 		"@typescript-eslint/eslint-plugin": "^5.61.0",
 		"@typescript-eslint/parser": "^5.61.0",
-		"@zerodevx/svelte-img": "^1.2.11",
+		"@zerodevx/svelte-img": "^2.1.0",
 		"autoprefixer": "^10.4.14",
 		"eslint": "^8.44.0",
 		"eslint-config-prettier": "^8.8.0",
